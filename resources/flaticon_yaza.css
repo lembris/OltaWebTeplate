@@ -1,0 +1,226 @@
+/*!
+*    ______ _       _   _
+*    |  ____| |     | | (_)
+*    | |__  | | __ _| |_ _  ___ ___  _ __
+*    |  __| | |/ _` | __| |/ __/ _ \| '_ \
+*    | |    | | (_| | |_| | (_| (_) | | | |
+*    |_|    |_|\__,_|\__|_|\___\___/|_| |_|
+*
+*         https://www.flaticon.com
+*/
+
+@font-face {
+    font-family: "flaticon_yaza";
+    src: url("../fonts/flaticon_yaza.woff2?772ea02a69aaa1df533c903d0ac989de") format("woff2"),
+url("../fonts/flaticon_yaza.woff?772ea02a69aaa1df533c903d0ac989de") format("woff"),
+url("../fonts/flaticon_yaza.eot?772ea02a69aaa1df533c903d0ac989de#iefix") format("embedded-opentype"),
+url("../fonts/flaticon_yaza.ttf?772ea02a69aaa1df533c903d0ac989de") format("truetype"),
+url("../fonts/flaticon_yaza.svg?772ea02a69aaa1df533c903d0ac989de#flaticon_yaza") format("svg")
+}
+
+i[class^="flaticon-"]:before, i[class*=" flaticon-"]:before {
+    font-family: flaticon_yaza !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.flaticon-straight-quotes:before {
+    content: "\f101";
+}
+.flaticon-mail:before {
+    content: "\f102";
+}
+.flaticon-star:before {
+    content: "\f103";
+}
+.flaticon-balance:before {
+    content: "\f104";
+}
+.flaticon-siren:before {
+    content: "\f105";
+}
+.flaticon-shield:before {
+    content: "\f106";
+}
+.flaticon-folder:before {
+    content: "\f107";
+}
+.flaticon-traffic-cone:before {
+    content: "\f108";
+}
+.flaticon-handcuffs:before {
+    content: "\f109";
+}
+.flaticon-footprint:before {
+    content: "\f10a";
+}
+.flaticon-rope:before {
+    content: "\f10b";
+}
+.flaticon-shield-1:before {
+    content: "\f10c";
+}
+.flaticon-typewriter:before {
+    content: "\f10d";
+}
+.flaticon-sandglass:before {
+    content: "\f10e";
+}
+.flaticon-jail:before {
+    content: "\f10f";
+}
+.flaticon-knife:before {
+    content: "\f110";
+}
+.flaticon-money-laundering:before {
+    content: "\f111";
+}
+.flaticon-jury:before {
+    content: "\f112";
+}
+.flaticon-dna:before {
+    content: "\f113";
+}
+.flaticon-hands-up:before {
+    content: "\f114";
+}
+.flaticon-newspaper:before {
+    content: "\f115";
+}
+.flaticon-baton:before {
+    content: "\f116";
+}
+.flaticon-security-box:before {
+    content: "\f117";
+}
+.flaticon-agreement:before {
+    content: "\f118";
+}
+.flaticon-money:before {
+    content: "\f119";
+}
+.flaticon-scroll:before {
+    content: "\f11a";
+}
+.flaticon-calendar:before {
+    content: "\f11b";
+}
+.flaticon-judge:before {
+    content: "\f11c";
+}
+.flaticon-evidence:before {
+    content: "\f11d";
+}
+.flaticon-book:before {
+    content: "\f11e";
+}
+.flaticon-folder-1:before {
+    content: "\f11f";
+}
+.flaticon-bullet:before {
+    content: "\f120";
+}
+.flaticon-security-camera:before {
+    content: "\f121";
+}
+.flaticon-gavel:before {
+    content: "\f122";
+}
+.flaticon-marijuana:before {
+    content: "\f123";
+}
+.flaticon-briefcase:before {
+    content: "\f124";
+}
+.flaticon-padlock:before {
+    content: "\f125";
+}
+.flaticon-police-hat:before {
+    content: "\f126";
+}
+.flaticon-agreement-1:before {
+    content: "\f127";
+}
+.flaticon-lawyer:before {
+    content: "\f128";
+}
+.flaticon-magnifying-glass:before {
+    content: "\f129";
+}
+.flaticon-courthouse:before {
+    content: "\f12a";
+}
+.flaticon-radio:before {
+    content: "\f12b";
+}
+.flaticon-inkwell:before {
+    content: "\f12c";
+}
+.flaticon-fingerprint:before {
+    content: "\f12d";
+}
+.flaticon-cardboard-box:before {
+    content: "\f12e";
+}
+.flaticon-balance-1:before {
+    content: "\f12f";
+}
+.flaticon-pistol:before {
+    content: "\f130";
+}
+.flaticon-fingerprint-1:before {
+    content: "\f131";
+}
+.flaticon-eye:before {
+    content: "\f132";
+}
+.flaticon-thief:before {
+    content: "\f133";
+}
+.flaticon-police-line:before {
+    content: "\f134";
+}
+.flaticon-helmet:before {
+    content: "\f135";
+}
+.flaticon-money-bag:before {
+    content: "\f136";
+}
+.flaticon-handshake:before {
+    content: "\f137";
+}
+.flaticon-handcuffs-1:before {
+    content: "\f138";
+}
+.flaticon-family:before {
+    content: "\f139";
+}
+.flaticon-justice-scale:before {
+    content: "\f13a";
+}
+.flaticon-healthcare:before {
+    content: "\f13b";
+}
+.flaticon-corporate-laws:before {
+    content: "\f13c";
+}
+.flaticon-financial-laws:before {
+    content: "\f13d";
+}
+.flaticon-scales:before {
+    content: "\f13e";
+}
+.flaticon-family-law:before {
+    content: "\f13f";
+}
+.flaticon-discussion:before {
+    content: "\f140";
+}
+.flaticon-civil-law:before {
+    content: "\f141";
+}

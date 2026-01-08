@@ -1,0 +1,139 @@
+# ===========================
+# OS Generated Files
+# ===========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ===========================
+# IDE & Editor Files
+# ===========================
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.project
+.settings/
+.buildpath
+nbproject/
+
+# ===========================
+# CodeIgniter Specific
+# ===========================
+# Logs
+application/logs/*.php
+application/logs/*.log
+!application/logs/index.html
+!application/logs/.htaccess
+
+# Cache
+application/cache/*
+!application/cache/index.html
+!application/cache/.htaccess
+
+# Session files (if file-based)
+application/sessions/*
+!application/sessions/index.html
+!application/sessions/.htaccess
+
+# ===========================
+# Configuration (sensitive)
+# ===========================
+# Uncomment if you want to exclude config files with credentials
+# application/config/database.php
+# application/config/email.php
+
+# ===========================
+# User Uploads
+# ===========================
+# Exclude uploaded files from version control
+assets/uploads/*
+!assets/uploads/index.html
+!assets/uploads/.htaccess
+
+assets/images/avatars/*
+!assets/images/avatars/index.html
+
+assets/images/gallery/*
+!assets/images/gallery/index.html
+
+assets/images/packages/*
+!assets/images/packages/index.html
+
+assets/images/blog/*
+!assets/images/blog/index.html
+
+assets/images/destinations/*
+!assets/images/destinations/index.html
+
+# ===========================
+# Dependency Directories
+# ===========================
+vendor/
+node_modules/
+bower_components/
+
+# ===========================
+# Build & Compiled Files
+# ===========================
+*.map
+*.min.js
+*.min.css
+dist/
+build/
+
+# ===========================
+# Backup Files
+# ===========================
+*.bak
+*.backup
+*.sql.gz
+*.sql.zip
+*_backup.sql
+
+# ===========================
+# Environment Files
+# ===========================
+.env
+.env.local
+.env.*.local
+*.env
+
+# ===========================
+# Temporary Files
+# ===========================
+tmp/
+temp/
+*.tmp
+*.temp
+cookies.txt
+
+# ===========================
+# Composer
+# ===========================
+composer.lock
+composer.phar
+
+# ===========================
+# Testing
+# ===========================
+coverage/
+.phpunit.result.cache
+phpunit.xml
+
+# ===========================
+# Misc
+# ===========================
+*.log
+*.pid
+*.seed
+*.pid.lock
+.sass-cache/

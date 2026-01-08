@@ -1,0 +1,140 @@
+{
+    "menu_name": "Tourism Admin Menu",
+    "sections": [
+        {
+            "header": "Dashboards",
+            "items": [
+                {
+                    "label": "Operations",
+                    "icon": "fas fa-briefcase",
+                    "url": "admin/dashboard/operations",
+                    "segment": ["dashboard", "operations"]
+                },
+                {
+                    "label": "Analytics",
+                    "icon": "fas fa-chart-line",
+                    "url": "admin/dashboard/analytics",
+                    "segment": ["dashboard", "analytics"]
+                }
+            ]
+        },
+        {
+            "header": "Safari & Tours",
+            "items": [
+                {
+                    "label": "Safari Packages",
+                    "icon": "fas fa-compass",
+                    "url": "admin/packages",
+                    "segment": ["packages"]
+                },
+                {
+                    "label": "Destinations",
+                    "icon": "fas fa-map-marker-alt",
+                    "url": "admin/destinations",
+                    "segment": ["destinations"]
+                },
+                {
+                    "label": "Itineraries",
+                    "icon": "fas fa-route",
+                    "url": "admin/itineraries",
+                    "segment": ["itineraries"]
+                },
+                {
+                    "label": "Bookings",
+                    "icon": "fas fa-calendar-check",
+                    "url": "admin/bookings",
+                    "segment": ["bookings"],
+                    "badge": "booking_count"
+                }
+            ]
+        },
+        {
+            "header": "Content Management",
+            "items": [
+                {
+                    "label": "Blog Posts",
+                    "icon": "fas fa-newspaper",
+                    "url": "admin/blog",
+                    "segment": ["blog"]
+                },
+                {
+                    "label": "Pages",
+                    "icon": "fas fa-file-alt",
+                    "url": "admin/pages",
+                    "segment": ["pages"]
+                },
+                {
+                    "label": "Testimonials",
+                    "icon": "fas fa-quote-right",
+                    "url": "admin/testimonials",
+                    "segment": ["testimonials"]
+                },
+                {
+                    "label": "Reviews",
+                    "icon": "fas fa-star",
+                    "url": "admin/reviews",
+                    "segment": ["reviews"],
+                    "badge": "pending_reviews"
+                },
+                {
+                    "label": "Media Gallery",
+                    "icon": "fas fa-images",
+                    "url": "admin/gallery",
+                    "segment": ["gallery"]
+                }
+            ]
+        },
+        {
+            "header": "Communications",
+            "items": [
+                {
+                    "label": "Contact Messages",
+                    "icon": "fas fa-envelope",
+                    "url": "admin/contacts",
+                    "segment": ["contacts"],
+                    "badge": "unread_contacts"
+                },
+                {
+                    "label": "Newsletter",
+                    "icon": "fas fa-mail-bulk",
+                    "url": "admin/newsletter",
+                    "segment": ["newsletter"]
+                }
+            ]
+        },
+        {
+            "header": "System",
+            "items": [
+                {
+                    "label": "Settings",
+                    "icon": "fas fa-cog",
+                    "url": "admin/settings",
+                    "segment": ["settings"]
+                },
+                {
+                    "label": "User Management",
+                    "icon": "fas fa-users",
+                    "url": "admin/users",
+                    "segment": ["users"]
+                }
+            ]
+        },
+        {
+            "header": "Account",
+            "items": [
+                {
+                    "label": "My Profile",
+                    "icon": "fas fa-user-circle",
+                    "url": "admin/profile",
+                    "segment": ["profile"]
+                },
+                {
+                    "label": "Logout",
+                    "icon": "fas fa-sign-out-alt",
+                    "url": "admin/auth/logout",
+                    "segment": ["logout"]
+                }
+            ]
+        }
+    ]
+}

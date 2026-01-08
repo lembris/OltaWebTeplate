@@ -1,0 +1,22 @@
+{
+    "name": "tourism",
+    "display_name": "Tourism & Safari",
+    "description": "A premium tourism and safari adventure template with elegant design",
+    "version": "1.0.0",
+    "author": "Oltana Softworks",
+    "preview": "preview.png",
+    "type": "tourism",
+    "colors": {
+        "primary": "#C7805C",
+        "secondary": "#90B3A7",
+        "accent": "#D9B39B",
+        "background": "#F5F0E1"
+    },
+    "features": [
+        "Safari packages",
+        "Destinations showcase",
+        "Booking system",
+        "Itinerary display",
+        "Blog section"
+    ]
+}
