@@ -2,14 +2,8 @@
 
 	"use strict";
 
-	$(window).stellar({
-    responsive: true,
-    parallaxBackgrounds: true,
-    parallaxElements: true,
-    horizontalScrolling: false,
-    hideDistantElements: false,
-    scrollProperty: 'scroll'
-  });
+	// Stellar parallax disabled - incompatible with newer jQuery
+	// $(window).stellar({...});
 
 
 	var fullHeight = function() {
@@ -33,7 +27,7 @@
 	loader();
 
 	// Scrollax
-   $.Scrollax();
+  	// $.Scrollax(); // Disabled - causes issues
 
 	var carousel = function() {
 		$('.carousel-testimony').owlCarousel({
