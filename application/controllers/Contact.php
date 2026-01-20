@@ -38,6 +38,9 @@ class Contact extends Frontend_Controller {
             $data['meta_description'] = 'Get in touch with Osiram Safari Adventure for safari bookings and travel inquiries.';
         }
         
+        // Initialize CAPTCHA question for contact form
+        $this->initialize_contact_captcha();
+        
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
@@ -46,6 +49,24 @@ class Contact extends Frontend_Controller {
         $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('contact', $data);
         $this->load->view('templates/' . $template . '/footer', $data);
+    }
+    
+    /**
+     * Initialize CAPTCHA question for contact form
+     */
+    private function initialize_contact_captcha()
+    {
+        $session_key = 'safari_captcha_contact';
+        
+        // Always initialize a fresh question (don't check if already set)
+        $questions = $this->get_captcha_questions();
+        $random_key = array_rand($questions);
+        $captcha = $questions[$random_key];
+        
+        // Store answer in session
+        $this->session->set_userdata($session_key, strtolower($captcha['a']));
+        $this->session->set_userdata($session_key . '_key', $random_key);
+        $this->session->set_userdata('captcha_refresh_count_contact', 0);
     }
 
     /**
@@ -350,21 +371,33 @@ class Contact extends Frontend_Controller {
      */
     public function refresh_captcha()
     {
-        // Check if AJAX request
-        if (!$this->input->is_ajax_request()) {
-            show_404();
+        // Set JSON header
+        header('Content-Type: application/json');
+        
+        // Check if POST request
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
             return;
         }
         
-        $type = $this->input->post('type') ?? 'contact';
+        // No CSRF check needed for AJAX endpoints that only read session data
+        // The session is already protected
+        
+        $type = $this->input->post('type');
+        if (!$type) {
+            $type = 'contact';
+        }
+        
         $refresh_key = 'captcha_refresh_count_' . $type;
         $refresh_count = $this->session->userdata($refresh_key) ?? 0;
         
         // Max 3 refreshes
         if ($refresh_count >= 3) {
+            $error_msg = $this->get_refresh_limit_message();
             echo json_encode([
                 'success' => false,
-                'message' => 'No more refreshes available! Answer this one 🦁',
+                'message' => $error_msg,
                 'remaining' => 0
             ]);
             return;
@@ -389,6 +422,22 @@ class Contact extends Frontend_Controller {
             'hint' => $captcha['hint'],
             'remaining' => 3 - ($refresh_count + 1)
         ]);
+    }
+    
+    /**
+     * Get refresh limit message based on active theme
+     */
+    private function get_refresh_limit_message()
+    {
+        $active_template = get_active_template();
+        
+        if ($active_template === 'college') {
+            return 'No more refreshes available! Answer this one to prove you\'re smart! 🎓';
+        } elseif ($active_template === 'medical') {
+            return 'No more refreshes available! Answer this one! 🏥';
+        } else {
+            return 'No more refreshes available! Answer this one 🦁';
+        }
     }
     
     /**

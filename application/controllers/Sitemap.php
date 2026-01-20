@@ -12,8 +12,25 @@ class Sitemap extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Package_model');
-        $this->load->model('Destination_model');
+        $this->load->helper('template');
+        
+        $active_template = get_active_template();
+        
+        // Load template-specific models
+        if ($active_template === 'medical') {
+            if (file_exists(APPPATH . 'models/Specialty_model.php')) {
+                $this->load->model('Specialty_model');
+            }
+            if (file_exists(APPPATH . 'models/Expertise_model.php')) {
+                $this->load->model('Expertise_model');
+            }
+            if (file_exists(APPPATH . 'models/Partner_model.php')) {
+                $this->load->model('Partner_model');
+            }
+        } else {
+            $this->load->model('Package_model');
+            $this->load->model('Destination_model');
+        }
         
         // Load blog model if exists
         if (file_exists(APPPATH . 'models/Blog_model.php')) {
@@ -27,11 +44,26 @@ class Sitemap extends CI_Controller {
     public function index() {
         header("Content-Type: application/xml; charset=utf-8");
         
+        $active_template = get_active_template();
+        
         $data['pages'] = $this->get_static_pages();
-        $data['packages'] = $this->get_packages();
-        $data['destinations'] = $this->get_destinations();
         $data['blogs'] = $this->get_blogs();
         $data['base_url'] = base_url();
+        
+        // Template-specific content
+        if ($active_template === 'medical') {
+            $data['specialties'] = $this->get_specialties();
+            $data['expertises'] = $this->get_expertises();
+            $data['partners'] = $this->get_partners();
+            $data['packages'] = [];
+            $data['destinations'] = [];
+        } else {
+            $data['packages'] = $this->get_packages();
+            $data['destinations'] = $this->get_destinations();
+            $data['specialties'] = [];
+            $data['expertises'] = [];
+            $data['partners'] = [];
+        }
         
         $this->load->view('sitemap_xml', $data);
     }
@@ -54,7 +86,9 @@ class Sitemap extends CI_Controller {
      * Get static pages
      */
     private function get_static_pages() {
-        return [
+        $active_template = get_active_template();
+        
+        $base_pages = [
             [
                 'loc' => base_url(),
                 'lastmod' => date('Y-m-d'),
@@ -65,18 +99,6 @@ class Sitemap extends CI_Controller {
                 'loc' => base_url('about'),
                 'lastmod' => date('Y-m-d'),
                 'changefreq' => 'monthly',
-                'priority' => '0.8'
-            ],
-            [
-                'loc' => base_url('packages'),
-                'lastmod' => date('Y-m-d'),
-                'changefreq' => 'weekly',
-                'priority' => '0.9'
-            ],
-            [
-                'loc' => base_url('destinations'),
-                'lastmod' => date('Y-m-d'),
-                'changefreq' => 'weekly',
                 'priority' => '0.8'
             ],
             [
@@ -92,24 +114,61 @@ class Sitemap extends CI_Controller {
                 'priority' => '0.6'
             ],
             [
-                'loc' => base_url('booking'),
-                'lastmod' => date('Y-m-d'),
-                'changefreq' => 'monthly',
-                'priority' => '0.8'
-            ],
-            [
-                'loc' => base_url('enquiry'),
-                'lastmod' => date('Y-m-d'),
-                'changefreq' => 'monthly',
-                'priority' => '0.7'
-            ],
-            [
                 'loc' => base_url('blog'),
                 'lastmod' => date('Y-m-d'),
                 'changefreq' => 'weekly',
                 'priority' => '0.7'
             ],
         ];
+        
+        // Template-specific pages
+        if ($active_template === 'medical') {
+            $base_pages[] = [
+                'loc' => base_url('services'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9'
+            ];
+            $base_pages[] = [
+                'loc' => base_url('expertise'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.8'
+            ];
+            $base_pages[] = [
+                'loc' => base_url('consultation'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'monthly',
+                'priority' => '0.7'
+            ];
+        } else {
+            $base_pages[] = [
+                'loc' => base_url('packages'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.9'
+            ];
+            $base_pages[] = [
+                'loc' => base_url('destinations'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'weekly',
+                'priority' => '0.8'
+            ];
+            $base_pages[] = [
+                'loc' => base_url('booking'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'monthly',
+                'priority' => '0.8'
+            ];
+            $base_pages[] = [
+                'loc' => base_url('enquiry'),
+                'lastmod' => date('Y-m-d'),
+                'changefreq' => 'monthly',
+                'priority' => '0.7'
+            ];
+        }
+        
+        return $base_pages;
     }
 
     /**
@@ -193,5 +252,92 @@ class Sitemap extends CI_Controller {
         }
         
         return $blogs;
+    }
+
+    /**
+     * Get all specialties for medical sitemap
+     */
+    private function get_specialties() {
+        $specialties = [];
+        
+        try {
+            if (isset($this->Specialty_model) && method_exists($this->Specialty_model, 'get_all')) {
+                $result = $this->Specialty_model->get_all();
+                
+                if ($result) {
+                    foreach ($result as $specialty) {
+                        $slug = isset($specialty->slug) ? $specialty->slug : url_title($specialty->name, 'dash', TRUE);
+                        $specialties[] = [
+                            'loc' => base_url('services/' . $slug),
+                            'lastmod' => isset($specialty->updated_at) ? date('Y-m-d', strtotime($specialty->updated_at)) : date('Y-m-d'),
+                            'changefreq' => 'monthly',
+                            'priority' => '0.7'
+                        ];
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // Model might not have this method
+        }
+        
+        return $specialties;
+    }
+
+    /**
+     * Get all expertises for medical sitemap
+     */
+    private function get_expertises() {
+        $expertises = [];
+        
+        try {
+            if (isset($this->Expertise_model) && method_exists($this->Expertise_model, 'get_all')) {
+                $result = $this->Expertise_model->get_all();
+                
+                if ($result) {
+                    foreach ($result as $expertise) {
+                        $slug = isset($expertise->slug) ? $expertise->slug : url_title($expertise->name, 'dash', TRUE);
+                        $expertises[] = [
+                            'loc' => base_url('expertise/' . $slug),
+                            'lastmod' => isset($expertise->updated_at) ? date('Y-m-d', strtotime($expertise->updated_at)) : date('Y-m-d'),
+                            'changefreq' => 'monthly',
+                            'priority' => '0.7'
+                        ];
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // Model might not have this method
+        }
+        
+        return $expertises;
+    }
+
+    /**
+     * Get all partners for medical sitemap
+     */
+    private function get_partners() {
+        $partners = [];
+        
+        try {
+            if (isset($this->Partner_model) && method_exists($this->Partner_model, 'get_all')) {
+                $result = $this->Partner_model->get_all();
+                
+                if ($result) {
+                    foreach ($result as $partner) {
+                        $slug = isset($partner->slug) ? $partner->slug : url_title($partner->name, 'dash', TRUE);
+                        $partners[] = [
+                            'loc' => base_url('partners/' . $slug),
+                            'lastmod' => isset($partner->updated_at) ? date('Y-m-d', strtotime($partner->updated_at)) : date('Y-m-d'),
+                            'changefreq' => 'monthly',
+                            'priority' => '0.6'
+                        ];
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            // Model might not have this method
+        }
+        
+        return $partners;
     }
 }

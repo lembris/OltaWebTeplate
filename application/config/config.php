@@ -485,7 +485,9 @@ $config['csrf_exclude_uris'] = array(
     'admin/seo/ai-status',
     'admin/settings/save_template',
     'admin/settings/delete_template',
-    'admin/settings/activate_template'
+    'admin/settings/activate_template',
+    'contact/refresh_captcha',
+    'enquiry/refresh_captcha'
 );
 
 /*

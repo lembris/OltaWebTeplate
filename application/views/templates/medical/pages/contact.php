@@ -534,8 +534,13 @@ function toggleFaq(element) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Load initial CAPTCHA question
-    loadCaptchaQuestion('contact');
+    // Check if we already have a question displayed
+    var questionText = document.getElementById('captchaQuestion').textContent.trim();
+    
+    // Only load a new question if the current one is an error message or empty
+    if (!questionText || questionText.includes('No more refreshes') || questionText.includes('Loading')) {
+        loadCaptchaQuestion('contact');
+    }
     
     // Handle CAPTCHA refresh
     document.querySelectorAll('.refresh-captcha').forEach(btn => {
@@ -547,12 +552,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     function loadCaptchaQuestion(type) {
+        // Get CSRF token from meta tag or cookie
+        var csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || getCookie('csrf_token_name');
+        var csrfTokenName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+        
+        var formData = new FormData();
+        formData.append('type', type);
+        if (csrfToken && csrfTokenName) {
+            formData.append(csrfTokenName, csrfToken);
+        }
+        
         fetch(base_url + 'contact/refresh_captcha', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'X-Requested-With': 'XMLHttpRequest'
             },
-            body: 'type=' + type
+            body: formData
         })
         .then(response => response.json())
         .then(data => {
@@ -568,6 +583,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error loading CAPTCHA:', error);
         });
+    }
+    
+    function getCookie(name) {
+        var value = '; ' + document.cookie;
+        var parts = value.split('; ' + name + '=');
+        if (parts.length == 2) return parts.pop().split(';').shift();
+        return '';
     }
 });
 </script>

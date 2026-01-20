@@ -33,6 +33,11 @@
 
   <!-- Dynamic Theme CSS (must be loaded after main CSS to override) -->
   <?php echo get_theme_css(); ?>
-</head>
+  
+  <!-- JavaScript: Define base_url for frontend scripts -->
+  <script>
+    var base_url = "<?php echo base_url(); ?>";
+  </script>
+  </head>
 
-<body class="<?php echo isset($body_class) ? $body_class : 'index-page'; ?>">
+  <body class="<?php echo isset($body_class) ? $body_class : 'index-page'; ?>">

@@ -14,7 +14,7 @@
     </url>
     <?php endforeach; ?>
     
-    <!-- Safari Packages -->
+    <!-- Safari Packages / Tourism -->
     <?php if(!empty($packages)): ?>
     <?php foreach($packages as $package): ?>
     <url>
@@ -26,7 +26,7 @@
     <?php endforeach; ?>
     <?php endif; ?>
     
-    <!-- Destinations -->
+    <!-- Destinations / Tourism -->
     <?php if(!empty($destinations)): ?>
     <?php foreach($destinations as $destination): ?>
     <url>
@@ -34,6 +34,42 @@
         <lastmod><?php echo $destination['lastmod']; ?></lastmod>
         <changefreq><?php echo $destination['changefreq']; ?></changefreq>
         <priority><?php echo $destination['priority']; ?></priority>
+    </url>
+    <?php endforeach; ?>
+    <?php endif; ?>
+    
+    <!-- Medical Services / Specialties -->
+    <?php if(!empty($specialties)): ?>
+    <?php foreach($specialties as $specialty): ?>
+    <url>
+        <loc><?php echo htmlspecialchars($specialty['loc']); ?></loc>
+        <lastmod><?php echo $specialty['lastmod']; ?></lastmod>
+        <changefreq><?php echo $specialty['changefreq']; ?></changefreq>
+        <priority><?php echo $specialty['priority']; ?></priority>
+    </url>
+    <?php endforeach; ?>
+    <?php endif; ?>
+    
+    <!-- Medical Expertise -->
+    <?php if(!empty($expertises)): ?>
+    <?php foreach($expertises as $expertise): ?>
+    <url>
+        <loc><?php echo htmlspecialchars($expertise['loc']); ?></loc>
+        <lastmod><?php echo $expertise['lastmod']; ?></lastmod>
+        <changefreq><?php echo $expertise['changefreq']; ?></changefreq>
+        <priority><?php echo $expertise['priority']; ?></priority>
+    </url>
+    <?php endforeach; ?>
+    <?php endif; ?>
+    
+    <!-- Partner Hospitals -->
+    <?php if(!empty($partners)): ?>
+    <?php foreach($partners as $partner): ?>
+    <url>
+        <loc><?php echo htmlspecialchars($partner['loc']); ?></loc>
+        <lastmod><?php echo $partner['lastmod']; ?></lastmod>
+        <changefreq><?php echo $partner['changefreq']; ?></changefreq>
+        <priority><?php echo $partner['priority']; ?></priority>
     </url>
     <?php endforeach; ?>
     <?php endif; ?>
