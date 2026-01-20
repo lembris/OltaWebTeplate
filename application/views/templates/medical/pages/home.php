@@ -191,11 +191,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <div class="badge-item">
                   <i class="bi bi-people"></i>
-                  <span>Community Focused</span>
-                </div>
-                <div class="badge-item">
-                  <i class="bi bi-star-fill"></i>
-                  <span>19.7K+ Subscribers</span>
+                  <span>Community Centered</span>
                 </div>
               </div>
 
@@ -210,11 +206,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <div class="hero-stats mb-4" data-aos="fade-right" data-aos-delay="500">
                 <div class="stat-item">
                   <h3><span data-purecounter-start="0" data-purecounter-end="1" data-purecounter-duration="2" class="purecounter"></span>M</h3>
-                  <p>People Reached</p>
+                  <p>People Impacted</p>
                 </div>
                 <div class="stat-item">
-                  <h3><span data-purecounter-start="0" data-purecounter-end="19" data-purecounter-duration="2" class="purecounter"></span>.7K+</h3>
-                  <p>YouTube Subscribers</p>
+                  <h3><span data-purecounter-start="0" data-purecounter-end="28000" data-purecounter-duration="2" class="purecounter"></span>+</h3>
+                  <p>Subscribers</p>
                 </div>
                 <div class="stat-item">
                   <h3><span data-purecounter-start="0" data-purecounter-end="50" data-purecounter-duration="2" class="purecounter"></span>+</h3>
@@ -224,20 +220,24 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
               <div class="hero-actions" data-aos="fade-right" data-aos-delay="600">
                 <a href="<?php echo base_url('partners'); ?>" class="btn btn-primary">Partner With Us</a>
-                <a href="https://www.youtube.com/@TNAAFYA" class="btn btn-outline glightbox">
+                <?php if (!empty($youtube)): ?> 
+                <a href="<?php echo $youtube; ?>" class="btn btn-outline glightbox">
                   <i class="bi bi-youtube me-2"></i>
                   Visit Our Channel
                 </a>
+                <?php endif; ?>
               </div>
 
               <div class="emergency-contact" data-aos="fade-right" data-aos-delay="700">
                 <div class="emergency-icon">
                   <i class="bi bi-telephone-fill"></i>
                 </div>
-                <div class="emergency-info">
-                  <small>Need Health Assistance?</small>
-                  <strong>+255 759 399 919</strong>
-                </div>
+                 <?php if (!empty($phone_number)): ?>    
+                  <div class="emergency-info">
+                    <small>Need Health Assistance?</small>
+                    <strong><a href="tel:<?php echo $phone_number; ?>"><?php echo $phone_number; ?></a></strong>
+                  </div>
+                <?php endif; ?>
               </div>
             </div>
           </div>
@@ -252,8 +252,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   </div>
                   <div class="card-content">
                     <h6>Health & Medical</h6>
-                    <p>Care Solutions</p>
-                    <small>Reaching All Communities</small>
+                    <p>Solutions</p>
+                    <small>Access trusted health education, outreach, </br>and care support across Tanzania</small>
                   </div>
                 </div>
                 <div class="floating-card rating-card">
@@ -370,7 +370,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
           <div class="col-lg-4" data-aos="fade-left" data-aos-delay="300">
             <div class="services-sidebar">
-
+              <?php if (!empty($medical_specialties)): ?>
+                <?php foreach (array_slice($medical_specialties, 0, 3) as $specialty): ?>
+                  <div class="service-item" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-icon-wrapper">
+                      <i class="bi bi-capsule"></i>
+                    </div>
+                    <div class="service-info">
+                      <h4><?php echo htmlspecialchars($specialty->name); ?></h4>
+                      <p><?php echo htmlspecialchars($specialty->short_description ?? 'TNA CARE service'); ?></p>
+                      <a href="<?php echo base_url('services#' . $specialty->slug); ?>" class="service-link">Learn More</a>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
+              <?php else: ?>
               <div class="service-item" data-aos="fade-up" data-aos-delay="400">
                 <div class="service-icon-wrapper">
                   <i class="bi bi-capsule"></i>
@@ -403,89 +416,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   <a href="<?php echo base_url('services#corporate'); ?>" class="service-link">Learn More</a>
                 </div>
               </div>
+              <?php endif; ?>
 
             </div>
           </div>
 
         </div>
-
-        <?php if (!empty($medical_specialties)): ?>
-        <div class="services-grid" data-aos="fade-up" data-aos-delay="300">
-          <div class="row align-items-center">
-            <?php foreach ($medical_specialties as $specialty): ?>
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card-simple">
-                <div class="service-icon">
-                  <?php if (!empty($specialty->icon)): ?>
-                  <i class="bi <?php echo htmlspecialchars($specialty->icon); ?>"></i>
-                  <?php else: ?>
-                  <i class="bi bi-gear"></i>
-                  <?php endif; ?>
-                </div>
-                <div class="service-info">
-                  <h5><?php echo htmlspecialchars($specialty->name); ?></h5>
-                  <span><?php echo htmlspecialchars($specialty->short_description ?? 'TNA CARE service'); ?></span>
-                </div>
-              </div>
-            </div>
-            <?php endforeach; ?>
-          </div>
-        </div>
-        <?php else: ?>
-        <div class="services-grid" data-aos="fade-up" data-aos-delay="300">
-          <div class="row align-items-center">
-
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card-simple">
-                <div class="service-icon">
-                  <i class="bi bi-laptop"></i>
-                </div>
-                <div class="service-info">
-                  <h5>Digital Education</h5>
-                  <span>Online health programs</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card-simple">
-                <div class="service-icon">
-                  <i class="bi bi-people"></i>
-                </div>
-                <div class="service-info">
-                  <h5>Medical Outreach</h5>
-                  <span>Community health camps</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card-simple">
-                <div class="service-icon">
-                  <i class="bi bi-briefcase"></i>
-                </div>
-                <div class="service-info">
-                  <h5>Corporate Wellness</h5>
-                  <span>Employee health programs</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-lg-3 col-md-6">
-              <div class="service-card-simple">
-                <div class="service-icon">
-                  <i class="bi bi-camera-video"></i>
-                </div>
-                <div class="service-info">
-                  <h5>Health Media</h5>
-                  <span>Health communication</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <?php endif; ?>
 
       </div>
 
@@ -1332,7 +1268,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <div class="feature-block" data-aos="fade-up" data-aos-delay="200">
                 <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
                 <h3>Registered & Licensed</h3>
-                <p>Fully compliant with BRELA and Tanzanian Ministry of Health regulations.</p>
+                <p>Tanzanian Registered Health Service organization.</p>
               </div>
             </div>
 

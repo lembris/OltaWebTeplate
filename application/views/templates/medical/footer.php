@@ -14,21 +14,27 @@
                 <span class="sitename"><?php echo $site_name; ?></span>
                 <?php endif; ?>
               </a>
-              <p class="brand-description">Connecting Communities to Better Health through innovative health education, outreach programs, and digital solutions across Tanzania and beyond.</p>
+              <p class="brand-description">Connecting Communities to Better Health through innovative health education, outreach programs, and digital solutions across Tanzania, east and central Africa.</p>
 
               <div class="contact-info mt-5">
+                <?php if($physical_address): ?>
                 <div class="contact-item">
                   <i class="bi bi-geo-alt"></i>
                   <span><?php echo $physical_address; ?></span>
                 </div>
+                <?php endif; ?>
+                <?php if($phone_number): ?>
                 <div class="contact-item">
                   <i class="bi bi-telephone"></i>
-                  <span><?php echo $phone_number; ?></span>
+                  <span><a href="tel:<?php echo $phone_number; ?>"><?php echo $phone_number; ?></a> </span>
                 </div>
+                  <?php endif; ?>
+                <?php if($site_email): ?>
                 <div class="contact-item">
                   <i class="bi bi-envelope"></i>
-                  <span><?php echo $site_email; ?></span>
+                  <span><a href="mailto:<?php echo $site_email; ?>"><?php echo $site_email; ?></a></span>
                 </div>
+                <?php endif; ?>
               </div>
             </div>
           </div>
@@ -76,7 +82,6 @@
                       <?php if (!empty($instagram)): ?>
                       <a href="<?php echo $instagram; ?>" target="_blank">Instagram</a>
                       <?php endif; ?>
-                      <a href="<?php echo base_url('newsletter'); ?>">Newsletter</a>
                     </nav>
                   </div>
                 </div>

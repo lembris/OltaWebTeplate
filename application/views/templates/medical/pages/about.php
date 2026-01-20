@@ -441,7 +441,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <div class="col-lg-10 text-center">
         <div class="page-header" data-aos="fade-up">
           <h1>About TNA CARE</h1>
-          <p>Bridging the gap between communities and quality healthcare through education, consultation, and strategic partnerships across Tanzania and East Africa.</p>
+          <p>Bridging the gap between communities and quality healthcare through education, consultation, and strategic partnerships across Tanzania, East and Central Africa.</p>
         </div>
       </div>
     </div>
@@ -462,6 +462,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <h2>Our Story</h2>
           <p class="lead-text">TNA CARE began as a health media initiative to close the gap between reliable health information and underserved communities.</p>
           <p>Founded with a vision to improve healthcare access in Tanzania and East Africa, we've evolved into a multi-service healthcare facilitation company trusted by individuals, corporates, NGOs, and government agencies.</p>
+          <p>Registered with BRELA and operating in accordance with the laws and regulatory guidelines of Tanzania’s Ministry of Health, we have evolved from digital content creators into trusted healthcare partners for individuals, corporations, NGOs, and government agencies.</p>
           <p>Our integrated model combines digital media, direct patient outreach, corporate wellness programs, and innovative digital health solutions to address public health challenges across the region.</p>
           <p>We believe that everyone deserves access to quality healthcare information and services, regardless of their location or economic status.</p>
         </div>
@@ -485,12 +486,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           
           <div class="mission-vision-item mb-4">
             <h4 style="color: var(--theme-primary); font-weight: 700;"><i class="bi bi-eye-fill me-2"></i>Our Vision</h4>
-            <p>To be the leading healthcare facilitation company in East and Central Africa, empowering communities with accessible health education and connecting them to world-class medical services.</p>
+            <p>To transform healthcare across Africa by delivering innovative, inclusive, and impactful solutions that empower communities and strengthen health systems.</p>
           </div>
           
           <div class="mission-vision-item">
             <h4 style="color: var(--theme-primary); font-weight: 700;"><i class="bi bi-bullseye me-2"></i>Our Mission</h4>
-            <p>To bridge the gap between individuals and quality healthcare through innovative digital platforms, strategic hospital partnerships, and community-focused health programs that deliver measurable impact.</p>
+            <p>To bridge healthcare gaps across Africa by connecting communities and strategic partners to quality care through innovation, collaboration, and sustainable solutions, with initial implementation focused in Tanzania, East and Central Africa.</p>
           </div>
         </div>
       </div>

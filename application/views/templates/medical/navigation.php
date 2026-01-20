@@ -3,12 +3,16 @@
     <div class="topbar d-flex align-items-center dark-background">
       <div class="container d-flex justify-content-center justify-content-md-between">
         <div class="contact-info d-flex align-items-center">
-          <i class="bi bi-envelope d-flex align-items-center">
-            <a href="mailto:<?php echo $site_email; ?>"><?php echo $site_email; ?></a>
-          </i>
-          <i class="bi bi-phone d-flex align-items-center ms-4">
-            <span><?php echo $phone_number; ?></span>
-          </i>
+          <?php if (!empty($site_email)): ?>
+            <i class="bi bi-envelope d-flex align-items-center p-2">
+              <a href="mailto:<?php echo $site_email; ?>"><?php echo $site_email; ?></a>
+            </i>
+          <?php endif; ?>
+          <?php if (!empty($phone_number)): ?>
+            <i class="bi bi-phone d-flex align-items-center p-2">
+              <a href="tel:<?php echo $phone_number; ?>"><?php echo $phone_number; ?></a>
+            </i>
+          <?php endif; ?>
         </div>
         <div class="social-links d-none d-md-flex align-items-center">
           <?php if (!empty($facebook)): ?>
@@ -17,7 +21,7 @@
           <?php if (!empty($instagram)): ?>
           <a href="<?php echo $instagram; ?>" target="_blank" class="instagram"><i class="bi bi-instagram"></i></a>
           <?php endif; ?>
-          <?php if (!empty($youtube)): ?>
+          <?php if (!empty($youtube)): ?> 
           <a href="<?php echo $youtube; ?>" target="_blank" class="youtube"><i class="bi bi-youtube"></i></a>
           <?php endif; ?>
           <?php if (!empty($linkedin)): ?>
@@ -47,7 +51,7 @@
              <li><a href="<?php echo base_url('contact'); ?>" class="<?php echo strpos(uri_string(), 'contact') === 0 ? 'active' : ''; ?>">Contact</a></li>
              <li class="ms-lg-3">
                <a href="<?php echo base_url('#consultation'); ?>" class="nav-cta-btn">
-                 <i class="bi bi-calendar-check me-2"></i><span>Book Consultation</span>
+                 <i class="bi bi-calendar-check me-2"></i><span>Get Health Support</span>
                </a>
              </li>
            </ul>

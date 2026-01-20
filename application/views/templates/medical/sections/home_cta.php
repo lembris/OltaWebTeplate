@@ -37,16 +37,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         <div class="col-lg-5">
           <div class="cta-actions" data-aos="fade-up" data-aos-delay="300">
-            <a href="tel:+255759399919" class="cta-phone">
+            <?php if (!empty($phone_number)): ?>                 
+            <a href="tel:<?php echo $phone_number; ?>" class="cta-phone">
               <div class="cta-phone-icon">
                 <i class="bi bi-telephone-fill"></i>
               </div>
               <div class="cta-phone-info">
                 <span class="cta-phone-label">Emergency Line</span>
-                <span class="cta-phone-number">+255 759 399 919</span>
+                <span class="cta-phone-number"><?php echo $phone_number; ?></span>
               </div>
             </a>
-            <a href="<?php echo base_url('contact'); ?>" class="cta-button">
+            <?php endif; ?>
+            <a href="<?php echo base_url('contact'); ?>" class="cta-button"> 
               <span>Send Message</span>
               <i class="bi bi-arrow-right"></i>
             </a>
