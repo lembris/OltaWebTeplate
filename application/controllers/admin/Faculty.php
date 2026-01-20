@@ -65,14 +65,29 @@ class Faculty extends Admin_Controller
 
             if ($this->form_validation->run() === TRUE) {
                 $email = $this->input->post('email', TRUE);
+                $first_name = $this->input->post('first_name', TRUE);
+                $last_name = $this->input->post('last_name', TRUE);
+                
+                // Generate slug from first and last name
+                $slug = strtolower(trim($first_name . ' ' . $last_name));
+                $slug = preg_replace('/[^a-zA-Z0-9]+/', '-', $slug);
+                $slug = preg_replace('/^-|-$/', '', $slug);
+                
+                // Check if slug exists and make unique if needed
+                $original_slug = $slug;
+                $counter = 1;
+                while ($this->Faculty_staff_model->get_by_slug($slug)) {
+                    $slug = $original_slug . '-' . $counter++;
+                }
                 
                 // Check if email already exists
                 if ($this->Faculty_staff_model->email_exists($email)) {
                     $this->session->set_flashdata('error', 'This email address is already registered.');
                 } else {
                     $faculty_data = [
-                        'first_name' => $this->input->post('first_name', TRUE),
-                        'last_name' => $this->input->post('last_name', TRUE),
+                        'first_name' => $first_name,
+                        'last_name' => $last_name,
+                        'slug' => $slug,
                         'title' => $this->input->post('title', TRUE),
                         'email' => $email,
                         'department_id' => $this->input->post('department_id', TRUE),
@@ -82,7 +97,8 @@ class Faculty extends Admin_Controller
                         'bio' => $this->input->post('bio', TRUE),
                         'specialization' => $this->input->post('specialization', TRUE),
                         'qualifications' => $this->input->post('qualifications', TRUE),
-                        'status' => $this->input->post('status', TRUE) ?: 'active'
+                        'status' => $this->input->post('status', TRUE) ?: 'active',
+                        'is_featured' => $this->input->post('is_featured') ? 1 : 0
                     ];
 
                     // Handle photo upload
@@ -140,14 +156,31 @@ class Faculty extends Admin_Controller
 
             if ($this->form_validation->run() === TRUE) {
                 $email = $this->input->post('email', TRUE);
+                $first_name = $this->input->post('first_name', TRUE);
+                $last_name = $this->input->post('last_name', TRUE);
+                
+                // Generate slug from first and last name
+                $slug = strtolower(trim($first_name . ' ' . $last_name));
+                $slug = preg_replace('/[^a-zA-Z0-9]+/', '-', $slug);
+                $slug = preg_replace('/^-|-$/', '', $slug);
+                
+                // Check if slug exists and make unique if needed (excluding current)
+                $original_slug = $slug;
+                $counter = 1;
+                $existing = $this->Faculty_staff_model->get_by_slug($slug);
+                while ($existing && $existing->id != $faculty->id) {
+                    $slug = $original_slug . '-' . $counter++;
+                    $existing = $this->Faculty_staff_model->get_by_slug($slug);
+                }
                 
                 // Check if email already exists (excluding current)
                 if ($this->Faculty_staff_model->email_exists($email, $faculty->id)) {
                     $this->session->set_flashdata('error', 'This email address is already registered.');
                 } else {
                     $faculty_data = [
-                        'first_name' => $this->input->post('first_name', TRUE),
-                        'last_name' => $this->input->post('last_name', TRUE),
+                        'first_name' => $first_name,
+                        'last_name' => $last_name,
+                        'slug' => $slug,
                         'title' => $this->input->post('title', TRUE),
                         'email' => $email,
                         'department_id' => $this->input->post('department_id', TRUE),
@@ -157,7 +190,8 @@ class Faculty extends Admin_Controller
                         'bio' => $this->input->post('bio', TRUE),
                         'specialization' => $this->input->post('specialization', TRUE),
                         'qualifications' => $this->input->post('qualifications', TRUE),
-                        'status' => $this->input->post('status', TRUE) ?: 'active'
+                        'status' => $this->input->post('status', TRUE) ?: 'active',
+                        'is_featured' => $this->input->post('is_featured') ? 1 : 0
                     ];
 
                     // Handle photo upload

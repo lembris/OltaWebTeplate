@@ -148,6 +148,21 @@ function get_contrast_text_color($hex)
 }
 
 /**
+ * Convert hex to RGB
+ * 
+ * @param string $hex Hex color code
+ * @return string RGB values (e.g., "23, 92, 221")
+ */
+function hex_to_rgb($hex)
+{
+    $hex = str_replace('#', '', $hex);
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+    return "{$r}, {$g}, {$b}";
+}
+
+/**
  * Generate CSS for theme colors
  * 
  * @return string CSS rules
@@ -157,20 +172,32 @@ function generate_theme_css()
     $colors = get_theme_colors();
     $primary_dark = darken_color($colors['primary'], 15);
     $secondary_dark = darken_color($colors['secondary'], 15);
+    $primary_rgb = hex_to_rgb($colors['primary']);
+    $secondary_rgb = hex_to_rgb($colors['secondary']);
+    $accent_rgb = hex_to_rgb($colors['accent']);
     
     $css = ":root {
         --primary-color: {$colors['primary']};
         --theme-primary: {$colors['primary']};
+        --theme-primary-rgb: {$primary_rgb};
         --primary-dark: {$primary_dark};
+        --primary: {$colors['primary']};
+        --primary-light: {$colors['accent']};
         --secondary-color: {$colors['secondary']};
         --theme-secondary: {$colors['secondary']};
+        --theme-secondary-rgb: {$secondary_rgb};
         --secondary-dark: {$secondary_dark};
+        --secondary: {$colors['secondary']};
         --accent-color: {$colors['accent']};
         --theme-accent: {$colors['accent']};
+        --theme-accent-rgb: {$accent_rgb};
+        --accent: {$colors['accent']};
         --background-color: {$colors['background']};
         --theme-background: {$colors['background']};
         --text-color: {$colors['text']};
         --theme-text: {$colors['text']};
+        --contrast-color: #ffffff;
+        --surface-color: #ffffff;
     }
     
     /* Button styling - overrides Bootstrap defaults with high specificity */

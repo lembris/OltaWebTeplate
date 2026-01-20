@@ -128,8 +128,10 @@ class Events extends Admin_Controller
                     goto show_form;
                 }
 
+                // Auto-set template based on active theme (NULL means all templates)
                 $event_data = [
                     'title' => $this->input->post('title', TRUE),
+                    'slug' => $slug,
                     'start_date' => $this->input->post('start_date', TRUE),
                     'start_time' => $this->input->post('start_time', TRUE) ?: NULL,
                     'end_date' => $this->input->post('end_date', TRUE),
@@ -141,7 +143,8 @@ class Events extends Admin_Controller
                     'is_featured' => $this->input->post('is_featured') ? 1 : 0,
                     'registration_required' => $this->input->post('registration_required') ? 1 : 0,
                     'visibility' => $this->input->post('visibility', TRUE) ?: 'public',
-                    'status' => $this->input->post('status', TRUE) ?: 'upcoming'
+                    'status' => $this->input->post('status', TRUE) ?: 'upcoming',
+                    'template' => NULL
                 ];
 
                 if ($banner) {
@@ -166,6 +169,28 @@ class Events extends Admin_Controller
         $this->load->view('admin/layout/sidebar', $data);
         $this->load->view('admin/events/form', $data);
         $this->load->view('admin/layout/footer', $data);
+    }
+
+    /**
+     * Generate unique slug from title
+     */
+    private function generate_slug($title)
+    {
+        if (empty($title)) {
+            return '';
+        }
+        
+        $slug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $title)));
+        $slug = preg_replace('/^-|-$/', '', $slug);
+        
+        // Check if slug exists and make unique if needed
+        $original_slug = $slug;
+        $counter = 1;
+        while ($this->Event_calendar_model->get_by_slug($slug)) {
+            $slug = $original_slug . '-' . $counter++;
+        }
+        
+        return $slug;
     }
 
     /**
@@ -206,8 +231,13 @@ class Events extends Admin_Controller
                     goto show_edit_form;
                 }
 
+                // Generate slug from title
+                $slug = $this->generate_slug($this->input->post('title', TRUE));
+
+                // Auto-set template based on active theme (NULL means all templates)
                 $event_data = [
                     'title' => $this->input->post('title', TRUE),
+                    'slug' => $slug,
                     'start_date' => $this->input->post('start_date', TRUE),
                     'start_time' => $this->input->post('start_time', TRUE) ?: NULL,
                     'end_date' => $this->input->post('end_date', TRUE),
@@ -219,7 +249,8 @@ class Events extends Admin_Controller
                     'is_featured' => $this->input->post('is_featured') ? 1 : 0,
                     'registration_required' => $this->input->post('registration_required') ? 1 : 0,
                     'visibility' => $this->input->post('visibility', TRUE) ?: 'public',
-                    'status' => $this->input->post('status', TRUE) ?: 'upcoming'
+                    'status' => $this->input->post('status', TRUE) ?: 'upcoming',
+                    'template' => NULL
                 ];
 
                 if ($banner) {

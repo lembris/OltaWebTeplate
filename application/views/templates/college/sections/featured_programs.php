@@ -47,13 +47,13 @@
                                 <?php foreach($certificate_programs as $program): 
                                     $program_name = is_object($program) ? $program->name : ($program['name'] ?? '');
                                     $program_code = is_object($program) ? $program->code : ($program['code'] ?? '');
-                                    $program_id = is_object($program) ? $program->id : ($program['id'] ?? '');
+                                    $program_slug = is_object($program) ? ($program->slug ?? $program_code) : ($program['slug'] ?? $program['code'] ?? '');
                                     $duration = is_object($program) ? ($program->duration_months ?? '') : ($program['duration_months'] ?? '');
                                 ?>
                                 <li class="mb-2">
                                     <span class="text-success">✓</span>
-                                    <?php if(!empty($program_id)): ?>
-                                        <a href="<?php echo base_url('programs/' . $program_id); ?>" class="text-dark">
+                                    <?php if(!empty($program_slug)): ?>
+                                        <a href="<?php echo base_url('programs/' . $program_slug); ?>" class="text-dark">
                                             <?php echo $program_name; ?>
                                         </a>
                                     <?php else: ?>
@@ -93,13 +93,13 @@
                                 <?php foreach($diploma_programs as $program): 
                                     $program_name = is_object($program) ? $program->name : ($program['name'] ?? '');
                                     $program_code = is_object($program) ? $program->code : ($program['code'] ?? '');
-                                    $program_id = is_object($program) ? $program->id : ($program['id'] ?? '');
+                                    $program_slug = is_object($program) ? ($program->slug ?? $program_code) : ($program['slug'] ?? $program['code'] ?? '');
                                     $duration = is_object($program) ? ($program->duration_months ?? '') : ($program['duration_months'] ?? '');
                                 ?>
                                 <li class="mb-2">
                                     <span class="text-success">✓</span>
-                                    <?php if(!empty($program_id)): ?>
-                                        <a href="<?php echo base_url('programs/' . $program_id); ?>" class="text-dark">
+                                    <?php if(!empty($program_slug)): ?>
+                                        <a href="<?php echo base_url('programs/' . $program_slug); ?>" class="text-dark">
                                             <?php echo $program_name; ?>
                                         </a>
                                     <?php else: ?>

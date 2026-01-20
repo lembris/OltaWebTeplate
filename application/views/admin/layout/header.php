@@ -211,6 +211,33 @@
             font-weight: 600;
         }
         
+        /* Sidebar Section Headers (from admin_menu.json) */
+        .sidebar-section-header {
+            padding: 15px 20px 8px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            margin-top: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        
+        .sidebar-section-header::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            bottom: -1px;
+            width: 30px;
+            height: 2px;
+            background: var(--accent-color);
+        }
+        
+        .sidebar-section-header:first-of-type {
+            margin-top: 0;
+        }
+        
         /* Main Content Area */
         .admin-main {
             margin-left: var(--sidebar-width);

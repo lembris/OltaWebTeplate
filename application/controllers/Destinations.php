@@ -8,6 +8,7 @@ class Destinations extends Frontend_Controller {
 		parent::__construct();
 		$this->load->model('Destination_model');
 		$this->load->helper('text');
+		$this->load->helper('template');
 	}
 
 	public function index()
@@ -19,10 +20,14 @@ class Destinations extends Frontend_Controller {
 		// Load destinations from database
 		$data['destinations'] = $this->Destination_model->get_all_destinations();
 
-		$this->load->view('includes/header', $data);
-		$this->load->view('includes/navigation', $data);
-		$this->load->view('pages/destinations', $data);
-		$this->load->view('includes/footer', $data);
+		// Load footer programs for college template
+		$data['footer_programs'] = $this->get_footer_programs();
+
+		$template = get_active_template();
+		$this->load->view('templates/' . $template . '/header', $data);
+		$this->load->view('templates/' . $template . '/navigation', $data);
+		load_template_page('destinations', $data);
+		$this->load->view('templates/' . $template . '/footer', $data);
 	}
 
 	public function destination($slug)
@@ -45,24 +50,32 @@ class Destinations extends Frontend_Controller {
 			// Get related destinations
 			$data['related_destinations'] = $this->Destination_model->get_related($destination->id, 3);
 
-			$this->load->view('includes/header', $data);
-			$this->load->view('includes/navigation', $data);
-			$this->load->view('pages/destination-detail', $data);
-			$this->load->view('pages/sections/quick-booking');
-			$this->load->view('includes/footer', $data);
+			// Load footer programs for college template
+			$data['footer_programs'] = $this->get_footer_programs();
+
+			$template = get_active_template();
+			$this->load->view('templates/' . $template . '/header', $data);
+			$this->load->view('templates/' . $template . '/navigation', $data);
+			load_template_page('destination-detail', $data);
+			$this->load->view('templates/' . $template . '/pages/sections/quick-booking', $data);
+			$this->load->view('templates/' . $template . '/footer', $data);
 		} else {
-			// Fallback: Try static file if exists
-			$view_path = APPPATH . 'views/pages/destinations/' . $slug . '.php';
+			// Fallback: Try static file if exists in template
+			$template = get_active_template();
+			$view_path = APPPATH . 'views/templates/' . $template . '/pages/destinations/' . $slug . '.php';
 			
 			if (file_exists($view_path)) {
 				$data['main_page'] = 'Destinations';
 				$data['current_page_name'] = ucwords(str_replace('-', ' ', $slug));
 
-				$this->load->view('includes/header', $data);
-				$this->load->view('includes/navigation', $data);
-				$this->load->view("pages/destinations/$slug", $data);
-				$this->load->view('pages/sections/quick-booking');
-				$this->load->view('includes/footer', $data);
+				// Load footer programs for college template
+				$data['footer_programs'] = $this->get_footer_programs();
+
+				$this->load->view('templates/' . $template . '/header', $data);
+				$this->load->view('templates/' . $template . '/navigation', $data);
+				$this->load->view("templates/{$template}/pages/destinations/{$slug}", $data);
+				$this->load->view('templates/' . $template . '/pages/sections/quick-booking', $data);
+				$this->load->view('templates/' . $template . '/footer', $data);
 			} else {
 				// 404 - Destination not found
 				show_404();

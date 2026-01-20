@@ -33,10 +33,11 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])) {
     $protocol = 'https';
 } elseif (isset($_SERVER['REQUEST_SCHEME'])) {
     $protocol = $_SERVER['REQUEST_SCHEME'];
+} elseif (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443') {
+    $protocol = 'https';
+} else {
+    $protocol = 'http';
 }
-
-// Force HTTPS in production
-$protocol = 'https';  // Always use HTTPS
 
 $base_url = $protocol . "://" . $_SERVER['HTTP_HOST'];
 $base_url .= str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']);
@@ -481,7 +482,10 @@ $config['csrf_regenerate'] = FALSE; // Set to FALSE to prevent token mismatch on
 $config['csrf_exclude_uris'] = array(
     'admin/seo/generate-quick',
     'admin/seo/generate-ai',
-    'admin/seo/ai-status'
+    'admin/seo/ai-status',
+    'admin/settings/save_template',
+    'admin/settings/delete_template',
+    'admin/settings/activate_template'
 );
 
 /*

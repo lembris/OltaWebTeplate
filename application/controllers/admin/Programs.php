@@ -87,7 +87,7 @@ class Programs extends Admin_Controller
         $data['page_title'] = 'Add Academic Program';
         $data['program'] = null;
         $data['departments'] = $this->Department_model->get_all();
-        $data['levels'] = ['Certificate', 'Diploma', 'Degree', 'Masters', 'PhD'];
+        $data['levels'] = ['certificate', 'diploma', 'bachelors', 'masters', 'phd', 'postdoctoral'];
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('name', 'Program Name', 'required|trim|min_length[3]');
@@ -97,107 +97,109 @@ class Programs extends Admin_Controller
             $this->form_validation->set_rules('duration_months', 'Duration (Months)', 'required|numeric');
             $this->form_validation->set_rules('description', 'Description', 'trim');
 
-            if ($this->form_validation->run() === TRUE) {
-                $code = $this->input->post('code', TRUE);
-                
-                // Check if code already exists
-                if ($this->Academic_program_model->code_exists($code)) {
-                    $this->session->set_flashdata('error', 'Program code already exists.');
-                } else {
-                    $program_data = [
-                        'name' => $this->input->post('name', TRUE),
-                        'code' => $code,
-                        'department_id' => $this->input->post('department_id', TRUE),
-                        'level' => $this->input->post('level', TRUE),
-                        'duration_months' => $this->input->post('duration_months', TRUE),
-                        'description' => $this->input->post('description', TRUE),
-                        'status' => $this->input->post('status', TRUE) ?: 'active'
-                    ];
+                    if ($this->form_validation->run() === TRUE) {
+                        $code = $this->input->post('code', TRUE);
+                        
+                        // Check if code already exists
+                        if ($this->Academic_program_model->code_exists($code)) {
+                            $this->session->set_flashdata('error', 'Program code already exists.');
+                        } else {
+                            $program_data = [
+                                'name' => $this->input->post('name', TRUE),
+                                'code' => $code,
+                                'department_id' => $this->input->post('department_id', TRUE),
+                                'level' => $this->input->post('level', TRUE),
+                                'duration_months' => $this->input->post('duration_months', TRUE),
+                                'description' => $this->input->post('description', TRUE),
+                                'slug' => url_title(strtolower($code), '-', TRUE),
+                                'status' => $this->input->post('status', TRUE) ?: 'active'
+                            ];
 
-                    if (!empty($_FILES['image']['name'])) {
-                        $image = $this->upload_image('image');
-                        if ($image) {
-                            $program_data['image'] = $image;
-                        }
-                    }
-
-                    if ($this->Academic_program_model->create($program_data)) {
-                        $this->session->set_flashdata('success', 'Academic program created successfully.');
-                        redirect('admin/programs');
-                    } else {
-                        $this->session->set_flashdata('error', 'Failed to create program.');
-                    }
-                }
-            }
-        }
-
-        $this->load->view('admin/layout/header', $data);
-        $this->load->view('admin/layout/sidebar', $data);
-        $this->load->view('admin/programs/form', $data);
-        $this->load->view('admin/layout/footer', $data);
-    }
-
-    /**
-     * Edit academic program
-     */
-    public function edit($uid)
-    {
-        $program = $this->Academic_program_model->get_by_uid($uid);
-        if (!$program) {
-            $this->session->set_flashdata('error', 'Program not found.');
-            redirect('admin/programs');
-        }
-
-        $data = $this->get_admin_data();
-        $data['page_title'] = 'Edit Academic Program';
-        $data['program'] = $program;
-        $data['departments'] = $this->Department_model->get_all();
-        $data['levels'] = ['Certificate', 'Diploma', 'Degree', 'Masters', 'PhD'];
-
-        if ($this->input->post()) {
-            $this->form_validation->set_rules('name', 'Program Name', 'required|trim|min_length[3]');
-            $this->form_validation->set_rules('code', 'Program Code', 'required|trim|min_length[2]');
-            $this->form_validation->set_rules('department_id', 'Department', 'required');
-            $this->form_validation->set_rules('level', 'Level', 'required');
-            $this->form_validation->set_rules('duration_months', 'Duration (Months)', 'required|numeric');
-            $this->form_validation->set_rules('description', 'Description', 'trim');
-
-            if ($this->form_validation->run() === TRUE) {
-                $code = $this->input->post('code', TRUE);
-                
-                // Check if code already exists (excluding current)
-                if ($this->Academic_program_model->code_exists($code, $program->id)) {
-                    $this->session->set_flashdata('error', 'Program code already exists.');
-                } else {
-                    $program_data = [
-                        'name' => $this->input->post('name', TRUE),
-                        'code' => $code,
-                        'department_id' => $this->input->post('department_id', TRUE),
-                        'level' => $this->input->post('level', TRUE),
-                        'duration_months' => $this->input->post('duration_months', TRUE),
-                        'description' => $this->input->post('description', TRUE),
-                        'status' => $this->input->post('status', TRUE) ?: 'active'
-                    ];
-
-                    if (!empty($_FILES['image']['name'])) {
-                        $image = $this->upload_image('image');
-                        if ($image) {
-                            if (!empty($program->image) && file_exists($this->upload_path . $program->image)) {
-                                @unlink($this->upload_path . $program->image);
+                            if (!empty($_FILES['image']['name'])) {
+                                $image = $this->upload_image('image');
+                                if ($image) {
+                                    $program_data['image'] = $image;
+                                }
                             }
-                            $program_data['image'] = $image;
+
+                            if ($this->Academic_program_model->create($program_data)) {
+                                $this->session->set_flashdata('success', 'Academic program created successfully.');
+                                redirect('admin/programs');
+                            } else {
+                                $this->session->set_flashdata('error', 'Failed to create program.');
+                            }
                         }
                     }
+                }
 
-                    if ($this->Academic_program_model->update_by_uid($uid, $program_data)) {
-                        $this->session->set_flashdata('success', 'Program updated successfully.');
-                        redirect('admin/programs');
-                    } else {
-                        $this->session->set_flashdata('error', 'Failed to update program.');
+                $this->load->view('admin/layout/header', $data);
+                $this->load->view('admin/layout/sidebar', $data);
+                $this->load->view('admin/programs/form', $data);
+                $this->load->view('admin/layout/footer', $data);
+            }
+
+            /**
+             * Edit academic program
+             */
+            public function edit($uid)
+            {
+                $program = $this->Academic_program_model->get_by_uid($uid);
+                if (!$program) {
+                    $this->session->set_flashdata('error', 'Program not found.');
+                    redirect('admin/programs');
+                }
+
+                $data = $this->get_admin_data();
+                $data['page_title'] = 'Edit Academic Program';
+                $data['program'] = $program;
+                $data['departments'] = $this->Department_model->get_all();
+                $data['levels'] = ['certificate', 'diploma', 'bachelors', 'masters', 'phd', 'postdoctoral'];
+
+                if ($this->input->post()) {
+                    $this->form_validation->set_rules('name', 'Program Name', 'required|trim|min_length[3]');
+                    $this->form_validation->set_rules('code', 'Program Code', 'required|trim|min_length[2]');
+                    $this->form_validation->set_rules('department_id', 'Department', 'required');
+                    $this->form_validation->set_rules('level', 'Level', 'required');
+                    $this->form_validation->set_rules('duration_months', 'Duration (Months)', 'required|numeric');
+                    $this->form_validation->set_rules('description', 'Description', 'trim');
+
+                    if ($this->form_validation->run() === TRUE) {
+                        $code = $this->input->post('code', TRUE);
+                        
+                        // Check if code already exists (excluding current)
+                        if ($this->Academic_program_model->code_exists($code, $program->id)) {
+                            $this->session->set_flashdata('error', 'Program code already exists.');
+                        } else {
+                            $program_data = [
+                                'name' => $this->input->post('name', TRUE),
+                                'code' => $code,
+                                'department_id' => $this->input->post('department_id', TRUE),
+                                'level' => $this->input->post('level', TRUE),
+                                'duration_months' => $this->input->post('duration_months', TRUE),
+                                'description' => $this->input->post('description', TRUE),
+                                'slug' => url_title(strtolower($code), '-', TRUE),
+                                'status' => $this->input->post('status', TRUE) ?: 'active'
+                            ];
+
+                            if (!empty($_FILES['image']['name'])) {
+                                $image = $this->upload_image('image');
+                                if ($image) {
+                                    if (!empty($program->image) && file_exists($this->upload_path . $program->image)) {
+                                        @unlink($this->upload_path . $program->image);
+                                    }
+                                    $program_data['image'] = $image;
+                                }
+                            }
+
+                            if ($this->Academic_program_model->update_by_uid($uid, $program_data)) {
+                                $this->session->set_flashdata('success', 'Program updated successfully.');
+                                redirect('admin/programs');
+                            } else {
+                                $this->session->set_flashdata('error', 'Failed to update program.');
+                            }
+                        }
                     }
                 }
-            }
-        }
 
         $this->load->view('admin/layout/header', $data);
         $this->load->view('admin/layout/sidebar', $data);

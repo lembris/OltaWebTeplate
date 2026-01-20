@@ -66,17 +66,17 @@
                             </li> -->
                         </ul>
                     </li>
-                    <li class="nav-item <?php echo ($current_page_name == 'Events') ? 'active' : ''; ?>">
-                        <a href="<?php echo base_url('events'); ?>" class="nav-link <?php echo ($current_page_name == 'Events') ? 'active' : ''; ?>">Events</a>
+                    <li class="nav-item <?php echo ($current_page_name == 'Events' || $main_page == 'Events') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url('events'); ?>" class="nav-link <?php echo ($current_page_name == 'Events' || $main_page == 'Events') ? 'active' : ''; ?>">Events</a>
                     </li>
-                    <li class="nav-item <?php echo ($current_page_name == 'Notices') ? 'active' : ''; ?>">
-                        <a href="<?php echo base_url('notices'); ?>" class="nav-link <?php echo ($current_page_name == 'Notices') ? 'active' : ''; ?>">Notices</a>
+                    <li class="nav-item <?php echo ($current_page_name == 'Notices' || $main_page == 'Notices') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url('notices'); ?>" class="nav-link <?php echo ($current_page_name == 'Notices' || $main_page == 'Notices') ? 'active' : ''; ?>">Notices</a>
                     </li>
                     <!-- <li class="nav-item <php echo ($current_page_name == 'Gallery') ? 'active' : ''; ?>">
                         <a href="<php echo base_url('gallery'); ?>" class="nav-link <php echo ($current_page_name == 'Gallery') ? 'active' : ''; ?>">Gallery</a>
                     </li> -->
-                    <li class="nav-item <?php echo ($current_page_name == 'Blog') ? 'active' : ''; ?>">
-                        <a href="<?php echo base_url('blog'); ?>" class="nav-link <?php echo ($current_page_name == 'Blog') ? 'active' : ''; ?>">Blog</a>
+                    <li class="nav-item <?php echo ($current_page_name == 'Blog' || $main_page == 'Blog') ? 'active' : ''; ?>">
+                        <a href="<?php echo base_url('blog'); ?>" class="nav-link <?php echo ($current_page_name == 'Blog' || $main_page == 'Blog') ? 'active' : ''; ?>">Blog</a>
                     </li>
                     <li class="nav-item <?php echo ($current_page_name == 'Contact Us') ? 'active' : ''; ?>">
                         <a href="<?php echo base_url('contact'); ?>" class="nav-link <?php echo ($current_page_name == 'Contact Us') ? 'active' : ''; ?>">Contact</a>

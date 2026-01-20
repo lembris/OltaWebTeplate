@@ -135,34 +135,26 @@
 
                 <!-- Reviews Section -->
                 <div class="mb-4">
-                    <!-- Reviews Header with Stats -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <div>
-                            <h5 style="margin: 0; color: #1a1a2e; font-weight: 700;">
+                            <h5 style="margin: 0; color: #333; font-weight: 700;">
                                 <i class="fa fa-star mr-2" style="color: #ffc107;"></i>Student Reviews
                             </h5>
-                            <div id="reviewStats" style="margin-top: 8px;">
-                                <span id="reviewCount" style="color: #666; font-size: 0.9rem;">Loading reviews...</span>
+                            <div style="margin-top: 8px;">
+                                <span id="reviewCount" style="color: #666; font-size: 0.9rem;"></span>
                                 <span id="averageRating" style="margin-left: 16px; color: #666; font-size: 0.9rem; display: none;"></span>
                             </div>
                         </div>
-                        <button class="btn" style="background: linear-gradient(135deg, var(--theme-primary, #C7805C) 0%, var(--primary-dark, #A8684A) 100%); color: white; border: none; border-radius: 6px; padding: 10px 20px; font-weight: 600;" id="writeReviewBtn" onclick="openReviewModal()">
+                        <button class="btn btn-sm" style="background: var(--theme-primary, #C7805C); color: white; border: none; border-radius: 6px; padding: 8px 16px; font-weight: 600;" onclick="openReviewModal()">
                             <i class="fa fa-pencil mr-2"></i>Write Review
                         </button>
                     </div>
 
-                    <!-- Reviews Container -->
-                    <div id="reviewsContainer" style="display: grid; gap: 16px;">
-                        <div style="text-align: center; padding: 32px;">
-                            <i class="fa fa-spinner fa-spin" style="font-size: 28px; color: var(--theme-primary, #C7805C);"></i>
-                            <p style="margin-top: 12px; color: #999;">Loading reviews...</p>
-                        </div>
-                    </div>
+                    <div id="reviewsContainer" style="display: grid; gap: 16px;"></div>
 
-                    <!-- Pagination -->
                     <div id="reviewsPagination" style="margin-top: 20px; display: none; text-align: center;">
                         <nav aria-label="Review pagination">
-                            <ul class="pagination justify-content-center" id="reviewPaginationList"></ul>
+                            <ul class="pagination justify-content-center" id="reviewPaginationList" style="gap: 4px;"></ul>
                         </nav>
                     </div>
                 </div>
@@ -172,153 +164,305 @@
 </section>
 
 <!-- Review Modal -->
-<?php include_once APPPATH . 'views/templates/college/modals/review-modal.php'; ?>
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0" style="background: linear-gradient(135deg, var(--theme-primary, #C7805C) 0%, var(--primary-dark, #A8684A) 100%); padding: 20px;">
+                <h5 class="modal-title" id="reviewModalLabel" style="color: white; font-weight: 700;">
+                    <i class="fa fa-star mr-2"></i>Write a Review
+                    <?php if (isset($member)): ?>
+                    <br><small style="font-size: 0.8rem; font-weight: 500; opacity: 0.95;">for <?php echo htmlspecialchars($member->first_name . ' ' . $member->last_name); ?></small>
+                    <?php endif; ?>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="opacity: 0.8;"></button>
+            </div>
+            <form id="reviewForm">
+                <div class="modal-body" style="padding: 24px;">
+                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                    <input type="hidden" id="facultyId" name="faculty_id" value="<?php echo isset($member) ? $member->id : ''; ?>">
+                    
+                    <div id="reviewAlert" style="display: none; margin-bottom: 16px;" class="alert alert-dismissible fade show" role="alert">
+                        <span id="reviewAlertMessage"></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="studentName" style="font-weight: 600; color: #333; font-size: 0.9rem;">
+                            <i class="fa fa-user mr-2" style="color: var(--theme-primary, #C7805C);"></i>Your Name
+                        </label>
+                        <input type="text" class="form-control" id="studentName" name="student_name" placeholder="Enter your full name" required style="border: 2px solid #e0e0e0; border-radius: 6px; padding: 10px;">
+                        <small class="text-danger" id="error_student_name" style="display: none;"></small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="studentEmail" style="font-weight: 600; color: #333; font-size: 0.9rem;">
+                            <i class="fa fa-envelope mr-2" style="color: var(--theme-primary, #C7805C);"></i>Email (optional)
+                        </label>
+                        <input type="email" class="form-control" id="studentEmail" name="email" placeholder="your@email.com" style="border: 2px solid #e0e0e0; border-radius: 6px; padding: 10px;">
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label style="font-weight: 600; color: #333; font-size: 0.9rem; display: block; margin-bottom: 8px;">
+                            <i class="fa fa-star mr-2" style="color: var(--theme-primary, #C7805C);"></i>Rating
+                        </label>
+                        <div id="ratingStars" style="font-size: 28px; cursor: pointer;">
+                            <i class="fa fa-star-o" data-rating="1" style="margin-right: 12px; cursor: pointer; color: #ffc107;"></i>
+                            <i class="fa fa-star-o" data-rating="2" style="margin-right: 12px; cursor: pointer; color: #ffc107;"></i>
+                            <i class="fa fa-star-o" data-rating="3" style="margin-right: 12px; cursor: pointer; color: #ffc107;"></i>
+                            <i class="fa fa-star-o" data-rating="4" style="margin-right: 12px; cursor: pointer; color: #ffc107;"></i>
+                            <i class="fa fa-star-o" data-rating="5" style="cursor: pointer; color: #ffc107;"></i>
+                        </div>
+                        <input type="hidden" id="rating" name="rating" value="0" required>
+                        <small class="text-muted" id="ratingText" style="display: block; margin-top: 6px; font-size: 0.8rem;">Click to rate (1-5 stars)</small>
+                        <small class="text-danger" id="error_rating" style="display: none;"></small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="reviewTitle" style="font-weight: 600; color: #333; font-size: 0.9rem;">
+                            <i class="fa fa-heading mr-2" style="color: var(--theme-primary, #C7805C);"></i>Review Title
+                        </label>
+                        <select class="form-control" id="reviewTitle" name="review_title" required style="border: 2px solid #e0e0e0; border-radius: 6px; padding: 10px;">
+                            <option value="">Select a review title</option>
+                            <option value="Excellent Teaching">Excellent Teaching</option>
+                            <option value="Very Helpful">Very Helpful</option>
+                            <option value="Great Instructor">Great Instructor</option>
+                            <option value="Knowledgeable">Knowledgeable</option>
+                            <option value="Inspiring Mentor">Inspiring Mentor</option>
+                            <option value="Supportive">Supportive</option>
+                            <option value="Engaging Classes">Engaging Classes</option>
+                            <option value="Clear Explanations">Clear Explanations</option>
+                            <option value="Good Experience">Good Experience</option>
+                            <option value="Could Be Improved">Could Be Improved</option>
+                        </select>
+                        <small class="text-danger" id="error_review_title" style="display: none;"></small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="reviewText" style="font-weight: 600; color: #333; font-size: 0.9rem;">
+                            <i class="fa fa-comments mr-2" style="color: var(--theme-primary, #C7805C);"></i>Your Review
+                        </label>
+                        <textarea class="form-control" id="reviewText" name="review_text" rows="4" placeholder="Share your experience..." required style="border: 2px solid #e0e0e0; border-radius: 6px; padding: 10px; resize: vertical;"></textarea>
+                        <small class="text-danger" id="error_review_text" style="display: none;"></small>
+                    </div>
+                </div>
+                <div class="modal-footer border-0" style="padding: 16px 24px; background: #f8f9fa;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 6px; padding: 8px 20px;">
+                        <i class="fa fa-times mr-2"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn" id="submitBtn" style="background: linear-gradient(135deg, var(--theme-primary, #C7805C) 0%, var(--primary-dark, #A8684A) 100%); color: white; border: none; border-radius: 6px; padding: 8px 20px; font-weight: 600;">
+                        <i class="fa fa-check mr-2"></i><span>Submit Review</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script>
-function openReviewModal() {
-    const modal = document.getElementById('reviewModal');
-    if (modal) {
-        const bsModal = new bootstrap.Modal(modal);
-        bsModal.show();
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
-    const facultyId = <?= isset($member) ? $member->id : 'null' ?>;
+    const facultyId = <?php echo isset($member) ? $member->id : 'null'; ?>;
     const reviewsContainer = document.getElementById('reviewsContainer');
     const reviewCount = document.getElementById('reviewCount');
     const averageRating = document.getElementById('averageRating');
     const reviewsPagination = document.getElementById('reviewsPagination');
     const reviewPaginationList = document.getElementById('reviewPaginationList');
-    
-    if (!facultyId) return;
-    
+    const stars = document.querySelectorAll('#ratingStars i');
+    const ratingInput = document.getElementById('rating');
+    const ratingText = document.getElementById('ratingText');
+    const reviewForm = document.getElementById('reviewForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const alertDiv = document.getElementById('reviewAlert');
+    const alertMessage = document.getElementById('reviewAlertMessage');
+
+    // Open review modal
+    window.openReviewModal = function() {
+        const modal = document.getElementById('reviewModal');
+        if (modal) {
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+        }
+    };
+
     // Load reviews
     function loadReviews(page = 1) {
-        fetch(`<?= base_url('faculty/get_reviews') ?>/${facultyId}?page=${page}`, {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+        if (!facultyId) return;
+        fetch(`<?php echo base_url('faculty/get_reviews'); ?>/${facultyId}?page=${page}`, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 renderReviews(data);
                 updateStats(data);
-                if (data.total > 5) {
-                    renderPagination(data);
-                }
-            } else {
-                reviewsContainer.innerHTML = '<div style="text-align: center; padding: 32px; color: #999;">No reviews yet. Be the first to review!</div>';
-                reviewCount.textContent = '0 reviews';
+                if (data.total > 5) renderPagination(data);
             }
         })
         .catch(error => {
             console.error('Error loading reviews:', error);
-            reviewsContainer.innerHTML = '<div style="text-align: center; padding: 32px; color: #999;">Error loading reviews. Please try again.</div>';
         });
     }
-    
+
     // Render reviews HTML
     function renderReviews(data) {
-        if (!data.reviews || data.reviews.length === 0) {
-            reviewsContainer.innerHTML = '<div style="text-align: center; padding: 32px; color: #999;">No reviews yet. Be the first to review!</div>';
-            return;
-        }
-        
+        if (!data.reviews || data.reviews.length === 0) return;
         let html = '';
         data.reviews.forEach(review => {
-            const stars = getStarHTML(review.rating);
-            const date = new Date(review.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-            
+            const starHTML = getStarHTML(review.rating);
+            const date = new Date(review.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
             html += `
-                <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #f8f9fa 0%, #f0f1f4 100%); transition: all 0.3s;">
+                <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #f8f9fa 0%, #f0f1f4 100%);">
                     <div class="card-body">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
                             <div>
-                                <h6 class="mb-1" style="color: #1a1a2e; font-weight: 600;">${review.student_name}</h6>
+                                <h6 class="mb-0" style="color: #1a1a2e; font-weight: 600;">${review.student_name}</h6>
                                 <small class="text-muted" style="font-size: 0.85rem;">${date}</small>
                             </div>
-                            <span style="color: #ffc107; font-size: 0.95rem; white-space: nowrap;">
-                                ${stars}
-                                <span class="ml-2" style="color: #666; font-weight: 600;">${review.rating}.0</span>
-                            </span>
+                            <span style="color: #ffc107;">${starHTML} <strong>${review.rating}.0</strong></span>
                         </div>
-                        <p class="text-muted small mb-2" style="font-weight: 600; color: var(--theme-primary, #C7805C);">${review.review_title}</p>
-                        <p class="mb-0" style="font-size: 0.95rem; color: #555; line-height: 1.6;">${review.review_text}</p>
+                        <p class="mb-2" style="font-weight: 600; color: var(--theme-primary, #C7805C);">${review.review_title}</p>
+                        <p class="mb-0" style="font-size: 0.95rem; color: #555;">${review.review_text}</p>
                     </div>
                 </div>
             `;
         });
-        
         reviewsContainer.innerHTML = html;
     }
-    
-    // Get star HTML
+
     function getStarHTML(rating) {
-        let stars = '';
+        let starsHtml = '';
         for (let i = 1; i <= 5; i++) {
-            if (i <= rating) {
-                stars += '<i class="fa fa-star" style="margin-right: 2px;"></i>';
-            } else {
-                stars += '<i class="fa fa-star-o" style="margin-right: 2px;"></i>';
-            }
+            starsHtml += i <= rating ? '<i class="fa fa-star"></i>' : '<i class="fa fa-star-o"></i>';
         }
-        return stars;
+        return starsHtml;
     }
-    
-    // Update stats
+
     function updateStats(data) {
         if (data.total === 0) {
             reviewCount.textContent = 'No reviews yet';
-            averageRating.style.display = 'none';
+            if (averageRating) averageRating.style.display = 'none';
         } else {
             reviewCount.textContent = `${data.total} review${data.total !== 1 ? 's' : ''}`;
-            averageRating.innerHTML = `<i class="fa fa-star" style="color: #ffc107;"></i> <strong>${data.average_rating}</strong> average rating`;
-            averageRating.style.display = 'inline';
+            if (averageRating) {
+                averageRating.innerHTML = `<i class="fa fa-star" style="color: #ffc107;"></i> <strong>${data.average_rating}</strong> average rating`;
+                averageRating.style.display = 'inline';
+            }
         }
     }
-    
-    // Render pagination
+
     function renderPagination(data) {
         if (data.total_pages <= 1) {
             reviewsPagination.style.display = 'none';
             return;
         }
-        
         let paginationHTML = '';
-        
-        // Previous button
         if (data.current_page > 1) {
             paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="loadReviews(${data.current_page - 1}); return false;">← Previous</a></li>`;
         }
-        
-        // Page numbers
         for (let i = 1; i <= data.total_pages; i++) {
-            if (i === data.current_page) {
-                paginationHTML += `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`;
-            } else {
-                paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="loadReviews(${i}); return false;">${i}</a></li>`;
-            }
+            paginationHTML += i === data.current_page 
+                ? `<li class="page-item active"><a class="page-link" href="#">${i}</a></li>`
+                : `<li class="page-item"><a class="page-link" href="#" onclick="loadReviews(${i}); return false;">${i}</a></li>`;
         }
-        
-        // Next button
         if (data.current_page < data.total_pages) {
             paginationHTML += `<li class="page-item"><a class="page-link" href="#" onclick="loadReviews(${data.current_page + 1}); return false;">Next →</a></li>`;
         }
-        
         reviewPaginationList.innerHTML = paginationHTML;
         reviewsPagination.style.display = 'block';
     }
-    
-    // Make loadReviews accessible globally for pagination
+
+    // Star rating handler
+    if (stars.length > 0) {
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = this.getAttribute('data-rating');
+                ratingInput.value = rating;
+                stars.forEach((s, index) => {
+                    s.className = index < rating ? 'fa fa-star' : 'fa fa-star-o';
+                });
+                const labels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                ratingText.textContent = labels[rating] + ' (' + rating + '/5)';
+                const errorEl = document.getElementById('error_rating');
+                if (errorEl) errorEl.style.display = 'none';
+            });
+        });
+    }
+
+    // Form submission
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.text-danger[id^="error_"]').forEach(el => el.style.display = 'none');
+            alertDiv.style.display = 'none';
+            
+            if (ratingInput.value == 0) {
+                const errorEl = document.getElementById('error_rating');
+                if (errorEl) {
+                    errorEl.textContent = 'Please select a rating';
+                    errorEl.style.display = 'block';
+                }
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>Submitting...';
+            
+            const formData = new FormData(this);
+            fetch('<?php echo base_url("faculty/store_review"); ?>', {
+                method: 'POST',
+                body: formData,
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa fa-check mr-2"></i><span>Submit Review</span>';
+                if (data.success) {
+                    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                    alertMessage.textContent = data.message;
+                    alertDiv.style.display = 'block';
+                    reviewForm.reset();
+                    ratingInput.value = 0;
+                    ratingText.textContent = 'Click to rate (1-5 stars)';
+                    stars.forEach(s => s.className = 'fa fa-star-o');
+                    setTimeout(() => {
+                        const modal = document.getElementById('reviewModal');
+                        if (modal) {
+                            const bsModal = bootstrap.Modal.getInstance(modal);
+                            if (bsModal) bsModal.hide();
+                        }
+                    }, 2000);
+                } else {
+                    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+                    if (data.errors) {
+                        let errorMsg = 'Please fix the following errors:<ul style="margin-top: 8px; margin-bottom: 0;">';
+                        for (let field in data.errors) {
+                            errorMsg += '<li>' + data.errors[field] + '</li>';
+                            const errorEl = document.getElementById('error_' + field);
+                            if (errorEl) {
+                                errorEl.textContent = data.errors[field];
+                                errorEl.style.display = 'block';
+                            }
+                        }
+                        errorMsg += '</ul>';
+                        alertMessage.innerHTML = errorMsg;
+                    } else {
+                        alertMessage.textContent = data.message || 'An error occurred.';
+                    }
+                    alertDiv.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa fa-check mr-2"></i><span>Submit Review</span>';
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+                alertMessage.textContent = 'An error occurred. Please try again.';
+                alertDiv.style.display = 'block';
+            });
+        });
+    }
+
     window.loadReviews = loadReviews;
-    
-    // Initial load
     loadReviews();
 });
 </script>

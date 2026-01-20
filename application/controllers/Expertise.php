@@ -1,37 +1,56 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Expertise extends CI_Controller {
+class Expertise extends Frontend_Controller {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('Expertise_model');
+        $this->load->helper('template');
+    }
 
     public function index()
-	{
+    {
+        $data = $this->get_common_data();
+        $data['current_page_name'] = 'Our Expertise';
+        $data['page_title'] = 'Medical Expertise | TNA CARE';
+        $data['page_description'] = 'Our team of medical professionals brings expertise across various specialized fields including cardiology, surgery, oncology, and more.';
+        
+        $data['expertises'] = $this->Expertise_model->get_all_active('display_order', 'asc');
+        
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('expertise', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
+    }
 
-        $data['site_name'] = 'Osiram Safari Adventure';
-        $data['site_tag'] = 'Tour Operators';
-        $data['site_name_abb'] = 'OSA';
-        $data['main_page'] = '';
+    public function view($slug = null)
+    {
+        if (empty($slug)) {
+            redirect('expertise');
+        }
 
-        $data['current_page_name'] = 'Expertise';
-        $data['consult_number'] = '+255 78 703 3777';
-        $data['consult_number_call'] = '255787033777';
-        $data['work_hours'] = '9:00AM - 8:00PM';
-        $data['address_location'] = 'Suite 3, Mezzanine Floor, R-Square, Plot No. 274, Haile Selassie Road, Opp. IST School, Masaki, P.O. Box 779, Dar es Salaam.';
-        $data['email_address']  = 'welcome@osiramsafari.com';
-    
-        // Social Links
-        $data['facebook'] = 'SweetandConradLLP?_rdc=1&_rdr';
-        $data['instagram'] = 'sweet_and_conrad_advocates';
-        $data['linkedin'] = 'company/sweetandconradllp/';
-        $data['twitter'] = '';
-        $data['youtube'] = '';
+        $data = $this->get_common_data();
+        
+        $expertise = $this->Expertise_model->get_by_slug($slug);
+        
+        if (!$expertise) {
+            show_404();
+        }
 
-
-        $this->load->view('includes/header', $data);
-        //navigation menu
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/expertise', $data);
-        $this->load->view('includes/footer', $data);
-
-	}
+        $data['current_page_name'] = $expertise->name;
+        $data['page_title'] = $expertise->name . ' | TNA CARE';
+        $data['page_description'] = $expertise->short_description;
+        $data['expertise'] = $expertise;
+        
+        $data['related_expertises'] = $this->Expertise_model->get_all_active('display_order', 'asc');
+        
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('expertise-detail', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
+    }
 }

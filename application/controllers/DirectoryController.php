@@ -46,10 +46,11 @@ class DirectoryController extends Frontend_Controller {
         // Load footer programs (college template)
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('directory', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -87,10 +88,11 @@ class DirectoryController extends Frontend_Controller {
         // Load footer programs (college template)
         $data['footer_programs'] = $this->get_footer_programs();
         
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('directory-detail', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -121,10 +123,11 @@ class DirectoryController extends Frontend_Controller {
         // Load footer programs (college template)
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('directory', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -156,9 +159,10 @@ class DirectoryController extends Frontend_Controller {
         // Load footer programs (college template)
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('directory', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 }

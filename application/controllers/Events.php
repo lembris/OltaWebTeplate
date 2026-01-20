@@ -38,23 +38,24 @@ class Events extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('events', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
-     * View single event by UID
+     * View single event by slug
      */
-    public function view($uid = null)
+    public function view($slug = null)
     {
-        if (!$uid) {
+        if (!$slug) {
             show_404();
         }
 
         $data = $this->get_common_data();
-        $data['event'] = $this->Event_calendar_model->get_by_uid($uid);
+        $data['event'] = $this->Event_calendar_model->get_by_slug($slug);
         
         if (!$data['event']) {
             show_404();
@@ -71,10 +72,11 @@ class Events extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('event-detail', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -102,10 +104,11 @@ class Events extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('events', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -134,35 +137,28 @@ class Events extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('events-search', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
-     * Register for event by UID
+     * Register for event by slug
      */
-    public function register($uid = null)
+    public function register($slug = null)
     {
-        if (!$uid) {
+        if (!$slug) {
             show_404();
         }
 
-        $event = $this->Event_calendar_model->get_by_uid($uid);
+        $event = $this->Event_calendar_model->get_by_slug($slug);
         if (!$event || !$event->registration_required) {
             show_404();
         }
 
-        $data = $this->get_common_data();
-        $data['main_page'] = 'Events';
-        $data['page_title'] = 'Register for ' . $event->title;
-        $data['current_page_name'] = 'Event Registration';
-        $data['event'] = $event;
-        
-        // Load footer programs for college template
-        $data['footer_programs'] = $this->get_footer_programs();
-
+        // Handle form submission
         if ($this->input->method() === 'post') {
             $this->form_validation->set_rules('first_name', 'First Name', 'required|trim');
             $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
@@ -171,21 +167,37 @@ class Events extends Frontend_Controller {
             $this->form_validation->set_rules('affiliation', 'Affiliation', 'trim');
 
             if ($this->form_validation->run() === FALSE) {
+                $data = $this->get_common_data();
                 $data['errors'] = validation_errors();
-                load_template_view('header', $data);
-                load_template_view('navigation', $data);
+                $data['main_page'] = 'Events';
+                $data['page_title'] = 'Register for ' . $event->title;
+                $data['current_page_name'] = 'Event Registration';
+                $data['event'] = $event;
+                $data['footer_programs'] = $this->get_footer_programs();
+
+                $template = get_active_template();
+                $this->load->view('templates/' . $template . '/header', $data);
+                $this->load->view('templates/' . $template . '/navigation', $data);
                 load_template_page('event-register', $data);
-                load_template_view('footer', $data);
+                $this->load->view('templates/' . $template . '/footer', $data);
                 return;
             }
 
             // Check if email already registered
             if ($this->Event_calendar_model->check_email_registered($event->id, $this->input->post('email'))) {
+                $data = $this->get_common_data();
                 $data['message'] = 'This email is already registered for this event.';
-                load_template_view('header', $data);
-                load_template_view('navigation', $data);
+                $data['main_page'] = 'Events';
+                $data['page_title'] = 'Register for ' . $event->title;
+                $data['current_page_name'] = 'Event Registration';
+                $data['event'] = $event;
+                $data['footer_programs'] = $this->get_footer_programs();
+
+                $template = get_active_template();
+                $this->load->view('templates/' . $template . '/header', $data);
+                $this->load->view('templates/' . $template . '/navigation', $data);
                 load_template_page('event-register', $data);
-                load_template_view('footer', $data);
+                $this->load->view('templates/' . $template . '/footer', $data);
                 return;
             }
 
@@ -201,24 +213,43 @@ class Events extends Frontend_Controller {
 
             if ($this->Event_calendar_model->register_for_event($registration)) {
                 $this->session->set_flashdata('success', 'Successfully registered for the event!');
-                redirect('events/view/' . $uid);
+                redirect('events/view/' . $slug);
             } else {
+                $data = $this->get_common_data();
                 $data['error'] = 'Registration failed. Please try again.';
-                load_template_view('header', $data);
-                load_template_view('navigation', $data);
+                $data['main_page'] = 'Events';
+                $data['page_title'] = 'Register for ' . $event->title;
+                $data['current_page_name'] = 'Event Registration';
+                $data['event'] = $event;
+                $data['footer_programs'] = $this->get_footer_programs();
+
+                $template = get_active_template();
+                $this->load->view('templates/' . $template . '/header', $data);
+                $this->load->view('templates/' . $template . '/navigation', $data);
                 load_template_page('event-register', $data);
-                load_template_view('footer', $data);
+                $this->load->view('templates/' . $template . '/footer', $data);
             }
-        } else {
-            load_template_view('header', $data);
-            load_template_view('navigation', $data);
-            load_template_page('event-register', $data);
-            load_template_view('footer', $data);
+            return;
         }
+
+        $data = $this->get_common_data();
+        $data['main_page'] = 'Events';
+        $data['page_title'] = 'Register for ' . $event->title;
+        $data['current_page_name'] = 'Event Registration';
+        $data['event'] = $event;
+        
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('event-register', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
-     * Calendar view
+     * Events calendar view
      */
     public function calendar()
     {
@@ -233,16 +264,23 @@ class Events extends Frontend_Controller {
         $start = $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-01';
         $end = date('Y-m-t', strtotime($start));
 
-        $data['events'] = $this->Event_calendar_model->get_by_date_range($start, $end);
+        // Get active template for filtering
+        $template = get_active_template();
+        
+        $data['events'] = $this->Event_calendar_model->get_by_date_range($start, $end, $template);
         $data['year'] = $year;
         $data['month'] = $month;
+        
+        // Load theme-specific colors
+        $data['event_colors'] = get_event_type_colors();
         
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('events-calendar', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 }

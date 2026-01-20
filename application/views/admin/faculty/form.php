@@ -224,6 +224,16 @@
                         <small class="text-muted">Controls visibility on the public faculty directory.</small>
                     </div>
 
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_featured" id="is_featured" value="1" <?= set_checkbox('is_featured', 1, isset($faculty) && $faculty && $faculty->is_featured) ?>>
+                            <label class="form-check-label" for="is_featured">
+                                <strong>Featured</strong>
+                            </label>
+                        </div>
+                        <small class="text-muted">Featured faculty appear on the About page and homepage.</small>
+                    </div>
+
                     <hr>
 
                     <div class="d-grid gap-2">

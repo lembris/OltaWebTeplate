@@ -1,5 +1,4 @@
-<section class="section bg-light">
-    <div class="container">
+<div class="container">
         <div class="row justify-content-center pb-4">
             <div class="col-md-12 heading-section text-center ftco-animate">
                 <span class="subheading">Real Student Projects</span>
@@ -62,5 +61,4 @@
             </div>
         </div>
     </div>
-</section>
 

@@ -17,7 +17,16 @@
             <div class="col-lg-8 ftco-animate">
                 <!-- Program Image -->
                 <?php 
-                $program_image = !empty($program->image) ? base_url('assets/img/programs/' . $program->image) : get_template_image('work-1.jpg');
+                $program_image = '';
+                if (!empty($program->image)) {
+                    $image_path = FCPATH . 'assets/img/programs/' . $program->image;
+                    if (file_exists($image_path)) {
+                        $program_image = base_url('assets/img/programs/' . $program->image);
+                    }
+                }
+                if (empty($program_image)) {
+                    $program_image = get_template_image('dmi_journey.jpg');
+                }
                 ?>
                 <img src="<?php echo $program_image; ?>" alt="<?php echo htmlspecialchars($program->name); ?>" class="img-fluid mb-4">
                 
@@ -158,27 +167,42 @@
                 <div class="sidebar-box bg-light p-4 mt-4">
                     <h3 class="heading-sidebar">Program Details</h3>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><strong>Code:</strong> <?php echo htmlspecialchars($program->code ?? 'N/A'); ?></li>
-                        <li class="mb-2"><strong>Department:</strong> <?php echo htmlspecialchars($program->department_name ?? 'General'); ?></li>
-                        <li class="mb-2"><strong>Mode:</strong> <?php echo htmlspecialchars($program->study_mode ?? 'Full-time'); ?></li>
-                        <li class="mb-2"><strong>Start Date:</strong> <?php echo htmlspecialchars($program->intake_date ?? 'January/September'); ?></li>
+                        <li class="mb-2">
+                            <i class="fa fa-barcode mr-2" style="color: var(--primary-color, #C7805C);"></i>
+                            <strong>Code:</strong> <?php echo htmlspecialchars($program->code ?? 'N/A'); ?>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fa fa-building mr-2" style="color: var(--primary-color, #C7805C);"></i>
+                            <strong>Department:</strong> <?php echo htmlspecialchars($program->department_name ?? 'General'); ?>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fa fa-clock-o mr-2" style="color: var(--primary-color, #C7805C);"></i>
+                            <strong>Mode:</strong> <?php echo htmlspecialchars($program->study_mode ?? 'Full-time'); ?>
+                        </li>
+                        <li class="mb-2">
+                            <i class="fa fa-calendar mr-2" style="color: var(--primary-color, #C7805C);"></i>
+                            <strong>Start Date:</strong> <?php echo htmlspecialchars($program->intake_date ?? 'January/September'); ?>
+                        </li>
                     </ul>
                 </div>
                 
                 <!-- Contact -->
                 <div class="sidebar-box bg-light p-4 mt-4">
-                    <h3 class="heading-sidebar">Need Help?</h3>
-                    <p>Contact our admissions office for more information.</p>
-                    <div class="block-23">
-                        <ul>
-                            <?php if (!empty($phone_number)): ?>
-                            <li><a href="tel:<?php echo $consult_number_call ?? ''; ?>"><span class="icon fa fa-phone"></span><span class="text"><?php echo $phone_number; ?></span></a></li>
-                            <?php endif; ?>
-                            <?php if (!empty($email_address)): ?>
-                            <li><a href="mailto:<?php echo $email_address; ?>"><span class="icon fa fa-envelope"></span><span class="text"><?php echo $email_address; ?></span></a></li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
+                    <h3 class="heading-sidebar">Contact</h3>
+                    <ul class="list-unstyled">
+                        <?php if (!empty($phone_number)): ?>
+                        <li class="mb-2">
+                            <i class="fa fa-phone mr-2" style="color: var(--primary-color, #C7805C);"></i>
+                            <strong>Phone:</strong> <?php echo htmlspecialchars($phone_number); ?>
+                        </li>
+                        <?php endif; ?>
+                        <?php if (!empty($email_address)): ?>
+                        <li class="mb-2">
+                            <i class="fa fa-envelope mr-2" style="color: var(--primary-color, #C7805C);"></i>
+                            <strong>Email:</strong> <a href="mailto:<?php echo htmlspecialchars($email_address); ?>" style="color: var(--primary-color, #C7805C); text-decoration: none;"><?php echo htmlspecialchars($email_address); ?></a>
+                        </li>
+                        <?php endif; ?>
+                    </ul>
                 </div>
                 
                 <!-- Related Programs -->
@@ -187,11 +211,22 @@
                     <h3 class="heading-sidebar">Related Programs</h3>
                     <?php foreach ($related_programs as $related): ?>
                     <div class="block-21 mb-3 d-flex">
-                         <?php $rel_img = !empty($related->image) ? base_url('assets/img/programs/' . $related->image) : get_template_image('work-2.jpg'); ?>
-                         <a class="blog-img mr-3" style="background-image: url(<?php echo $rel_img; ?>); width: 80px; height: 80px; background-size: cover;"></a>
+                        <?php 
+                        $rel_img = '';
+                        if (!empty($related->image)) {
+                            $rel_img_path = FCPATH . 'assets/img/programs/' . $related->image;
+                            if (file_exists($rel_img_path)) {
+                                $rel_img = base_url('assets/img/programs/' . $related->image);
+                            }
+                        }
+                        if (empty($rel_img)) {
+                            $rel_img = get_template_image('dmi_journey.jpg');
+                        }
+                        ?>
+                        <a class="blog-img mr-3" style="background-image: url(<?php echo $rel_img; ?>); width: 80px; height: 80px; background-size: cover;"></a>
                         <div class="text">
-                            <h4 class="heading" style="font-size: 14px;"><a href="<?php echo base_url('programs/' . ($related->code ?? $related->id)); ?>"><?php echo htmlspecialchars($related->name); ?></a></h4>
-                            <span class="badge badge-secondary"><?php echo htmlspecialchars($related->level ?? 'Diploma'); ?></span>
+                            <h4 class="heading" style="font-size: 14px;"><a href="<?php echo base_url('programs/' . ($related->slug ?? $related->id)); ?>"><?php echo htmlspecialchars($related->name); ?></a></h4>
+                            <span class="badge badge-secondary"><?php echo htmlspecialchars(ucfirst($related->level ?? 'Diploma')); ?></span>
                         </div>
                     </div>
                     <?php endforeach; ?>

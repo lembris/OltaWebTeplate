@@ -120,10 +120,10 @@
         <!-- Copyright -->
         <div class="row" style="border-top: 1px solid rgba(0, 0, 0, 0.1); padding-top: 20px;">
             <div class="col-md-12 text-center">
-                <p style="margin: 0; color: var(--footer-text, #666);">
+                <p style="margin: 0; color: #ffffff;">
                     Copyright &copy; <?php echo date('Y'); ?> <strong><?php echo isset($site_name) ? $site_name : 'Institute'; ?></strong>. All rights reserved. 
                     <br class="d-md-none">
-                    Designed by <a href="https://www.oltanasoftworks.com/" target="_blank">Oltana Softworks</a>
+                    Designed by <a href="https://www.oltanasoftworks.com/" target="_blank" style="color: #ffffff; text-decoration: underline;">Oltana Softworks</a>
                 </p>
             </div>
         </div>

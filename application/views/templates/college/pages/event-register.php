@@ -102,7 +102,7 @@
                         <i class="fa fa-user-plus me-2" style="color: #C7805C;"></i>Registration Form
                     </h3>
                     
-                    <form method="post" action="<?php echo base_url('events/register/' . $event->uid); ?>">
+                    <form method="post" action="<?php echo base_url('events/register/' . $event->slug); ?>">
                         <input type="hidden" name="csrf_token" value="<?php echo $this->security->get_csrf_hash(); ?>">
                         <div class="row mb-4">
                             <div class="col-md-6">
@@ -156,7 +156,7 @@
                             <button type="submit" class="btn btn-primary btn-lg" style="background-color: #C7805C; border-color: #C7805C;">
                                 <i class="fa fa-check me-2"></i>Complete Registration
                             </button>
-                            <a href="<?php echo base_url('events/view/' . $event->uid); ?>" class="btn btn-outline-secondary btn-lg">
+                            <a href="<?php echo base_url('events/view/' . $event->slug); ?>" class="btn btn-outline-secondary btn-lg">
                                 <i class="fa fa-times me-2"></i>Cancel
                             </a>
                         </div>

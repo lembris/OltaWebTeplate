@@ -279,17 +279,18 @@ class Frontend_Controller extends CI_Controller
 }
 
     class Admin_Controller extends CI_Controller
-{
-    protected $admin_user;
-
-    public function __construct()
     {
-        parent::__construct();
-        $this->load->library('session');
-        $this->load->helper('url');
-        $this->check_authentication();
-        $this->load_admin_data();
-    }
+        protected $admin_user;
+
+        public function __construct()
+        {
+            parent::__construct();
+            $this->load->library('session');
+            $this->load->helper('url');
+            $this->load->helper('menu');  // Load menu helper for get_admin_menu() and render_admin_menu()
+            $this->check_authentication();
+            $this->load_admin_data();
+        }
 
     protected function check_authentication()
     {

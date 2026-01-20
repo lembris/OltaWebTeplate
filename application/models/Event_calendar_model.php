@@ -61,31 +61,66 @@ class Event_calendar_model extends CI_Model {
     }
 
     /**
-     * Get upcoming events
+     * Get event by slug
      */
-    public function get_upcoming($limit = 10, $offset = 0)
+    public function get_by_slug($slug)
     {
-        $today = date('Y-m-d');
-        
-        return $this->db->select('ec.*, d.name as department_name')
+        return $this->db->select('ec.*, d.name as department_name, d.id as dept_id')
                         ->from($this->table . ' ec')
                         ->join('departments d', 'ec.department_id = d.id', 'left')
-                        ->where('ec.start_date >=', $today)
-                        ->where('ec.status', 'upcoming')
-                        ->where('ec.visibility', 'public')
-                        ->order_by('ec.start_date', 'ASC')
-                        ->limit($limit, $offset)
-                        ->get()->result();
+                        ->where('ec.slug', $slug)
+                        ->get()->row();
     }
 
-    public function count_upcoming()
+    /**
+     * Get upcoming events, filtered by template
+     */
+    public function get_upcoming($limit = 10, $offset = 0, $template = null)
     {
         $today = date('Y-m-d');
         
-        return $this->db->where('start_date >=', $today)
-                        ->where('status', 'upcoming')
-                        ->where('visibility', 'public')
-                        ->count_all_results($this->table);
+        $this->db->select('ec.*, d.name as department_name')
+                ->from($this->table . ' ec')
+                ->join('departments d', 'ec.department_id = d.id', 'left')
+                ->where('ec.start_date >=', $today)
+                ->where('ec.status', 'upcoming')
+                ->where('ec.visibility', 'public');
+        
+        // Filter by template
+        if ($template) {
+            $this->db->group_start();
+            $this->db->where('ec.template', $template);
+            $this->db->or_where('ec.template', NULL);
+            $this->db->or_where('ec.template', '');
+            $this->db->group_end();
+        }
+        
+        return $this->db->order_by('ec.start_date', 'ASC')
+                       ->limit($limit, $offset)
+                       ->get()->result();
+    }
+
+    /**
+     * Count upcoming events, filtered by template
+     */
+    public function count_upcoming($template = null)
+    {
+        $today = date('Y-m-d');
+        
+        $this->db->where('start_date >=', $today)
+                ->where('status', 'upcoming')
+                ->where('visibility', 'public');
+        
+        // Filter by template
+        if ($template) {
+            $this->db->group_start();
+            $this->db->where('template', $template);
+            $this->db->or_where('template', NULL);
+            $this->db->or_where('template', '');
+            $this->db->group_end();
+        }
+        
+        return $this->db->count_all_results($this->table);
     }
 
     /**
@@ -148,18 +183,28 @@ class Event_calendar_model extends CI_Model {
     }
 
     /**
-     * Get by date range
+     * Get events by date range, filtered by template
      */
-    public function get_by_date_range($start_date, $end_date)
+    public function get_by_date_range($start_date, $end_date, $template = null)
     {
-        return $this->db->select('ec.*, d.name as department_name')
-                        ->from($this->table . ' ec')
-                        ->join('departments d', 'ec.department_id = d.id', 'left')
-                        ->where('ec.start_date >=', $start_date)
-                        ->where('ec.start_date <=', $end_date)
-                        ->where('ec.visibility', 'public')
-                        ->order_by('ec.start_date', 'ASC')
-                        ->get()->result();
+        $this->db->select('ec.*, d.name as department_name')
+                ->from($this->table . ' ec')
+                ->join('departments d', 'ec.department_id = d.id', 'left')
+                ->where('ec.start_date >=', $start_date)
+                ->where('ec.start_date <=', $end_date)
+                ->where('ec.visibility', 'public');
+        
+        // Filter by template: show events for specific template OR events with no template (shared)
+        if ($template) {
+            $this->db->group_start();
+            $this->db->where('ec.template', $template);
+            $this->db->or_where('ec.template', NULL);
+            $this->db->or_where('ec.template', '');
+            $this->db->group_end();
+        }
+        
+        return $this->db->order_by('ec.start_date', 'ASC')
+                       ->get()->result();
     }
 
     /**

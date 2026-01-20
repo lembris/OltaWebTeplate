@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.posts && data.posts.length > 0) {
                 const topViews = data.posts[0].views;
                 viewedContainer.innerHTML = data.posts.map((post, idx) => {
-                    const imgUrl = post.featured_image ? post.featured_image : '<?= get_template_image('image_1.jpg') ?>';
+                    const imgUrl = post.featured_image ? '<?= base_url('assets/img/blog/') ?>' + post.featured_image : '<?= get_template_image('dmi_journey.jpg') ?>';
                     const viewDiff = idx === 0 ? '' : `<span class="view-diff">-${topViews - post.views}</span>`;
                     return `
                         <div class="most-viewed-card mb-3">

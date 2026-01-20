@@ -60,6 +60,15 @@ class Academic_program_model extends CI_Model {
                         ->get()->row();
     }
 
+    public function get_by_slug($slug)
+    {
+        return $this->db->select('ap.*, d.name as department_name, d.id as dept_id')
+                        ->from($this->table . ' ap')
+                        ->join('departments d', 'ap.department_id = d.id', 'left')
+                        ->where('ap.slug', $slug)
+                        ->get()->row();
+    }
+
     public function get_by_code($code)
     {
         return $this->db->select('ap.*, d.name as department_name')

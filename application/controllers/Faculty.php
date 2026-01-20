@@ -23,6 +23,13 @@ class Faculty extends Frontend_Controller {
 
         $data = $this->get_common_data();
         $data['faculty'] = $this->Faculty_staff_model->get_active($limit, $offset);
+        
+        // Load review stats for each faculty member
+        foreach ($data['faculty'] as &$member) {
+            $member->review_count = $this->Faculty_review_model->count_by_faculty($member->id, 'approved');
+            $member->average_rating = $this->Faculty_review_model->get_average_rating($member->id);
+        }
+        
         $total = $this->Faculty_staff_model->count_all();
         $data['total_pages'] = ceil($total / $limit);
         $data['current_page'] = $page;
@@ -33,23 +40,24 @@ class Faculty extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('faculty', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
-     * View single faculty member
+     * View single faculty member by slug
      */
-    public function view($uid = null)
+    public function view($slug = null)
     {
-        if (!$uid) {
+        if (!$slug) {
             show_404();
         }
 
         $data = $this->get_common_data();
-        $data['member'] = $this->Faculty_staff_model->get_by_uid($uid);
+        $data['member'] = $this->Faculty_staff_model->get_by_slug($slug);
         
         if (!$data['member']) {
             show_404();
@@ -62,10 +70,11 @@ class Faculty extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('faculty-detail', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -88,6 +97,13 @@ class Faculty extends Frontend_Controller {
 
         $data = $this->get_common_data();
         $data['faculty'] = $this->Faculty_staff_model->get_by_department($dept_id, $limit, $offset);
+        
+        // Load review stats for each faculty member
+        foreach ($data['faculty'] as &$member) {
+            $member->review_count = $this->Faculty_review_model->count_by_faculty($member->id, 'approved');
+            $member->average_rating = $this->Faculty_review_model->get_average_rating($member->id);
+        }
+        
         $total = $this->Faculty_staff_model->count_by_department($dept_id);
         $data['department'] = $department;
         $data['total_pages'] = ceil($total / $limit);
@@ -96,10 +112,14 @@ class Faculty extends Frontend_Controller {
         $data['current_page_name'] = 'Faculty';
         $data['main_page'] = 'Faculty';
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('faculty', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -119,6 +139,14 @@ class Faculty extends Frontend_Controller {
 
         $data = $this->get_common_data();
         $data['results'] = $this->Faculty_staff_model->search($keyword, $limit, $offset);
+        $data['faculty'] = $data['results']; // For compatibility with view
+        
+        // Load review stats for each search result
+        foreach ($data['faculty'] as &$member) {
+            $member->review_count = $this->Faculty_review_model->count_by_faculty($member->id, 'approved');
+            $member->average_rating = $this->Faculty_review_model->get_average_rating($member->id);
+        }
+        
         $total = $this->Faculty_staff_model->get_search_count($keyword);
         $data['keyword'] = $keyword;
         $data['total_pages'] = ceil($total / $limit);
@@ -127,10 +155,14 @@ class Faculty extends Frontend_Controller {
         $data['current_page_name'] = 'Faculty';
         $data['main_page'] = 'Faculty';
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('faculty', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**

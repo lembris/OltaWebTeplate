@@ -26,6 +26,7 @@ class Settings extends Admin_Controller {
         $data['active_template_name'] = $active_template;
         $data['settings'] = $this->Settings_model->get_all($active_template);
         $data['active_tab'] = $this->input->get('tab') ?: 'general';
+        $data['templates'] = get_available_templates();
         
         // Check if sms_providers table exists, create if not
         if (!$this->db->table_exists('sms_providers')) {
@@ -282,6 +283,177 @@ class Settings extends Admin_Controller {
         }
 
         redirect('admin/settings?tab=' . $tab);
+    }
+    
+    // ========== TEMPLATE CRUD METHODS ==========
+    
+    public function save_template()
+    {
+        if (!$this->input->is_ajax_request()) {
+            show_404();
+        }
+        
+        $template_key = $this->input->post('template_key') ?: $this->input->post('template_name');
+        $display_name = $this->input->post('display_name');
+        $description = $this->input->post('description');
+        $version = $this->input->post('version') ?: '1.0.0';
+        $author = $this->input->post('author') ?: 'Unknown';
+        $type = $this->input->post('type') ?: 'general';
+        
+        // Get colors
+        $colors = [
+            'primary' => $this->input->post('colors[primary]') ?: '#006EB0',
+            'secondary' => $this->input->post('colors[secondary]') ?: '#0CA69C',
+            'accent' => $this->input->post('colors[accent]') ?: '#E43834',
+            'background' => $this->input->post('colors[background]') ?: '#E9F7F6'
+        ];
+        
+        // Debug log received data
+        log_message('info', '=== TEMPLATE SAVE DEBUG ===');
+        log_message('info', 'template_key: ' . $template_key);
+        log_message('info', 'display_name: ' . $display_name);
+        log_message('info', 'description: ' . $description);
+        log_message('info', 'version: ' . $version);
+        log_message('info', 'author: ' . $author);
+        log_message('info', 'type: ' . $type);
+        log_message('info', 'colors: ' . json_encode($colors));
+        
+        // Validate
+        if (empty($template_key) || empty($display_name)) {
+            echo json_encode(['success' => false, 'message' => 'Template name and display name are required']);
+            return;
+        }
+        
+        // Validate template key format (lowercase, numbers, underscores, hyphens)
+        if (!preg_match('/^[a-z0-9_-]+$/', $template_key)) {
+            echo json_encode(['success' => false, 'message' => 'Template name can only contain lowercase letters, numbers, underscores, and hyphens']);
+            return;
+        }
+        
+        // Check if template folder exists
+        $templates_path = FCPATH . 'assets/templates/';
+        $template_path = $templates_path . $template_key . '/';
+        $is_update = is_dir($template_path);
+        
+        if (!$is_update) {
+            echo json_encode(['success' => false, 'message' => 'Template folder does not exist: ' . $template_path]);
+            return;
+        }
+        
+        log_message('info', 'is_update: ' . ($is_update ? 'true' : 'false'));
+        
+        // Save template settings to database (for this specific template)
+        // All settings stored in site_settings table
+        $result1 = $this->Settings_model->update('template_display_name', $display_name, $template_key, 'template');
+        $result2 = $this->Settings_model->update('template_description', $description, $template_key, 'template');
+        $result3 = $this->Settings_model->update('template_version', $version, $template_key, 'template');
+        $result4 = $this->Settings_model->update('template_author', $author, $template_key, 'template');
+        $result5 = $this->Settings_model->update('template_type', $type, $template_key, 'template');
+        
+        // Save theme colors for this template
+        $result6 = $this->Settings_model->update('theme_primary_color', $colors['primary'], $template_key, 'theme');
+        $result7 = $this->Settings_model->update('theme_secondary_color', $colors['secondary'], $template_key, 'theme');
+        $result8 = $this->Settings_model->update('theme_accent_color', $colors['accent'], $template_key, 'theme');
+        $result9 = $this->Settings_model->update('theme_background_color', $colors['background'], $template_key, 'theme');
+        
+        log_message('info', 'Save results: dn=' . ($result1?'1':'0') . ', desc=' . ($result2?'1':'0') . ', ver=' . ($result3?'1':'0') . ', auth=' . ($result4?'1':'0') . ', type=' . ($result5?'1':'0'));
+        log_message('info', 'Color results: p=' . ($result6?'1':'0') . ', s=' . ($result7?'1':'0') . ', a=' . ($result8?'1':'0') . ', bg=' . ($result9?'1':'0'));
+        
+        // Verify the saves
+        $verify_display = $this->Settings_model->get('template_display_name', $template_key);
+        $verify_desc = $this->Settings_model->get('template_description', $template_key);
+        $verify_primary = $this->Settings_model->get('theme_primary_color', $template_key);
+        
+        log_message('info', 'Verification - display_name: ' . ($verify_display ?: 'NOT FOUND'));
+        log_message('info', 'Verification - description: ' . ($verify_desc ?: 'NOT FOUND'));
+        log_message('info', 'Verification - primary_color: ' . ($verify_primary ?: 'NOT FOUND'));
+        
+        echo json_encode([
+            'success' => true, 
+            'message' => $is_update ? 'Template "' . $display_name . '" updated successfully!' : 'Template created successfully',
+            'template' => [
+                'name' => $template_key,
+                'display_name' => $display_name,
+                'description' => $description,
+                'version' => $version,
+                'author' => $author,
+                'type' => $type,
+                'colors' => $colors
+            ],
+            'debug' => [
+                'template_key' => $template_key,
+                'saved_display_name' => $display_name,
+                'verified_display_name' => $verify_display,
+                'verified_description' => $verify_desc,
+                'verified_primary_color' => $verify_primary
+            ]
+        ]);
+    }
+    
+    public function delete_template($template_key)
+    {
+        if (empty($template_key)) {
+            $this->session->set_flashdata('error', 'Template key is required');
+            redirect('admin/settings?tab=template');
+            return;
+        }
+        
+        // Get active template
+        $this->load->helper('template');
+        $active_template = get_active_template();
+        
+        // Cannot delete active template
+        if ($template_key === $active_template) {
+            $this->session->set_flashdata('error', 'Cannot delete the active template. Please activate a different template first.');
+            redirect('admin/settings?tab=template');
+            return;
+        }
+        
+        // Delete from database (template settings)
+        $this->db->where('setting_key', 'active_template');
+        $this->db->where('template', $template_key);
+        $this->db->delete('site_settings');
+        
+        // Also delete any template-specific settings
+        $this->db->where('template', $template_key);
+        $this->db->delete('site_settings');
+        
+        $this->session->set_flashdata('success', 'Template "' . htmlspecialchars($template_key) . '" has been removed from the database. The physical files have not been deleted.');
+        redirect('admin/settings?tab=template');
+    }
+    
+    public function activate_template($template_key)
+    {
+        if (empty($template_key)) {
+            $this->session->set_flashdata('error', 'Template key is required');
+            redirect('admin/settings?tab=template');
+            return;
+        }
+        
+        // Check if template exists
+        $this->load->helper('template');
+        $available_templates = get_available_templates();
+        
+        if (!array_key_exists($template_key, $available_templates)) {
+            $this->session->set_flashdata('error', 'Template not found');
+            redirect('admin/settings?tab=template');
+            return;
+        }
+        
+        // Update active template
+        $this->Settings_model->update('active_template', $template_key, null, 'template');
+        
+        // Also sync theme colors with template defaults
+        $template_info = $available_templates[$template_key];
+        if (!empty($template_info['colors'])) {
+            foreach ($template_info['colors'] as $key => $color) {
+                $color_key = 'theme_' . $key . '_color';
+                $this->Settings_model->update($color_key, $color, null, 'theme');
+            }
+        }
+        
+        $this->session->set_flashdata('success', 'Template "' . htmlspecialchars($template_info['display_name'] ?? $template_key) . '" is now active.');
+        redirect('admin/settings?tab=template');
     }
 
     private function upload_file($field_name, $folder = 'uploads')

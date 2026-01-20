@@ -18,6 +18,7 @@ class Home extends Frontend_Controller {
 			$this->load->model('Department_model');
 			$this->load->model('Faculty_staff_model');
 			$this->load->model('Gallery_model');
+			$this->load->model('About_accreditations_model');
 		} else {
 			// Tourism template models
 			$this->load->model('Package_model');
@@ -48,15 +49,19 @@ class Home extends Frontend_Controller {
 		// Load template-specific content
 		if ($active_template === 'college') {
 			$this->load_college_content($data);
+		} elseif ($active_template === 'medical') {
+			$this->load_medical_content($data);
 		} else {
 			$this->load_tourism_content($data);
 		}
 
 		// Load template-specific header, navigation, page, and footer
-		load_template_view('header', $data);
-		load_template_view('navigation', $data);
+		// Use direct view loading for template components (header, navigation, footer are in template root)
+		$template = get_active_template();
+		$this->load->view('templates/' . $template . '/header', $data);
+		$this->load->view('templates/' . $template . '/navigation', $data);
 		load_template_page('home', $data);
-		load_template_view('footer', $data);
+		$this->load->view('templates/' . $template . '/footer', $data);
 	}
 	
 	/**
@@ -140,6 +145,149 @@ class Home extends Frontend_Controller {
 		// (existing blog posts are tourism-related)
 		// TODO: Add blog category filtering by template
 		$data['latest_blogs'] = [];
+		
+		// Load accreditations for homepage
+		$data['accreditations'] = [];
+		try {
+			$data['accreditations'] = $this->About_accreditations_model->get_active(10, 0, 'college');
+		} catch (Exception $e) {
+			$data['accreditations'] = [];
+		}
+		
+		// Load testimonials for homepage
+		$data['testimonials'] = [];
+		if ($this->db->table_exists('testimonials')) {
+			try {
+				$this->load->model('Testimonial_model');
+				$data['testimonials'] = $this->Testimonial_model->get_active(6);
+			} catch (Exception $e) {
+				$data['testimonials'] = [];
+			}
+		}
+	}
+	
+	/**
+	 * Load content specific to the Medical template
+	 */
+	private function load_medical_content(&$data)
+	{
+		// SEO Meta Tags for Medical
+		$data['page_title'] = 'TNA CARE | Connecting Communities to Better Health';
+		$data['meta_description'] = 'TNA CARE is a Tanzanian health service facilitator offering digital health education, corporate wellness programs, medical outreach, and health media solutions.';
+		$data['meta_keywords'] = 'TNA CARE, healthcare Tanzania, digital health, health education, corporate wellness, medical outreach, public health media';
+		
+		// Stats counters - can be configured in settings or use defaults
+		$data['stats'] = [
+			'people_reached' => $this->get_setting('medical_people_reached', '1'),
+			'subscribers' => $this->get_setting('medical_subscribers', '19.7'),
+			'partnerships' => $this->get_setting('medical_partnerships', '50'),
+			'years_service' => $this->get_setting('medical_years_service', '5')
+		];
+		
+		// Load testimonials - only if table exists
+		$data['testimonials'] = [];
+		if ($this->db->table_exists('testimonials')) {
+			try {
+				$this->load->model('Testimonial_model');
+				$data['testimonials'] = $this->Testimonial_model->get_featured(6);
+			} catch (Exception $e) {
+				$data['testimonials'] = [];
+			}
+		}
+		
+		// Load gallery images
+		$data['gallery_images'] = [];
+		try {
+			$data['gallery_images'] = $this->Gallery_model->get_featured(8);
+		} catch (Exception $e) {
+			$data['gallery_images'] = [];
+		}
+		
+		// Load latest blog posts
+		$data['latest_blogs'] = [];
+		if (isset($this->Blog_model)) {
+			try {
+				$data['latest_blogs'] = $this->Blog_model->get_latest_posts(3);
+			} catch (Exception $e) {
+				$data['latest_blogs'] = [];
+			}
+		}
+		
+		// Load medical specialties (TNA CARE services)
+		$data['medical_specialties'] = [];
+		$data['featured_specialties'] = [];
+		if ($this->db->table_exists('specialties')) {
+			try {
+				$this->load->model('Specialty_model');
+				$data['medical_specialties'] = $this->Specialty_model->get_active(8);
+				$data['featured_specialties'] = $this->Specialty_model->get_featured(4);
+			} catch (Exception $e) {
+				$data['medical_specialties'] = [];
+				$data['featured_specialties'] = [];
+			}
+		}
+		
+		// Load medical expertises (Clinical expertise like Cardiology, Surgery, etc.)
+		$data['medical_expertises'] = [];
+		$data['featured_expertises'] = [];
+		if ($this->db->table_exists('expertises')) {
+			try {
+				$this->load->model('Expertise_model');
+				$data['medical_expertises'] = $this->Expertise_model->get_active(8);
+				$data['featured_expertises'] = $this->Expertise_model->get_featured(6);
+			} catch (Exception $e) {
+				$data['medical_expertises'] = [];
+				$data['featured_expertises'] = [];
+			}
+		}
+		
+		// Load partner hospitals - Tanzanian
+		$data['tz_partners'] = [];
+		if ($this->db->table_exists('partners')) {
+			try {
+				$this->load->model('Partner_model');
+				$data['tz_partners'] = $this->Partner_model->get_by_type('tanzania', 4);
+				$data['int_partners'] = $this->Partner_model->get_by_type('international', 4);
+			} catch (Exception $e) {
+				$data['tz_partners'] = [];
+				$data['int_partners'] = [];
+			}
+		}
+		
+		// Load team members for leadership section
+		$data['team_members'] = [];
+		$data['featured_team_members'] = [];
+		if ($this->db->table_exists('team_members')) {
+			try {
+				$this->load->model('Team_member_model');
+				$active_template = get_active_template();
+				$data['team_members'] = $this->Team_member_model->get_by_template($active_template, 8);
+				$data['featured_team_members'] = $this->Team_member_model->get_featured(4);
+			} catch (Exception $e) {
+				$data['team_members'] = [];
+				$data['featured_team_members'] = [];
+			}
+		}
+		
+		// Clear tourism-specific data
+		$data['packages'] = [];
+		$data['featured_packages'] = [];
+		$data['featured_destinations'] = [];
+		$data['featured_programs'] = [];
+		$data['programs'] = [];
+	}
+	
+	/**
+	 * Helper to get setting with default value
+	 */
+	protected function get_setting($key, $default = '')
+	{
+		try {
+			$setting = $this->Settings_model->get($key);
+			return $setting ? $setting : $default;
+		} catch (Exception $e) {
+			return $default;
+		}
 	}
 	
 	/**

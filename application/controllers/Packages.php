@@ -7,7 +7,7 @@ class Packages extends Frontend_Controller {
     {
         parent::__construct();
         $this->load->model('Package_model');
-        $this->load->helper(['form', 'text']);
+        $this->load->helper(['form', 'text', 'template']);
         $this->load->library(['form_validation', 'email', 'session']);
     }
 
@@ -43,10 +43,14 @@ class Packages extends Frontend_Controller {
             ['title' => 'Packages', 'url' => '']
         ];
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/packages-list', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('packages-list', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -72,10 +76,14 @@ class Packages extends Frontend_Controller {
         // Get related packages (same category, exclude current)
         $data['related_packages'] = $this->Package_model->get_related_packages($package->id, $package->category, 3);
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/package-detail-dynamic', $data); 
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('package-detail-dynamic', $data); 
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -172,10 +180,14 @@ class Packages extends Frontend_Controller {
             ['title' => 'Search Results', 'url' => '']
         ];
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/search-results', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('search-results', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**

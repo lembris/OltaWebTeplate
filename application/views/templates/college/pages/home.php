@@ -249,10 +249,10 @@
 
 
 <!-- ============================================
-     EVENTS & NOTICES - Combined Section
-     ============================================ -->
+      EVENTS & NOTICES - Combined Section
+      ============================================ -->
 <?php if(!empty($upcoming_events) || !empty($latest_notices)): ?>
-<section class="ftco-section bg-light">
+<section class="ftco-section bg-light" style="padding: 2rem 0;">
     <div class="container">
         <div class="row">
             <!-- Events Column -->
@@ -265,8 +265,7 @@
                 <div class="events-list">
                     <?php foreach(array_slice($upcoming_events, 0, 4) as $event): ?>
                     <?php 
-                        $event_id = is_object($event) ? $event->id : ($event['id'] ?? '');
-                        $event_uid = is_object($event) ? $event->uid : ($event['uid'] ?? '');
+                        $event_slug = is_object($event) ? ($event->slug ?? '') : ($event['slug'] ?? '');
                         $event_title = is_object($event) ? $event->title : ($event['title'] ?? '');
                         $event_date = is_object($event) ? $event->start_date : ($event['start_date'] ?? '');
                         $event_time = is_object($event) ? ($event->start_time ?? '') : ($event['start_time'] ?? '');
@@ -277,7 +276,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div style="flex: 1;">
                                 <h5 class="mb-2">
-                                    <a href="<?php echo base_url('events/' . $event_uid); ?>" style="text-decoration: none; color: #333;">
+                                    <a href="<?php echo base_url('events/view/' . $event_slug); ?>" style="text-decoration: none; color: #333;">
                                         <?php echo $event_title; ?>
                                     </a>
                                 </h5>
@@ -295,7 +294,7 @@
                                 <?php endif; ?>
                                 <p class="small mb-0"><?php echo word_limiter(strip_tags($event_desc), 15); ?></p>
                             </div>
-                            <a href="<?php echo base_url('events/' . $event_uid); ?>" class="btn btn-sm btn-outline-primary ml-2" style="white-space: nowrap;">Details</a>
+                            <a href="<?php echo base_url('events/view/' . $event_slug); ?>" class="btn btn-sm btn-outline-primary ml-2" style="white-space: nowrap;">Details</a>
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -357,9 +356,21 @@
 <?php endif; ?>
 
 
+<!-- PRIORITY 1: TESTIMONIALS (Social Proof) -->
+<section class="ftco-section" style="padding: 0; margin: 0;">
+<?php include VIEWPATH . 'templates/college/sections/home_testimonials.php'; ?>
+</section>
+
+<!-- PRIORITY 2: STATISTICS (Credibility) -->
+<section class="ftco-section" style="padding: 0; margin: 0;">
+<?php include VIEWPATH . 'templates/college/sections/statistics_facts.php'; ?>
+</section>
+
 
 <!-- STUDENT WORK SHOWCASE -->
+<section class="ftco-section bg-light" style="padding-top: 2rem;">
 <?php include VIEWPATH . 'templates/college/sections/student_work.php'; ?>
+</section>
 
 <!-- Featured Programs section -->
 <?php include VIEWPATH . 'templates/college/sections/featured_programs.php'; ?>
@@ -463,46 +474,70 @@
 
 
 <!-- ============================================
-     FEATURED FACULTY - Dynamic Section
-     ============================================ -->
+      FEATURED FACULTY - Dynamic Section
+      ============================================ -->
 <?php if(!empty($featured_faculty)): ?>
-    <section class="section bg-light">
-        <div class="container">
-            <div class="row justify-content-center pb-4">
-                <div class="col-md-12 heading-section text-center ftco-animate">
-                    <span class="subheading">Meet Our Experts</span>
-                    <h2 class="mb-4">Distinguished Faculty Members</h2>
-                </div>
-            </div>
-            <div class="row">
-                <?php foreach($featured_faculty as $faculty): ?>
-                <?php 
-                    // Handle faculty data (both object and array)
-                    // Note: faculty_staff table uses first_name, last_name, photo (not name, image)
-                    $faculty_id = is_object($faculty) ? $faculty->id : ($faculty['id'] ?? '');
-                    $faculty_first = is_object($faculty) ? $faculty->first_name : ($faculty['first_name'] ?? '');
-                    $faculty_last = is_object($faculty) ? $faculty->last_name : ($faculty['last_name'] ?? '');
-                    $faculty_name = $faculty_first . ' ' . $faculty_last;
-                    $faculty_title = is_object($faculty) ? ($faculty->title ?? 'Instructor') : ($faculty['title'] ?? 'Instructor');
-                    $faculty_image = is_object($faculty) ? ($faculty->photo ?? '') : ($faculty['photo'] ?? '');
-                    $faculty_bio = is_object($faculty) ? ($faculty->bio ?? '') : ($faculty['bio'] ?? '');
-                    $faculty_department = is_object($faculty) ? ($faculty->department_name ?? '') : ($faculty['department_name'] ?? '');
-                ?>
-                <div class="col-md-6 col-lg-3 ftco-animate">
-                    <div class="staffcard">
-                        <div class="img img-3" style="background-image: url(<?php echo !empty($faculty_image) ? base_url($faculty_image) : base_url('assets/images/placeholder-avatar.png'); ?>);"></div>
-                        <div class="stafftext p-3 text-center">
-                            <h3><?php echo trim($faculty_name); ?></h3>
-                            <p class="staff-position"><?php echo $faculty_title; ?></p>
-                            <p class="text-muted"><?php echo $faculty_department; ?></p>
-                            <p class="text-sm"><?php echo word_limiter(strip_tags($faculty_bio), 15, '...'); ?></p>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
+<section class="ftco-section" style="background-color: white;">
+    <div class="container">
+        <div class="row justify-content-center pb-4">
+            <div class="col-md-12 heading-section text-center ftco-animate">
+                <span class="subheading">Meet Our Experts</span>
+                <h2 class="mb-4" style="color: #333;">Distinguished Faculty Members</h2>
             </div>
         </div>
-    </section>
+        <div class="row">
+            <?php foreach($featured_faculty as $faculty): ?>
+            <?php 
+                // Handle faculty data (both object and array)
+                $faculty_slug = is_object($faculty) ? ($faculty->slug ?? '') : ($faculty['slug'] ?? '');
+                $faculty_first = is_object($faculty) ? $faculty->first_name : ($faculty['first_name'] ?? '');
+                $faculty_last = is_object($faculty) ? $faculty->last_name : ($faculty['last_name'] ?? '');
+                $faculty_name = $faculty_first . ' ' . $faculty_last;
+                $faculty_title = is_object($faculty) ? ($faculty->title ?? 'Instructor') : ($faculty['title'] ?? 'Instructor');
+                $faculty_image = is_object($faculty) ? ($faculty->photo ?? '') : ($faculty['photo'] ?? '');
+                $faculty_bio = is_object($faculty) ? ($faculty->bio ?? '') : ($faculty['bio'] ?? '');
+                $faculty_department = is_object($faculty) ? ($faculty->department_name ?? '') : ($faculty['department_name'] ?? '');
+                $faculty_email = is_object($faculty) ? ($faculty->email ?? '') : ($faculty['email'] ?? '');
+                
+                // Get photo URL
+                $photo_url = '';
+                if (!empty($faculty_image)) {
+                    $photo_path = FCPATH . 'assets/images/faculty/' . $faculty_image;
+                    if (file_exists($photo_path)) {
+                        $photo_url = base_url('assets/images/faculty/' . $faculty_image);
+                    }
+                }
+                if (empty($photo_url)) {
+                    $photo_url = get_template_image('dmi_journey.jpg');
+                }
+            ?>
+            <div class="col-md-3 col-sm-6 ftco-animate">
+                <div class="team-card text-center p-3" style="background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); transition: transform 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <div class="team-photo mb-3" style="width: 120px; height: 120px; border-radius: 50%; margin: 0 auto; overflow: hidden; border: 4px solid var(--primary-color, #C7805C);">
+                        <img src="<?php echo $photo_url; ?>" alt="<?php echo htmlspecialchars($faculty_name); ?>" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h5 style="color: #333; margin-bottom: 5px; font-weight: 600;"><?php echo htmlspecialchars($faculty_name); ?></h5>
+                    <p class="team-title" style="color: var(--primary-color, #C7805C); font-size: 0.9rem; margin-bottom: 5px;"><?php echo htmlspecialchars($faculty_title); ?></p>
+                    <?php if (!empty($faculty_department)): ?>
+                    <p class="team-dept" style="color: #888; font-size: 0.8rem;"><?php echo htmlspecialchars($faculty_department); ?></p>
+                    <?php endif; ?>
+                    <?php if (!empty($faculty_email)): ?>
+                    <a href="mailto:<?php echo htmlspecialchars($faculty_email); ?>" style="color: var(--secondary-color, #90B3A7); font-size: 0.85rem; text-decoration: none;">
+                        <i class="fa fa-envelope" style="margin-right: 5px;"></i><?php echo htmlspecialchars($faculty_email); ?>
+                    </a>
+                    <?php endif; ?>
+                    <div class="mt-3">
+                        <a href="<?php echo base_url('faculty/view/' . $faculty_slug); ?>" class="btn btn-sm" style="background: var(--primary-color, #C7805C); color: white; border-radius: 20px; padding: 5px 15px;">View Profile</a>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <div class="row justify-content-center mt-5">
+            <a href="<?php echo base_url('faculty'); ?>" class="btn btn-outline-primary px-5" style="border-radius: 25px;">View All Team Members</a>
+        </div>
+    </div>
+</section>
 <?php endif; ?>
 
 
@@ -605,6 +640,9 @@
 </section>
 <?php endif; ?>
 
+<!-- Accreditations Section -->
+<?php include VIEWPATH . 'templates/college/sections/about_accreditations.php'; ?>
+
 <!-- Partners section -->
 <?php include VIEWPATH . 'templates/college/sections/partners.php'; ?>
 
@@ -704,6 +742,23 @@
                         messageDiv.style.display = 'none';
                     }, 5000);
                 });
+            });
+        }
+
+        // Testimonial Carousel Initialization
+        if (typeof jQuery !== 'undefined' && jQuery.fn.owlCarousel) {
+            jQuery('.carousel-testimony').owlCarousel({
+                autoplay: true,
+                loop: true,
+                margin: 20,
+                nav: true,
+                dots: true,
+                navText: ['<span class="fa fa-chevron-left"></span>', '<span class="fa fa-chevron-right"></span>'],
+                responsive: {
+                    0: { items: 1 },
+                    768: { items: 2 },
+                    992: { items: 3 }
+                }
             });
         }
     });

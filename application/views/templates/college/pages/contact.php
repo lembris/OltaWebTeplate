@@ -275,7 +275,7 @@
 
 
 <!-- Testimonials -->
- <?php include VIEWPATH.'templates/college/sections/testimonials.php'; ?>
+<?php include VIEWPATH.'templates/college/sections/testimonials.php'; ?>
 
  
 <!-- Partners section -->

@@ -7,6 +7,7 @@ class Itinerary extends Frontend_Controller {
     {
         parent::__construct();
         $this->load->model('Itinerary_model');
+        $this->load->helper('template');
     }
 
     /**
@@ -36,11 +37,15 @@ class Itinerary extends Frontend_Controller {
         $data['main_page'] = 'Itinerary';
         $data['current_page_name'] = $data['itinerary']->title ?? 'Itinerary Details';
 
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
         // Load views
-        $this->load->view('includes/header', $data);
-        $this->load->view('pages/sections/page-hero-unified', $data);
-        $this->load->view('itinerary/itinerary-detail', $data);
-        $this->load->view('includes/footer', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/pages/sections/page-hero-unified', $data);
+        $this->load->view('templates/' . $template . '/itinerary/itinerary-detail', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -56,10 +61,14 @@ class Itinerary extends Frontend_Controller {
         $data['main_page'] = 'Itineraries';
         $data['current_page_name'] = 'Our Itineraries';
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('pages/sections/page-hero-unified', $data);
-        $this->load->view('itinerary/itinerary-listing', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/pages/sections/page-hero-unified', $data);
+        $this->load->view('templates/' . $template . '/itinerary/itinerary-listing', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**

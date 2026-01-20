@@ -8,6 +8,7 @@ class Notices extends Frontend_Controller {
         parent::__construct();
         $this->load->model('Notice_model');
         $this->load->library('pagination');
+        $this->load->helper('template');
     }
 
     /**
@@ -64,11 +65,12 @@ class Notices extends Frontend_Controller {
         // Load footer programs (college template)
         $data['footer_programs'] = $this->get_footer_programs();
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/sections/page-hero-unified', $data);
-        $this->load->view('notices/notices-listing', $data);
-        $this->load->view('includes/footer', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        $this->load->view('templates/' . $template . '/pages/sections/page-hero-unified', $data);
+        $this->load->view('templates/' . $template . '/notices/notices-listing', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -101,11 +103,12 @@ class Notices extends Frontend_Controller {
         // Load footer programs (college template)
         $data['footer_programs'] = $this->get_footer_programs();
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/sections/page-hero-unified', $data);
-        $this->load->view('notices/notice-single', $data);
-        $this->load->view('includes/footer', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        $this->load->view('templates/' . $template . '/pages/sections/page-hero-unified', $data);
+        $this->load->view('templates/' . $template . '/notices/notice-single', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -140,11 +143,12 @@ class Notices extends Frontend_Controller {
         // Load footer programs (college template)
         $data['footer_programs'] = $this->get_footer_programs();
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/sections/page-hero-unified', $data);
-        $this->load->view('notices/notices-listing', $data);
-        $this->load->view('includes/footer', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        $this->load->view('templates/' . $template . '/pages/sections/page-hero-unified', $data);
+        $this->load->view('templates/' . $template . '/notices/notices-listing', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**

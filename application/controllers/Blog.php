@@ -67,10 +67,11 @@ class Blog extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('blog', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -90,10 +91,11 @@ class Blog extends Frontend_Controller {
             // Load footer programs for college template
             $data['footer_programs'] = $this->get_footer_programs();
             
-            load_template_view('header', $data);
-            load_template_view('navigation', $data);
+            $template = get_active_template();
+            $this->load->view('templates/' . $template . '/header', $data);
+            $this->load->view('templates/' . $template . '/navigation', $data);
             load_template_page('blog-404', $data);
-            load_template_view('footer', $data);
+            $this->load->view('templates/' . $template . '/footer', $data);
             return;
         }
 
@@ -125,10 +127,11 @@ class Blog extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('blog-single', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -136,6 +139,9 @@ class Blog extends Frontend_Controller {
      */
     public function category($category, $page = 1)
     {
+        // Convert URL-safe format back to original category name
+        $category = str_replace('-', ' ', $category);
+        $category = urldecode($category);
         $limit = 12;
         $page = max(1, (int)$page); // Ensure page is at least 1
         $total = $this->Blog_model->get_category_count($category);
@@ -190,10 +196,11 @@ class Blog extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
-        load_template_page('blog', $data);
-        load_template_view('footer', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('blog-category', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -247,10 +254,11 @@ class Blog extends Frontend_Controller {
         
         $data = array_merge($this->get_common_data(), $data);
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
-        load_template_page('blog', $data);
-        load_template_view('footer', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('blog-search', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**

@@ -22,18 +22,30 @@ class Contact extends Frontend_Controller {
         if ($active_template === 'college') {
             $data['page_title'] = 'Contact Us - Get in Touch';
             $data['meta_description'] = 'Contact our institution for admissions, inquiries, and more information about our programs.';
+            
+            // Load featured testimonials
+            $this->load->model('Testimonial_model');
+            $data['testimonials'] = $this->Testimonial_model->get_featured(6);
+        } elseif ($active_template === 'medical') {
+            $data['page_title'] = 'Contact Us - TNA CARE';
+            $data['meta_description'] = 'Get in touch with TNA CARE for healthcare inquiries, partnerships, or to schedule a consultation.';
+            
+            // Load FAQs
+            $this->load->model('About_faq_model');
+            $data['contact_faqs'] = $this->About_faq_model->get_grouped_by_category('medical');
         } else {
-            $data['page_title'] = 'Contact Us - Safari Booking Inquiries';
+            $data['page_title'] = 'Contact Us - Safari Adventure Tours';
             $data['meta_description'] = 'Get in touch with Osiram Safari Adventure for safari bookings and travel inquiries.';
         }
         
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('contact', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -108,6 +120,8 @@ class Contact extends Frontend_Controller {
         
         if ($active_template === 'college') {
             return '📚 Incorrect answer! That\'s not right. Let\'s test your knowledge again!';
+        } elseif ($active_template === 'medical') {
+            return '🏥 Oops! Wrong answer. Please try again!';
         } else {
             return '🦁 Oops! Wrong safari answer. Are you sure you\'re not a hyena bot? Try again!';
         }
@@ -122,9 +136,67 @@ class Contact extends Frontend_Controller {
         
         if ($active_template === 'college') {
             return $this->get_college_questions();
+        } elseif ($active_template === 'medical') {
+            return $this->get_medical_questions();
         } else {
             return $this->get_safari_questions();
         }
+    }
+    
+    /**
+     * Get Medical CAPTCHA questions pool
+     */
+    private function get_medical_questions()
+    {
+        return [
+            // Health Facts
+            ['q' => '🏥 What organ pumps blood through the body?', 'a' => 'heart', 'hint' => 'In your chest...'],
+            ['q' => '🩺 How many bones are in the adult human body?', 'a' => '206', 'hint' => 'Count them...'],
+            ['q' => '🦴 What is the largest organ in the human body?', 'a' => 'skin', 'hint' => 'You can see it...'],
+            ['q' => '🧠 What organ controls the body?', 'a' => 'brain', 'hint' => 'In your head...'],
+            ['q' => '💉 How many liters of blood does an adult have?', 'a' => '5', 'hint' => 'Approximately...'],
+            ['q' => '🦷 How many teeth do adults normally have?', 'a' => '32', 'hint' => 'Including wisdom teeth...'],
+            ['q' => '❤️ What is the normal resting heart rate?', 'a' => '72', 'hint' => 'Beats per minute...'],
+            ['q' => '🌡️ What is normal body temperature in Celsius?', 'a' => '37', 'hint' => '98.6 Fahrenheit...'],
+            ['q' => '💨 What gas do we breathe in?', 'a' => 'oxygen', 'hint' => 'O2...'],
+            ['q' => '🦠 What causes the common cold?', 'a' => 'virus', 'hint' => 'Not bacteria...'],
+            
+            // Medical Terms
+            ['q' => '👨‍⚕️ What do you call a doctor who treats children?', 'a' => 'pediatrician', 'hint' => 'Or pediatrician...'],
+            ['q' => '🦴 What doctor treats bones?', 'a' => 'orthopedic', 'hint' => 'Or orthopedist...'],
+            ['q' => '🧠 What doctor treats brain disorders?', 'a' => 'neurologist', 'hint' => 'Nerves and brain...'],
+            ['q' => '👁️ What doctor specializes in eye care?', 'a' => 'optometrist', 'hint' => 'Or ophthalmologist...'],
+            ['q' => '🦷 What doctor works on teeth?', 'a' => 'dentist', 'hint' => 'Oral health...'],
+            ['q' => '💊 What is another name for a physician?', 'a' => 'doctor', 'hint' => 'Or MD...'],
+            ['q' => '🏨 Where do patients receive overnight care?', 'a' => 'hospital', 'hint' => 'Medical facility...'],
+            ['q' => '🚑 What vehicle transports patients?', 'a' => 'ambulance', 'hint' => 'Emergency vehicle...'],
+            
+            // Health Questions
+            ['q' => '💧 How much water should you drink daily?', 'a' => '8', 'hint' => 'Glasses...'],
+            ['q' => '😴 How many hours of sleep do adults need?', 'a' => '8', 'hint' => 'Per night...'],
+            ['q' => '🍎 What fruit keeps the doctor away?', 'a' => 'apple', 'hint' => 'An apple a day...'],
+            ['q' => '🚭 Is smoking healthy? (yes/no)', 'a' => 'no', 'hint' => 'Harmful habit...'],
+            ['q' => '🏃 Is exercise good for health? (yes/no)', 'a' => 'yes', 'hint' => 'Physical activity...'],
+            ['q' => '🥗 Is vegetables important? (yes/no)', 'a' => 'yes', 'hint' => 'Healthy eating...'],
+            ['q' => '😷 Do we cover coughs? (yes/no)', 'a' => 'yes', 'hint' => 'Good hygiene...'],
+            ['q' => '🧴 Should we wash hands? (yes/no)', 'a' => 'yes', 'hint' => 'Before eating...'],
+            
+            // Medical Facts
+            ['q' => '💉 What protects against diseases?', 'a' => 'vaccine', 'hint' => 'Immunization...'],
+            ['q' => '🩹 What do you put on a cut?', 'a' => 'bandage', 'hint' => 'Or plaster...'],
+            ['q' => '🌡️ What tool measures temperature?', 'a' => 'thermometer', 'hint' => 'For fevers...'],
+            ['q' => '🩸 What do you check for diabetes?', 'a' => 'blood', 'hint' => 'Sugar test...'],
+            ['q' => '👂 What do doctors use to check ears?', 'a' => 'otoscope', 'hint' => 'Looking instrument...'],
+            ['q' => '💓 What measures heart rate?', 'a' => 'pulse', 'hint' => 'Or heartbeat...'],
+            ['q' => '🩺 What do doctors listen to your heart with?', 'a' => 'stethoscope', 'hint' => 'Doctor\'s tool...'],
+            ['q' => '🦠 Is COVID-19 caused by a virus? (yes/no)', 'a' => 'yes', 'hint' => 'Pandemic disease...'],
+            
+            // Simple Questions
+            ['q' => '👶 How many months is a full-term pregnancy?', 'a' => '9', 'hint' => 'Approximately...'],
+            ['q' => '🦴 Do babies have more bones than adults? (yes/no)', 'a' => 'yes', 'hint' => 'They fuse together...'],
+            ['q' => '👵 Do wrinkles increase with age? (yes/no)', 'a' => 'yes', 'hint' => 'Natural aging...'],
+            ['q' => '💇 Does hair grow continuously? (yes/no)', 'a' => 'yes', 'hint' => 'Except eyebrows...'],
+        ];
     }
     
     /**
@@ -466,8 +538,8 @@ class Contact extends Frontend_Controller {
         }
 
         // Build email
-        $receiver_mail = 'osiramsafari@gmail.com';
-        $email_subject = 'CONTACT - QUERY';
+        $receiver_mail = $this->site_email ?: 'info@tnacare.or.tz';
+        $email_subject = 'CONTACT - ' . strtoupper($subject);
 
         $body = '<h3>New Contact Form Submission</h3>
                  <p><strong>From:</strong> ' . $email . '</p>
@@ -521,10 +593,14 @@ class Contact extends Frontend_Controller {
         // Clear the session data
         $this->session->unset_userdata('last_contact');
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('contact-success', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -664,6 +740,10 @@ class Contact extends Frontend_Controller {
      */
     public function sendEmail($to, $subject, $message) 
     {
+        $active_template = get_active_template();
+        $site_name = $this->site_name ?: 'TNA CARE';
+        $from_email = $this->site_email ?: 'info@tnacare.or.tz';
+        
         $config = array(
             'protocol' => 'smtp',
             'smtp_host' => 'smtp.gmail.com',
@@ -678,7 +758,7 @@ class Contact extends Frontend_Controller {
         
         $this->load->library('email');
         $this->email->initialize($config);
-        $this->email->from('lembris.internet@gmail.com', 'Osiram Safari Adventure');
+        $this->email->from($from_email, $site_name);
         $this->email->to($to);
         $this->email->subject($subject);
         $this->email->message($message);

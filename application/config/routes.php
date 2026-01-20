@@ -141,6 +141,32 @@ $route['programs/(:any)'] = 'programs/view/$1';  // Clean URL: /programs/BBA
 // Page Routes - SEO Optimized
 $route['page/(:any)'] = 'page/view/$1';
 
+// Services Route
+$route['services'] = 'services/index';
+
+// Specialties Route
+$route['specialties'] = 'specialties/index';
+$route['specialties/view/(:any)'] = 'specialties/view/$1';
+
+// Expertise Route
+$route['expertise'] = 'expertise/index';
+$route['expertise/(:any)'] = 'expertise/view/$1';
+
+// Additional Frontend Routes
+$route['about'] = 'about/index';
+$route['consultation'] = 'consultation/index';
+$route['consultation/success/(:any)'] = 'consultation/success/$1';
+$route['faculty'] = 'faculty/index';
+$route['faculty/store_review'] = 'faculty/store_review';
+$route['faculty/get_reviews/(:num)'] = 'faculty/get_reviews/$1';
+$route['faculty/(:any)'] = 'faculty/view/$1';
+$route['events'] = 'events/index';
+$route['events/view/(:any)'] = 'events/view/$1';
+$route['events/type/(:any)'] = 'events/by_type/$1';
+$route['events/search'] = 'events/search';
+$route['events/register/(:any)'] = 'events/register/$1';
+$route['events/calendar'] = 'events/calendar';
+
 // SEO Routes - Sitemap & Robots
 $route['sitemap.xml'] = 'sitemap/index';
 $route['sitemap'] = 'sitemap/index';
@@ -202,6 +228,11 @@ $route['admin/itineraries/reorder'] = 'admin/itineraries/reorder';
 // Admin Settings
 $route['admin/settings'] = 'admin/settings/index';
 $route['admin/settings/save'] = 'admin/settings/save';
+$route['admin/settings/save_template'] = 'admin/settings/save_template';
+$route['admin/settings/delete_template'] = 'admin/settings/delete_template';
+$route['admin/settings/delete_template/(:any)'] = 'admin/settings/delete_template/$1';
+$route['admin/settings/activate_template'] = 'admin/settings/activate_template';
+$route['admin/settings/activate_template/(:any)'] = 'admin/settings/activate_template/$1';
 $route['admin/settings/clear-cache'] = 'admin/settings/clear_cache';
 $route['admin/settings/test-email'] = 'admin/settings/test_email';
 
@@ -229,10 +260,6 @@ $route['admin/directorymgmt/toggle-status/([a-f0-9\-]+)'] = 'admin/directorycont
 // Frontend Events Routes
 $route['events'] = 'events/index';
 $route['events/calendar'] = 'events/calendar';
-$route['events/search'] = 'events/search';
-$route['events/type/(:any)'] = 'events/by_type/$1';
-$route['events/register/([a-f0-9\-]+)'] = 'events/register/$1';
-$route['events/([a-f0-9\-]+)'] = 'events/view/$1';
 
 // Admin Events
 $route['admin/events'] = 'admin/events/index';

@@ -1,0 +1,46 @@
+-- Migration 010: Create expertises table for medical template
+-- Stores medical expertise (Cardiology, Surgery, Transplant, etc.)
+-- Run this SQL in phpMyAdmin (database: dmi)
+
+CREATE TABLE IF NOT EXISTS `expertises` (
+    `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `uid` varchar(36) NOT NULL,
+    `name` varchar(255) NOT NULL,
+    `slug` varchar(255) NOT NULL,
+    `short_description` varchar(255) DEFAULT NULL,
+    `description` text DEFAULT NULL,
+    `icon` varchar(100) DEFAULT NULL COMMENT 'Bootstrap icon class or image path',
+    `image` varchar(255) DEFAULT NULL,
+    `category` varchar(100) DEFAULT NULL COMMENT 'e.g., cardiac, surgery, transplant, orthopedic, pediatric, oncology, specialized',
+    `features` text DEFAULT NULL COMMENT 'JSON array of feature points',
+    `display_order` int(11) NOT NULL DEFAULT 0,
+    `is_featured` tinyint(1) NOT NULL DEFAULT 0,
+    `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    PRIMARY KEY (`id`),
+    KEY `slug` (`slug`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `expertises` (`uid`, `name`, `slug`, `short_description`, `description`, `icon`, `category`, `features`, `display_order`, `is_featured`, `status`) VALUES
+('exp-001', 'Cardiology', 'cardiology', 'Diagnosis and treatment of heart and blood vessel conditions', 'Our cardiology department provides comprehensive care for all heart and cardiovascular conditions.', 'bi-heart-pulse', 'cardiac', '["ECG & Stress Testing", "Echocardiography", "Cardiac Catheterization", "Heart Failure Management", "Arrhythmia Treatment"]', 1, 1, 'active'),
+('exp-002', 'Cardiac Surgery', 'cardiac-surgery', 'Surgical procedures to treat heart conditions', 'Our cardiac surgery department specializes in complex surgical interventions for heart diseases.', 'bi-heart', 'surgery', '["Coronary Artery Bypass", "Valve Repair/Replacement", "Aortic Surgery", "Minimally Invasive Surgery", "Heart Failure Surgery"]', 2, 1, 'active'),
+('exp-003', 'Vascular Surgery', 'vascular-surgery', 'Treatment of conditions affecting blood vessels', 'Our vascular surgery department offers expert care for diseases of the peripheral arteries, veins, and lymphatic systems.', 'bi-droplet', 'surgery', '["Peripheral Artery Disease", "Aneurysm Repair", "Varicose Vein Treatment", "Carotid Surgery", "Thrombolysis"]', 3, 0, 'active'),
+('exp-004', 'Spine Disorders & Surgery', 'spine-disorders-surgery', 'Treatment for conditions affecting the spine and back', 'Our spine center provides comprehensive care for back and neck pain, spinal deformities, and degenerative conditions.', 'bi-body-text', 'surgery', '["Disc Herniation Treatment", "Spinal Fusion", "Laminectomy", "Spinal Stenosis Treatment", "Minimally Invasive Spine Surgery"]', 4, 0, 'active'),
+('exp-005', 'Orthopaedic Surgery', 'orthopaedic-surgery', 'Treatment for bone, joint, and muscle conditions', 'Our orthopaedic department provides comprehensive musculoskeletal care including joint replacement and trauma care.', 'bi-person-arms-up', 'orthopedic', '["Total Joint Replacement", "Sports Medicine", "Fracture Care", "Arthroscopy", "Rehabilitation"]', 5, 1, 'active'),
+('exp-006', 'Cosmetic Procedures', 'cosmetic-procedures', 'Surgeries to enhance physical appearance', 'Our cosmetic surgery department offers procedures to enhance appearance and restore function.', 'bi-gem', 'surgery', '["Facial Rejuvenation", "Body Contouring", "Breast Surgery", "Reconstructive Surgery", "Non-surgical Treatments"]', 6, 0, 'active'),
+('exp-007', 'Kidney Transplant', 'kidney-transplant', 'Surgical replacement of a diseased kidney', 'Our kidney transplant program provides comprehensive care for patients with end-stage renal disease.', 'bi-droplet-half', 'transplant', '["Pre-transplant Evaluation", "Living Donor Transplant", "Deceased Donor Transplant", "Post-transplant Care", "Dialysis Access"]', 7, 1, 'active'),
+('exp-008', 'Heart Transplant', 'heart-transplant', 'Replacement of a failing heart', 'Our heart transplant program offers life-saving treatment for patients with end-stage heart failure.', 'bi-heart-fill', 'transplant', '["Heart Failure Evaluation", "Ventricular Assist Devices", "Transplant Surgery", "Immunosuppression Management", "Cardiac Rehabilitation"]', 8, 1, 'active'),
+('exp-009', 'Bone Marrow Transplant', 'bone-marrow-transplant', 'Procedure to replace damaged bone marrow', 'Our bone marrow transplant program treats patients with leukemia, lymphoma, and other blood disorders.', 'bi-bandaid', 'transplant', '["Autologous Transplant", "Allogeneic Transplant", "Stem Cell Collection", "Infection Prevention", "Long-term Follow-up"]', 9, 1, 'active'),
+('exp-010', 'Liver Transplant', 'liver-transplant', 'Surgical replacement of a diseased liver', 'Our liver transplant program provides comprehensive care for patients with end-stage liver disease.', 'bi-virus', 'transplant', '["Liver Failure Evaluation", "Living Donor Transplant", "Deceased Donor Transplant", "Hepatobiliary Surgery", "Post-transplant Care"]', 10, 1, 'active'),
+('exp-011', 'Paediatric Oncology', 'paediatric-oncology', 'Specialized cancer care for children', 'Our paediatric oncology department provides specialized cancer care for children and adolescents.', 'bi-balloon-heart', 'pediatric', '["Leukemia Treatment", "Lymphoma Care", "Solid Tumor Treatment", "Stem Cell Transplant", "Psychosocial Support"]', 11, 1, 'active'),
+('exp-012', 'Paediatric Surgery', 'paediatric-surgery', 'Surgical care for infants, children, and adolescents', 'Our paediatric surgery department provides specialized surgical care for children from newborns to adolescents.', 'bi-balloon', 'pediatric', '["Neonatal Surgery", "General Paediatric Surgery", "Thoracic Surgery", "Urological Surgery", "Trauma Care"]', 12, 0, 'active'),
+('exp-013', 'Bariatric Surgery', 'bariatric-surgery', 'Weight-loss procedures for severe obesity', 'Our bariatric surgery program offers effective weight-loss solutions for patients with severe obesity.', 'bi-scale', 'surgery', '["Gastric Bypass", "Sleeve Gastrectomy", "Gastric Banding", "Revisional Surgery", "Nutritional Counseling"]', 13, 0, 'active'),
+('exp-014', 'Neurology', 'neurology', 'Diagnosis and treatment of nervous system disorders', 'Our neurology department provides expert care for disorders of the brain, spinal cord, and peripheral nervous system.', 'bi-brain', 'specialized', '["Stroke Care", "Epilepsy Management", "Movement Disorders", "Headache Treatment", "Neurodiagnostics"]', 14, 1, 'active'),
+('exp-015', 'Neurosurgery', 'neurosurgery', 'Surgical treatment of nervous system disorders', 'Our neurosurgery department provides advanced surgical treatment for brain, spine, and peripheral nerve conditions.', 'bi-cpu', 'surgery', '["Brain Tumor Surgery", "Spine Surgery", "Cerebrovascular Surgery", "Functional Neurosurgery", "Traumatic Brain Injury"]', 15, 1, 'active'),
+('exp-016', 'Physiotherapy & Rehabilitation', 'physiotherapy-rehabilitation', 'Restoring movement and function', 'Our physiotherapy and rehabilitation department helps patients recover function after injury, surgery, or illness.', 'bi-activity', 'specialized', '["Orthopaedic Rehabilitation", "Neurological Rehabilitation", "Cardiac Rehabilitation", "Sports Injury Recovery", "Pain Management"]', 16, 0, 'active'),
+('exp-017', 'Urology', 'urology', 'Treatment of urinary tract disorders', 'Our urology department provides comprehensive care for conditions affecting the urinary tract.', 'bi-droplet', 'specialized', '["Kidney Stone Treatment", "Prostate Care", "Bladder Disorders", "Male Infertility", "Urological Cancers"]', 17, 0, 'active'),
+('exp-018', 'Gastroenterology', 'gastroenterology', 'Diagnosis and treatment of digestive system disorders', 'Our gastroenterology department provides expert care for disorders of the digestive system.', 'bi-cup-hot', 'specialized', '["Endoscopy", "Colonoscopy", "Liver Disease Treatment", "IBD Management", "GI Cancer Screening"]', 18, 1, 'active'),
+('exp-019', 'Tumour & Oncology Surgery', 'tumour-oncology-surgery', 'Surgical removal of cancerous tumors', 'Our oncology surgery department specializes in the surgical treatment of tumors.', 'bi-clipboard2-pulse', 'oncology', '["Tumor Resection", "Cytoreductive Surgery", "HIPEC", "Lymph Node Dissection", "Reconstructive Surgery"]', 19, 1, 'active'),
+('exp-020', 'Dental', 'dental', 'Comprehensive care for teeth, gums, and oral health', 'Our dental department provides complete oral healthcare services for patients of all ages.', 'bi-emoji-smile', 'specialized', '["Preventive Care", "Restorative Dentistry", "Orthodontics", "Oral Surgery", "Cosmetic Dentistry"]', 20, 0, 'active'),
+('exp-021', 'Ophthalmology', 'ophthalmology', 'Diagnosis and treatment of eye disorders', 'Our ophthalmology department provides comprehensive eye care services from routine eye exams to complex surgical procedures.', 'bi-eye', 'specialized', '["Cataract Surgery", "LASIK & Refractive Surgery", "Glaucoma Treatment", "Retina Services", "Pediatric Ophthalmology"]', 21, 1, 'active');

@@ -3,16 +3,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Guide extends Frontend_Controller {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->helper('template');
+    }
+
     public function weather()
     {
         $data = $this->get_common_data();
         $data['main_page'] = 'Guide';
         $data['current_page_name'] = 'Weather condition';
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/travel-guide/weather', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('travel-guide/weather', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     public function food()
@@ -21,10 +31,14 @@ class Guide extends Frontend_Controller {
         $data['main_page'] = 'Guide';
         $data['current_page_name'] = 'Food';
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/travel-guide/food', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('travel-guide/food', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     public function cost()
@@ -33,10 +47,14 @@ class Guide extends Frontend_Controller {
         $data['main_page'] = 'Guide';
         $data['current_page_name'] = 'Cost';
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/travel-guide/cost', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('travel-guide/cost', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     public function visa()
@@ -45,9 +63,13 @@ class Guide extends Frontend_Controller {
         $data['main_page'] = 'Guide';
         $data['current_page_name'] = 'Visa';
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/travel-guide/visa', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('travel-guide/visa', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 }

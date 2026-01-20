@@ -1,11 +1,11 @@
 
 <!-- INDUSTRY PARTNERS -->
-<section class="ftco-section">
+<section class="ftco-section pb-3">
     <div class="container">
-        <div class="row justify-content-center pb-4">
+        <div class="row justify-content-center pb-1">
             <div class="col-md-12 heading-section text-center ftco-animate">
-                <span class="subheading">Connecting Talent with Industry</span>
-                <h2 class="mb-4">Industry Partners & Internships</h2>
+                <span class="subheading" style="font-size: 12px; margin-bottom: 5px;">Connecting Talent with Industry</span>
+                <h2 style="font-size: 28px; font-weight: 600;">Industry Partners & Internships</h2>
             </div>
         </div>
         <div class="row">

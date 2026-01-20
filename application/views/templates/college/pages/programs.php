@@ -57,11 +57,21 @@
                         <?php foreach ($programs as $program): ?>
                             <div class="col-md-6 ftco-animate">
                                 <div class="project-wrap">
-                                    <a href="<?= base_url('programs/' . $program->code) ?>" class="img" style="background-image: url('<?= !empty($program->image) ? base_url('assets/img/programs/' . $program->image) : get_template_image('course-1.jpg') ?>');">
+                                    <?php 
+                                    // Determine image URL
+                                    $program_image = !empty($program->image) ? $program->image : '';
+                                    if (!empty($program_image) && file_exists(FCPATH . 'assets/img/programs/' . $program_image)) {
+                                        $image_url = base_url('assets/img/programs/' . $program_image);
+                                    } else {
+                                        $image_url = base_url('assets/img/dmi_journey.jpg');
+                                    }
+                                    $program_slug = !empty($program->slug) ? $program->slug : $program->code;
+                                    ?>
+                                    <a href="<?= base_url('programs/' . $program_slug) ?>" class="img" style="background-image: url('<?= $image_url ?>');">
                                         <span class="price"><?= htmlspecialchars($program->level ?? 'Program') ?></span>
                                     </a>
                                     <div class="text p-4">
-                                        <h3><a href="<?= base_url('programs/' . $program->code) ?>"><?= htmlspecialchars($program->name) ?></a></h3>
+                                        <h3><a href="<?= base_url('programs/' . $program_slug) ?>"><?= htmlspecialchars($program->name) ?></a></h3>
                                         <p class="duration">
                                             <span><i class="fa fa-clock-o"></i> <?= htmlspecialchars($program->duration ?? 'Duration N/A') ?></span>
                                         </p>

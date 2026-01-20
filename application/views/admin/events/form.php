@@ -282,47 +282,6 @@
                 </div>
             </div>
 
-            <!-- Event Image Upload -->
-            <div class="card">
-                <div class="card-header">
-                    <i class="fas fa-image me-2"></i>Event Image
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <div class="image-preview mb-3">
-                            <?php if (isset($event) && $event && !empty($event->image)): ?>
-                                <img src="<?= base_url($event->image) ?>" 
-                                     alt="Current Image" 
-                                     id="imagePreview2" 
-                                     class="img-fluid rounded" 
-                                     style="max-height: 200px; width: 100%; object-fit: cover;">
-                            <?php else: ?>
-                                <div class="bg-light d-flex align-items-center justify-content-center rounded" 
-                                     id="imagePreviewPlaceholder2"
-                                     style="height: 150px;">
-                                    <div class="text-center text-muted">
-                                        <i class="fas fa-image fa-3x mb-2"></i>
-                                        <p class="mb-0">No image uploaded</p>
-                                    </div>
-                                </div>
-                                <img src="" 
-                                     alt="Preview" 
-                                     id="imagePreview2" 
-                                     class="img-fluid rounded" 
-                                     style="max-height: 200px; width: 100%; object-fit: cover; display: none;">
-                            <?php endif; ?>
-                        </div>
-
-                        <input type="file" 
-                               name="image" 
-                               id="image" 
-                               class="form-control" 
-                               accept="image/*">
-                        <small class="text-muted">Recommended: 600x400px. Max 2MB. JPG, PNG, WebP</small>
-                    </div>
-                </div>
-            </div>
-
             <!-- Event Info (Edit Mode) -->
             <?php if (isset($event) && $event): ?>
             <div class="card">
@@ -389,27 +348,6 @@ document.addEventListener('DOMContentLoaded', function() {
         bannerInput.addEventListener('change', function() {
             const placeholder = document.getElementById('imagePreviewPlaceholder');
             const preview = document.getElementById('imagePreview');
-            
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                    if (placeholder) {
-                        placeholder.style.display = 'none';
-                    }
-                };
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
-    }
-
-    // Event image preview
-    const imageInput = document.getElementById('image');
-    if (imageInput) {
-        imageInput.addEventListener('change', function() {
-            const placeholder = document.getElementById('imagePreviewPlaceholder2');
-            const preview = document.getElementById('imagePreview2');
             
             if (this.files && this.files[0]) {
                 const reader = new FileReader();

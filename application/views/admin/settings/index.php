@@ -82,33 +82,36 @@
                              </li>
               -->
               
-              <!-- Theme Tab - Commented out
               <li class="nav-item" role="presentation">
-                                 <button class="nav-link <?= $active_tab == 'theme' ? 'active' : '' ?>" id="theme-tab" data-bs-toggle="tab" data-bs-target="#theme" type="button">
-                                     <i class="fas fa-paint-brush me-2"></i>Theme
-                                 </button>
-                             </li>
-              -->
+                   <button class="nav-link <?= $active_tab == 'payment' ? 'active' : '' ?>" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button">
+                       <i class="fas fa-credit-card me-2"></i>Payment
+                   </button>
+               </li>
+               <li class="nav-item" role="presentation">
+                   <button class="nav-link <?= $active_tab == 'template' ? 'active' : '' ?>" id="template-tab" data-bs-toggle="tab" data-bs-target="#template" type="button">
+                       <i class="fas fa-layer-group me-2"></i>Template
+                   </button>
+               </li>
+              <li class="nav-item" role="presentation">
+                   <button class="nav-link <?= $active_tab == 'theme' ? 'active' : '' ?>" id="theme-tab" data-bs-toggle="tab" data-bs-target="#theme" type="button">
+                       <i class="fas fa-paint-brush me-2"></i>Theme
+                   </button>
+               </li>
               <li class="nav-item" role="presentation">
                    <button class="nav-link <?= $active_tab == 'seo' ? 'active' : '' ?>" id="seo-tab" data-bs-toggle="tab" data-bs-target="#seo" type="button">
                        <i class="fas fa-search me-2"></i>SEO AI
                    </button>
                </li>
-               <!-- Bulk SMS Tab - Commented out
                <li class="nav-item" role="presentation">
                    <button class="nav-link <?= $active_tab == 'sms' ? 'active' : '' ?>" id="sms-tab" data-bs-toggle="tab" data-bs-target="#sms" type="button">
                        <i class="fas fa-sms me-2"></i>Bulk SMS
                    </button>
                </li>
-               -->
-               
-               <!-- Menus Tab - Commented out
                <li class="nav-item" role="presentation">
                    <button class="nav-link <?= $active_tab == 'menu' ? 'active' : '' ?>" id="menu-tab" data-bs-toggle="tab" data-bs-target="#menu" type="button">
                        <i class="fas fa-bars me-2"></i>Menus
                    </button>
                </li>
-               -->
                </ul>
 
         <!-- Tab Contents -->
@@ -157,53 +160,6 @@
                                 <?php endif; ?>
                                 <input type="file" name="site_favicon" class="form-control" accept="image/*,.ico">
                                 <small class="text-muted">Recommended: 32x32px, ICO or PNG</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Theme Colors Section -->
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <h5 class="border-bottom pb-2 mb-3"><i class="fas fa-palette me-2"></i>Theme Colors</h5>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Primary Color</label>
-                                <div class="input-group">
-                                    <input type="color" name="primary_color" class="form-control form-control-color" value="<?= htmlspecialchars($settings['primary_color'] ?? '#C7805C') ?>" title="Choose primary color">
-                                    <input type="text" class="form-control" value="<?= htmlspecialchars($settings['primary_color'] ?? '#C7805C') ?>" id="primary_color_text" readonly>
-                                </div>
-                                <small class="text-muted">Terracotta (Main brand color)</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Secondary Color</label>
-                                <div class="input-group">
-                                    <input type="color" name="secondary_color" class="form-control form-control-color" value="<?= htmlspecialchars($settings['secondary_color'] ?? '#90B3A7') ?>" title="Choose secondary color">
-                                    <input type="text" class="form-control" value="<?= htmlspecialchars($settings['secondary_color'] ?? '#90B3A7') ?>" id="secondary_color_text" readonly>
-                                </div>
-                                <small class="text-muted">Sage green (Accent)</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Accent Color</label>
-                                <div class="input-group">
-                                    <input type="color" name="accent_color" class="form-control form-control-color" value="<?= htmlspecialchars($settings['accent_color'] ?? '#D9B39B') ?>" title="Choose accent color">
-                                    <input type="text" class="form-control" value="<?= htmlspecialchars($settings['accent_color'] ?? '#D9B39B') ?>" id="accent_color_text" readonly>
-                                </div>
-                                <small class="text-muted">Beige (Highlights)</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Background Color</label>
-                                <div class="input-group">
-                                    <input type="color" name="background_color" class="form-control form-control-color" value="<?= htmlspecialchars($settings['background_color'] ?? '#F5F0E1') ?>" title="Choose background color">
-                                    <input type="text" class="form-control" value="<?= htmlspecialchars($settings['background_color'] ?? '#F5F0E1') ?>" id="background_color_text" readonly>
-                                </div>
-                                <small class="text-muted">Cream (Light backgrounds)</small>
                             </div>
                         </div>
                     </div>
@@ -1100,6 +1056,80 @@
 
                                             <div class="alert alert-warning small mb-0">
                                                 <strong>Tip:</strong> API key is encrypted before storing. Update it only when adding a new key.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mt-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fas fa-magic me-2"></i>Test Auto-Generation
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="testAutoGenerate()">
+                                        <i class="fas fa-play me-1"></i>Generate SEO
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <p class="text-muted mb-4">Enter sample content below to see what auto-generated SEO would produce. This helps you understand how the system works.</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Content Type</label>
+                                                <select id="testContentType" class="form-select">
+                                                    <option value="blog">Blog Post</option>
+                                                    <option value="pages">Web Page</option>
+                                                    <option value="packages">Package</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">Sample Title</label>
+                                                <input type="text" id="testTitle" class="form-control" placeholder="Enter a title...">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Sample Excerpt / Short Description</label>
+                                        <textarea id="testExcerpt" class="form-control" rows="2" placeholder="Brief description..."></textarea>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Sample Full Content</label>
+                                        <textarea id="testContent" class="form-control" rows="5" placeholder="Enter your content here..."></textarea>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label class="form-label small text-muted">Meta Title</label>
+                                                <div id="previewMetaTitle" class="p-2 bg-light rounded small">-</div>
+                                                <small id="charCountTitle" class="text-muted char-count">0/60 characters</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label class="form-label small text-muted">Meta Description</label>
+                                                <div id="previewMetaDesc" class="p-2 bg-light rounded small">-</div>
+                                                <small id="charCountDesc" class="text-muted char-count">0/160 characters</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label class="form-label small text-muted">Keywords</label>
+                                                <div id="previewKeywords" class="p-2 bg-light rounded small">-</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="mb-3">
+                                                <label class="form-label small text-muted">Alt Text</label>
+                                                <div id="previewAltText" class="p-2 bg-light rounded small">-</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2388,5 +2418,69 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('An error occurred while deleting the menu item');
         });
     }
-});
-</script>
+    });
+
+    // SEO Auto-Generation Test Function
+    function testAutoGenerate() {
+    const type = document.getElementById('testContentType').value;
+    const title = document.getElementById('testTitle').value;
+    const excerpt = document.getElementById('testExcerpt').value;
+    const content = document.getElementById('testContent').value;
+    
+    if (!title) {
+       alert('Please enter a title');
+       return;
+    }
+    
+    const btn = event.target;
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Generating...';
+
+    fetch('<?= base_url('admin/seo/generate-quick') ?>', {
+       method: 'POST',
+       headers: {
+           'Content-Type': 'application/json',
+           'X-Requested-With': 'XMLHttpRequest'
+       },
+       body: JSON.stringify({
+           type: type,
+           title: title,
+           excerpt: excerpt,
+           content: content
+       })
+    })
+    .then(response => response.json())
+    .then(data => {
+       if (data.success && data.data) {
+           const seo = data.data;
+
+           document.getElementById('previewMetaTitle').textContent = seo.meta_title || '-';
+           document.getElementById('previewMetaDesc').textContent = seo.meta_description || '-';
+           document.getElementById('previewKeywords').textContent = seo.seo_keywords || '-';
+           document.getElementById('previewAltText').textContent = seo.alt_text || '-';
+
+           // Update character counts
+           const titleLen = (seo.meta_title || '').length;
+           const descLen = (seo.meta_description || '').length;
+           document.getElementById('charCountTitle').textContent = titleLen + '/60 characters';
+           document.getElementById('charCountTitle').className = titleLen > 60 ? 'text-warning char-count' : 'text-muted char-count';
+           document.getElementById('charCountDesc').textContent = descLen + '/160 characters';
+           document.getElementById('charCountDesc').className = descLen > 160 ? 'text-warning char-count' : 'text-muted char-count';
+
+           btn.disabled = false;
+           btn.innerHTML = originalHTML;
+       } else {
+           alert('Error generating SEO: ' + (data.error || 'Unknown error'));
+           btn.disabled = false;
+           btn.innerHTML = originalHTML;
+       }
+    })
+    .catch(error => {
+       console.error('Error:', error);
+       alert('An error occurred while generating SEO.');
+       btn.disabled = false;
+       btn.innerHTML = originalHTML;
+    });
+    }
+    </script>

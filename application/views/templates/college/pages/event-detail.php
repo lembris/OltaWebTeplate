@@ -1,7 +1,15 @@
 <?php
 /**
  * College Template - Event Detail Page
+ * Fixed: Dynamic theme colors
  */
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+// Get theme colors dynamically
+$primary_color = get_theme_color('primary');
+$secondary_color = get_theme_color('secondary');
+$accent_color = get_theme_color('accent');
+$primary_dark = darken_color($primary_color, 15);
 ?>
 
 <!-- ============================================
@@ -44,26 +52,41 @@
                             </span>
                         <?php endif; ?>
                         <?php if ($event->registration_required): ?>
-                            <span class="badge badge-warning">
+                            <span class="badge bg-warning text-dark">
                                 <i class="fa fa-check-circle me-1"></i>Registration Required
                             </span>
                         <?php else: ?>
-                            <span class="badge badge-success">
+                            <span class="badge" style="background-color: <?php echo $secondary_color; ?>;">
                                 <i class="fa fa-unlock me-1"></i>Open
                             </span>
                         <?php endif; ?>
                     </div>
 
                     <!-- Event Banner/Image -->
-                    <?php if (!empty($event->banner) || !empty($event->image)): ?>
+                    <?php 
+                    // Build proper image URL - use site logo as fallback
+                    $event_img = '';
+                    if (!empty($event->banner)) {
+                        $event_img = base_url($event->banner);
+                    } elseif (!empty($event->image)) {
+                        $event_img = base_url($event->image);
+                    } elseif (!empty($site_logo)) {
+                        $event_img = base_url($site_logo);
+                    } else {
+                        $fallback_logo = !empty($settings['site_logo']) ? 'assets/images/' . $settings['site_logo'] : 'assets/images/logo.png';
+                        $event_img = base_url($fallback_logo);
+                    }
+                    ?>
+                    <?php if (!empty($event_img)): ?>
                         <div class="mb-4">
-                            <?php if (!empty($event->banner)): ?>
-                                <img src="<?php echo base_url($event->banner); ?>" alt="<?php echo htmlspecialchars($event->title); ?>" class="img-fluid mb-4">
-                            <?php else: ?>
-                                <img src="<?php echo base_url($event->image); ?>" alt="<?php echo htmlspecialchars($event->title); ?>" class="img-fluid mb-4">
-                            <?php endif; ?>
+                            <img src="<?php echo $event_img; ?>" alt="<?php echo htmlspecialchars($event->title); ?>" class="img-fluid mb-4" style="width: 100%; border-radius: 12px;">
                         </div>
                     <?php endif; ?>
+
+                    <!-- Event Title -->
+                    <h1 class="event-title mb-4" style="color: <?php echo $primary_color; ?>;">
+                        <?php echo htmlspecialchars($event->title); ?>
+                    </h1>
 
                     <!-- Event Description -->
                     <div class="post-content">
@@ -72,9 +95,11 @@
 
                     <!-- Event Details -->
                     <?php if (!empty($event->organizer) || !empty($event->contact_person) || !empty($event->contact_email) || !empty($event->contact_phone)): ?>
-                        <div class="about-author d-flex p-4 mb-5 mt-5" style="background-color: #f8f9fa;">
+                        <div class="about-author d-flex p-4 mb-5 mt-5" style="background-color: #f8f9fa; border-left: 4px solid <?php echo $primary_color; ?>;">
                             <div class="desc align-self-md-center">
-                                <h4><i class="fa fa-user-circle me-2"></i>Event Organizer</h4>
+                                <h4 style="color: <?php echo $primary_color; ?>;">
+                                    <i class="fa fa-user-circle me-2"></i>Event Organizer
+                                </h4>
                                 <?php if (!empty($event->organizer)): ?>
                                     <p class="mb-2"><strong>Organization:</strong> <?php echo htmlspecialchars($event->organizer); ?></p>
                                 <?php endif; ?>
@@ -82,10 +107,10 @@
                                     <p class="mb-2"><strong>Contact Person:</strong> <?php echo htmlspecialchars($event->contact_person); ?></p>
                                 <?php endif; ?>
                                 <?php if (!empty($event->contact_email)): ?>
-                                    <p class="mb-2"><strong>Email:</strong> <a href="mailto:<?php echo htmlspecialchars($event->contact_email); ?>"><?php echo htmlspecialchars($event->contact_email); ?></a></p>
+                                    <p class="mb-2"><strong>Email:</strong> <a href="mailto:<?php echo htmlspecialchars($event->contact_email); ?>" style="color: <?php echo $primary_color; ?>;"><?php echo htmlspecialchars($event->contact_email); ?></a></p>
                                 <?php endif; ?>
                                 <?php if (!empty($event->contact_phone)): ?>
-                                    <p class="mb-0"><strong>Phone:</strong> <a href="tel:<?php echo htmlspecialchars($event->contact_phone); ?>"><?php echo htmlspecialchars($event->contact_phone); ?></a></p>
+                                    <p class="mb-0"><strong>Phone:</strong> <a href="tel:<?php echo htmlspecialchars($event->contact_phone); ?>" style="color: <?php echo $primary_color; ?>;"><?php echo htmlspecialchars($event->contact_phone); ?></a></p>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -93,8 +118,8 @@
 
                     <!-- Registrations Count -->
                     <?php if (!empty($registrations_count) && $event->registration_required): ?>
-                        <div class="mb-5 p-4" style="background-color: #f8f9fa; border-left: 4px solid #C7805C;">
-                            <i class="fa fa-users me-2"></i>
+                        <div class="mb-5 p-4" style="background-color: #f8f9fa; border-left: 4px solid <?php echo $primary_color; ?>;">
+                            <i class="fa fa-users me-2" style="color: <?php echo $primary_color; ?>;"></i>
                             <strong><?php echo $registrations_count; ?></strong> 
                             <span><?php echo $registrations_count == 1 ? 'person has' : 'people have'; ?> registered for this event.</span>
                         </div>
@@ -116,9 +141,6 @@
                             <a href="https://wa.me/?text=<?php echo urlencode($event->title . ' ' . current_url()); ?>" target="_blank" class="share-btn-circle share-btn-whatsapp" title="Share on WhatsApp">
                                 <i class="fa fa-whatsapp"></i>
                             </a>
-                            <a href="https://www.instagram.com" target="_blank" class="share-btn-circle share-btn-instagram" title="Follow on Instagram">
-                                <i class="fa fa-instagram"></i>
-                            </a>
                         </div>
                     </div>
 
@@ -135,11 +157,13 @@
             <div class="col-lg-4 sidebar ftco-animate">
                 <!-- Registration Box -->
                 <?php if ($event->registration_required || !empty($event->registration_link)): ?>
-                    <div class="sidebar-box p-4 mb-4" style="background-color: #f8f9fa;">
-                        <h5 class="mb-4">Register for This Event</h5>
+                    <div class="sidebar-box p-4 mb-4 rounded-3 shadow-sm" style="background-color: #f8f9fa;">
+                        <h5 class="mb-4 pb-2 border-bottom" style="color: <?php echo $primary_color; ?>;">
+                            <i class="fa fa-clipboard-list me-2"></i>Register for This Event
+                        </h5>
                         
                         <?php if ($event->registration_required): ?>
-                            <a href="<?php echo base_url('events/register/' . $event->uid); ?>" class="btn btn-primary w-100 mb-3">
+                            <a href="<?php echo base_url('events/register/' . $event->slug); ?>" class="btn btn-primary w-100 mb-3">
                                 <i class="fa fa-clipboard-list me-2"></i>Register Now
                             </a>
                         <?php endif; ?>
@@ -153,8 +177,10 @@
                 <?php endif; ?>
 
                 <!-- Quick Info Box -->
-                <div class="sidebar-box p-4 mb-4" style="background-color: #f8f9fa;">
-                    <h5 class="heading-sidebar mb-3"><i class="fa fa-info-circle me-2"></i>Quick Info</h5>
+                <div class="sidebar-box p-4 mb-4 rounded-3 shadow-sm" style="background-color: #f8f9fa;">
+                    <h5 class="heading-sidebar mb-3">
+                        <i class="fa fa-info-circle me-2" style="color: <?php echo $primary_color; ?>;"></i>Quick Info
+                    </h5>
                     
                     <div class="mb-3 pb-3" style="border-bottom: 1px solid #ddd;">
                         <small class="text-muted d-block mb-1">Event Type</small>
@@ -170,7 +196,7 @@
 
                     <div class="mb-3 pb-3" style="border-bottom: 1px solid #ddd;">
                         <small class="text-muted d-block mb-1">Status</small>
-                        <strong><span class="badge" style="background-color: #C7805C;"><?php echo ucfirst($event->status); ?></span></strong>
+                        <strong><span class="badge" style="background-color: <?php echo $primary_color; ?>;"><?php echo ucfirst($event->status); ?></span></strong>
                     </div>
 
                     <?php if (!empty($event->capacity)): ?>
@@ -182,8 +208,10 @@
                 </div>
 
                 <!-- When & Where Box -->
-                <div class="sidebar-box p-4" style="background-color: #f8f9fa;">
-                    <h5 class="heading-sidebar mb-3"><i class="fa fa-calendar me-2"></i>When & Where</h5>
+                <div class="sidebar-box p-4 rounded-3 shadow-sm" style="background-color: #f8f9fa;">
+                    <h5 class="heading-sidebar mb-3">
+                        <i class="fa fa-calendar me-2" style="color: <?php echo $primary_color; ?>;"></i>When & Where
+                    </h5>
                     
                     <div class="mb-3 pb-3" style="border-bottom: 1px solid #ddd;">
                         <small class="text-muted d-block mb-1">Date</small>
@@ -213,6 +241,12 @@
     line-height: 1.8;
 }
 
+.event-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
 .post-meta {
     font-size: 0.95rem;
     color: #666;
@@ -227,7 +261,7 @@
 
 .post-meta i {
     margin-right: 0.5rem;
-    color: #C7805C;
+    color: <?php echo $primary_color; ?>;
 }
 
 .post-content {
@@ -249,17 +283,31 @@
     margin-bottom: 1rem;
 }
 
-.share-buttons .btn {
+.share-btn-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #fff;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
-.share-buttons .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+.share-btn-facebook { background: #1877f2; }
+.share-btn-twitter { background: #1da1f2; }
+.share-btn-linkedin { background: #0077b5; }
+.share-btn-whatsapp { background: #25d366; }
+
+.share-btn-circle:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    color: #fff;
 }
 
 .sidebar-box {
-    border-radius: 0.25rem;
+    border-radius: 0.5rem;
 }
 
 .sidebar-box h5 {
@@ -280,27 +328,38 @@
     border-radius: 0.25rem;
 }
 
-.badge-warning {
-    background-color: #ffc107;
-    color: #000;
+/* Button Styles - Dynamic Theme Colors */
+.btn-primary {
+    background-color: <?php echo $primary_color; ?> !important;
+    border-color: <?php echo $primary_color; ?> !important;
+    background: linear-gradient(135deg, <?php echo $primary_color; ?> 0%, <?php echo $primary_dark; ?> 100%) !important;
 }
 
-.badge-success {
-    background-color: #28a745;
+.btn-primary:hover {
+    background-color: <?php echo $primary_dark; ?> !important;
+    border-color: <?php echo $primary_dark; ?> !important;
+}
+
+.btn-outline-primary {
+    color: <?php echo $primary_color; ?>;
+    border-color: <?php echo $primary_color; ?>;
+}
+
+.btn-outline-primary:hover {
+    background-color: <?php echo $primary_color; ?>;
+    border-color: <?php echo $primary_color; ?>;
     color: #fff;
 }
 
-@media (max-width: 768px) {
-    .post-meta {
-        display: flex;
-        flex-wrap: wrap;
-    }
+.btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+}
 
-    .post-meta span {
-        display: block;
-        margin-right: 1rem;
-        margin-bottom: 0.5rem;
-    }
+.btn-outline-secondary:hover {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: #fff;
 }
 
 .alert {
@@ -314,11 +373,28 @@
     background-color: #d4edda;
     color: #155724;
 }
+
+@media (max-width: 768px) {
+    .post-meta {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .post-meta span {
+        display: block;
+        margin-right: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .event-title {
+        font-size: 1.5rem;
+    }
+}
 </style>
 
 <script>
-function shareEvent(eventUid) {
-    const eventUrl = '<?php echo base_url('events/view/'); ?>' + eventUid;
+function shareEvent(eventSlug) {
+    const eventUrl = '<?php echo base_url('events/view/'); ?>' + eventSlug;
     if (navigator.share) {
         navigator.share({
             title: '<?php echo htmlspecialchars($event->title); ?>',
@@ -326,7 +402,6 @@ function shareEvent(eventUid) {
             url: eventUrl
         });
     } else {
-        // Fallback: Copy to clipboard
         const temp = document.createElement('input');
         temp.value = eventUrl;
         document.body.appendChild(temp);

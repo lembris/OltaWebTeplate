@@ -1,12 +1,18 @@
 <?php
 /**
- * College Template - Events Calendar Page
+ * College Template - Events Calendar Page (Interactive)
  */
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+// Get theme colors dynamically
+$primary_color = get_theme_color('primary');
+$secondary_color = get_theme_color('secondary');
+$primary_dark = darken_color($primary_color, 15);
 ?>
 
 <!-- ============================================
-     INNER HERO SECTION
-     ============================================ -->
+      INNER HERO SECTION
+      ============================================ -->
 <?php include VIEWPATH . 'templates/college/sections/inner_hero.php'; ?>
 
 <!-- Calendar Section -->
@@ -15,7 +21,7 @@
         <div class="row">
             <div class="col-lg-12 ftco-animate">
                 <!-- Month Navigation -->
-                <div class="d-flex justify-content-between align-items-center mb-5 pb-4" style="border-bottom: 2px solid #C7805C;">
+                <div class="d-flex justify-content-between align-items-center mb-5 pb-4" style="border-bottom: 2px solid <?php echo $primary_color; ?>;">
                     <?php
                     $prev_month = $month - 1;
                     $prev_year = $year;
@@ -31,13 +37,13 @@
                         $next_year++;
                     }
                     ?>
-                    <a href="<?php echo base_url('events/calendar?year=' . $prev_year . '&month=' . $prev_month); ?>" class="btn btn-outline-primary">
+                    <a href="<?php echo base_url('events/calendar?year=' . $prev_year . '&month=' . $prev_month); ?>" class="btn" style="background: linear-gradient(135deg, <?php echo $primary_color; ?> 0%, <?php echo $primary_dark; ?> 100%); color: white; border: none;">
                         <i class="fa fa-chevron-left me-2"></i>Previous Month
                     </a>
                     <h2 class="mb-0" style="color: #333; font-weight: 600;">
-                        <i class="fa fa-calendar me-2" style="color: #C7805C;"></i><?php echo date('F Y', strtotime($year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-01')); ?>
+                        <i class="fa fa-calendar me-2" style="color: <?php echo $primary_color; ?>;"></i><?php echo date('F Y', strtotime($year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-01')); ?>
                     </h2>
-                    <a href="<?php echo base_url('events/calendar?year=' . $next_year . '&month=' . $next_month); ?>" class="btn btn-outline-primary">
+                    <a href="<?php echo base_url('events/calendar?year=' . $next_year . '&month=' . $next_month); ?>" class="btn" style="background: linear-gradient(135deg, <?php echo $primary_color; ?> 0%, <?php echo $primary_dark; ?> 100%); color: white; border: none;">
                         Next Month<i class="fa fa-chevron-right ms-2"></i>
                     </a>
                 </div>
@@ -59,6 +65,7 @@
                         $first_day = date('w', strtotime($year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-01'));
                         $days_in_month = date('t', strtotime($year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT) . '-01'));
                         $today = date('Y-m-d');
+                        $month_str = str_pad($month, 2, '0', STR_PAD_LEFT);
                         
                         // Group events by date
                         $events_by_date = [];
@@ -79,21 +86,44 @@
                         <?php endfor; ?>
                         
                         <?php for ($day = 1; $day <= $days_in_month; $day++):
-                            $current_date = sprintf('%s-%02d-%02d', $year, $month, $day);
+                            $current_date = sprintf('%s-%s-%02d', $year, $month_str, $day);
                             $is_today = ($current_date === $today);
                             $has_events = isset($events_by_date[$current_date]);
+                            $day_events = $has_events ? $events_by_date[$current_date] : [];
                         ?>
-                            <div class="calendar-day <?php echo $is_today ? 'today' : ''; ?> <?php echo $has_events ? 'has-events' : ''; ?>">
+                            <div class="calendar-day <?php echo $is_today ? 'today' : ''; ?> <?php echo $has_events ? 'has-events' : ''; ?>" 
+                                 <?php if ($has_events): ?>
+                                 data-date="<?php echo $current_date; ?>"
+                                 data-events='<?php echo json_encode(array_map(function($e) use ($event_colors, $primary_color) {
+                                     $type = strtolower(str_replace(' ', '_', $e->event_type ?? 'default'));
+                                     return [
+                                         'title' => $e->title,
+                                         'slug' => $e->slug,
+                                         'type' => $e->event_type,
+                                         'color' => isset($event_colors[$type]) ? $event_colors[$type] : $primary_color,
+                                         'time' => !empty($e->start_time) ? date('g:i A', strtotime($e->start_time)) : '',
+                                         'location' => $e->location ?? '',
+                                         'banner' => $e->banner ?? '',
+                                         'image' => $e->image ?? ''
+                                     ];
+                                 }, $day_events)); ?>'
+                                 onclick="showDayEvents(this)"
+                                 style="cursor: pointer;"
+                                 <?php endif; ?>
+                                 title="<?php echo $has_events ? count($day_events) . ' event(s) on ' . date('F d, Y', strtotime($current_date)) : ''; ?>">
                                 <span class="day-number"><?php echo $day; ?></span>
                                 <?php if ($has_events): ?>
                                     <div class="day-events">
-                                        <?php foreach (array_slice($events_by_date[$current_date], 0, 2) as $event): ?>
-                                            <a href="<?php echo base_url('events/view/' . $event->uid); ?>" class="event-dot" title="<?php echo htmlspecialchars($event->title); ?>">
+                                        <?php foreach (array_slice($day_events, 0, 2) as $event): 
+                                            $eventType = strtolower(str_replace(' ', '_', $event->event_type ?? 'default'));
+                                            $color = isset($event_colors[$eventType]) ? $event_colors[$eventType] : $primary_color;
+                                        ?>
+                                            <span class="event-dot" style="background-color: <?php echo $color; ?>;">
                                                 <?php echo strlen($event->title) > 15 ? substr($event->title, 0, 15) . '...' : $event->title; ?>
-                                            </a>
+                                            </span>
                                         <?php endforeach; ?>
-                                        <?php if (count($events_by_date[$current_date]) > 2): ?>
-                                            <span class="more-events">+<?php echo count($events_by_date[$current_date]) - 2; ?> more</span>
+                                        <?php if (count($day_events) > 2): ?>
+                                            <span class="more-events">+<?php echo count($day_events) - 2; ?> more</span>
                                         <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
@@ -119,19 +149,19 @@
                 <?php if (!empty($events)): ?>
                     <div class="mt-5 pt-5" style="border-top: 1px solid #ddd;">
                         <h3 class="mb-4" style="color: #333; font-weight: 600;">
-                            <i class="fa fa-list-ul me-2" style="color: #C7805C;"></i>Events This Month
+                            <i class="fa fa-list-ul me-2" style="color: <?php echo $primary_color; ?>;"></i>Events This Month
                         </h3>
                         <div class="row g-4">
                             <?php foreach ($events as $event): 
                                 $eventType = strtolower(str_replace(' ', '_', $event->event_type ?? 'default'));
-                                $color = isset($event_colors[$eventType]) ? $event_colors[$eventType] : '#C7805C';
+                                $color = isset($event_colors[$eventType]) ? $event_colors[$eventType] : $primary_color;
                             ?>
                                 <div class="col-md-6 col-lg-4">
                                     <article class="blog-entry">
                                         <?php if (!empty($event->banner)): ?>
-                                            <a href="<?php echo base_url('events/view/' . $event->uid); ?>" class="block-20" style="background-image: url('<?php echo base_url($event->banner); ?>');" title="<?php echo htmlspecialchars($event->title); ?>"></a>
+                                            <a href="<?php echo base_url('events/view/' . $event->slug); ?>" class="block-20" style="background-image: url('<?php echo base_url($event->banner); ?>');" title="<?php echo htmlspecialchars($event->title); ?>"></a>
                                         <?php elseif (!empty($event->image)): ?>
-                                            <a href="<?php echo base_url('events/view/' . $event->uid); ?>" class="block-20" style="background-image: url('<?php echo base_url($event->image); ?>');" title="<?php echo htmlspecialchars($event->title); ?>"></a>
+                                            <a href="<?php echo base_url('events/view/' . $event->slug); ?>" class="block-20" style="background-image: url('<?php echo base_url($event->image); ?>');" title="<?php echo htmlspecialchars($event->title); ?>"></a>
                                         <?php else: ?>
                                             <div class="block-20 d-flex align-items-center justify-content-center" style="background-color: #f8f9fa; border-left: 4px solid <?php echo $color; ?>;">
                                                 <?php 
@@ -148,7 +178,7 @@
                                                 <?php echo ucfirst($event->event_type); ?>
                                             </span>
                                             <h3 class="heading mt-2">
-                                                <a href="<?php echo base_url('events/view/' . $event->uid); ?>">
+                                                <a href="<?php echo base_url('events/view/' . $event->slug); ?>">
                                                     <?php echo htmlspecialchars($event->title); ?>
                                                 </a>
                                             </h3>
@@ -159,7 +189,7 @@
                                                     at <?php echo date('g:i A', strtotime($event->start_time)); ?>
                                                 <?php endif; ?>
                                             </p>
-                                            <a href="<?php echo base_url('events/view/' . $event->uid); ?>" class="more-link mt-2">View Details <i class="fa fa-arrow-right ms-1"></i></a>
+                                            <a href="<?php echo base_url('events/view/' . $event->slug); ?>" class="more-link mt-2">View Details <i class="fa fa-arrow-right ms-1"></i></a>
                                         </div>
                                     </article>
                                 </div>
@@ -170,7 +200,7 @@
 
                 <!-- Back Button -->
                 <div class="mt-5 pt-4" style="border-top: 1px solid #ddd;">
-                    <a href="<?php echo base_url('events'); ?>" class="btn btn-outline-primary">
+                    <a href="<?php echo base_url('events'); ?>" class="btn" style="background: linear-gradient(135deg, <?php echo $primary_color; ?> 0%, <?php echo $primary_dark; ?> 100%); color: white; border: none;">
                         <i class="fa fa-chevron-left me-2"></i>Back to All Events
                     </a>
                 </div>
@@ -178,6 +208,92 @@
         </div>
     </div>
 </section>
+
+<!-- Day Events Modal -->
+<div class="modal fade" id="dayEventsModal" tabindex="-1" role="dialog" aria-labelledby="dayEventsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(135deg, <?php echo $primary_color; ?> 0%, <?php echo $primary_dark; ?> 100%); color: white;">
+                <h5 class="modal-title" id="dayEventsModalLabel">
+                    <i class="fa fa-calendar me-2"></i>Events on <span id="modalDate"></span>
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalEventsList">
+                <!-- Events will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Partners Section -->
+<?php include VIEWPATH . 'templates/college/sections/partners.php'; ?>
+
+<!-- Final CTA -->
+<?php include VIEWPATH . 'templates/college/sections/final_cta.php'; ?>
+
+<script>
+function showDayEvents(element) {
+    const date = element.getAttribute('data-date');
+    const events = JSON.parse(element.getAttribute('data-events'));
+    
+    // Format date
+    const formattedDate = new Date(date.replace(/-/g, '/')).toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    
+    document.getElementById('modalDate').textContent = formattedDate;
+    
+    let eventsHtml = '';
+    
+    if (events.length === 0) {
+        eventsHtml = '<div class="text-center text-muted py-4"><p>No events on this day.</p></div>';
+    } else {
+        eventsHtml = '<div class="row">';
+        
+        events.forEach(function(event) {
+            const imageUrl = event.banner ? '<?php echo base_url(); ?>' + event.banner : 
+                           (event.image ? '<?php echo base_url(); ?>' + event.image : '');
+            
+            eventsHtml += '<div class="col-md-6 mb-3">';
+            eventsHtml += '<div class="card h-100">';
+            
+            if (imageUrl) {
+                eventsHtml += '<div class="card-img-top" style="height: 120px; background-size: cover; background-position: center; background-image: url(\'' + imageUrl + '\');"></div>';
+            }
+            
+            eventsHtml += '<div class="card-body">';
+            eventsHtml += '<span class="badge mb-2" style="background-color: ' + event.color + ';">' + event.type + '</span>';
+            eventsHtml += '<h6 class="card-title">' + event.title + '</h6>';
+            
+            if (event.time) {
+                eventsHtml += '<p class="card-text small text-muted mb-1"><i class="fa fa-clock-o me-1"></i>' + event.time + '</p>';
+            }
+            
+            if (event.location) {
+                eventsHtml += '<p class="card-text small text-muted mb-2"><i class="fa fa-map-marker me-1"></i>' + event.location + '</p>';
+            }
+            
+            eventsHtml += '<a href="<?php echo base_url('events/view/'); ?>' + event.slug + '" class="btn btn-sm mt-2" style="background: linear-gradient(135deg, <?php echo $primary_color; ?> 0%, <?php echo $primary_dark; ?> 100%); color: white; border: none;">View Details</a>';
+            eventsHtml += '</div></div></div>';
+        });
+        
+        eventsHtml += '</div>';
+    }
+    
+    document.getElementById('modalEventsList').innerHTML = eventsHtml;
+    
+    $('#dayEventsModal').modal('show');
+}
+</script>
 
 <style>
 .calendar-wrapper {
@@ -190,7 +306,7 @@
 .calendar-header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    background: #C7805C;
+    background: linear-gradient(135deg, <?php echo $primary_color; ?> 0%, <?php echo $primary_dark; ?> 100%);
     color: white;
 }
 
@@ -219,11 +335,11 @@
 }
 
 .calendar-day.today {
-    background: rgba(199, 128, 92, 0.05);
+    background: rgba(<?php echo hex_to_rgb($primary_color); ?>, 0.05);
 }
 
 .calendar-day.today .day-number {
-    background: #C7805C;
+    background: linear-gradient(135deg, <?php echo $primary_color; ?> 0%, <?php echo $primary_dark; ?> 100%);
     color: white;
     border-radius: 50%;
     width: 28px;
@@ -234,7 +350,7 @@
 }
 
 .calendar-day.has-events {
-    background: rgba(199, 128, 92, 0.02);
+    background: rgba(<?php echo hex_to_rgb($primary_color); ?>, 0.02);
 }
 
 .day-number {
@@ -253,7 +369,7 @@
 .event-dot {
     display: block;
     padding: 3px 6px;
-    background: #C7805C;
+    background: <?php echo $primary_color; ?>;
     color: white;
     border-radius: 3px;
     font-size: 0.7rem;
@@ -265,7 +381,7 @@
 }
 
 .event-dot:hover {
-    background: #A0654A;
+    background: <?php echo $primary_dark; ?>;
     color: white;
 }
 
@@ -298,7 +414,7 @@
 }
 
 .heading a:hover {
-    color: #C7805C;
+    color: <?php echo $primary_color; ?>;
 }
 
 .meta {
@@ -307,14 +423,14 @@
 }
 
 .more-link {
-    color: #C7805C;
+    color: <?php echo $primary_color; ?>;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.3s ease;
 }
 
 .more-link:hover {
-    color: #A0654A;
+    color: <?php echo $primary_dark; ?>;
 }
 
 .badge {
@@ -323,51 +439,6 @@
     border-radius: 0.25rem;
     font-size: 0.85rem;
     font-weight: 500;
-}
-
-.hero-wrap {
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    min-height: 300px;
-}
-
-.hero-wrap .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.slider-text {
-    position: relative;
-    z-index: 2;
-}
-
-.breadcrumbs {
-    color: #fff;
-    font-size: 0.9rem;
-}
-
-.breadcrumbs a {
-    color: #fff;
-    text-decoration: none;
-}
-
-.breadcrumbs a:hover {
-    text-decoration: underline;
-}
-
-.breadcrumbs i {
-    margin: 0 0.5rem;
-}
-
-.bread {
-    color: #fff;
-    font-weight: 700;
-    font-size: 2.5rem;
 }
 
 @media (max-width: 768px) {
@@ -397,7 +468,7 @@
         transform: translateX(-50%);
         width: 6px;
         height: 6px;
-        background: #C7805C;
+        background: <?php echo $primary_color; ?>;
         border-radius: 50%;
     }
 }

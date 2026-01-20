@@ -58,27 +58,31 @@ class Programs extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('programs', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
-     * View single program by code or ID
+     * View single program by slug
      */
-    public function view($code = null)
+    public function view($slug = null)
     {
-        if (!$code) {
+        if (!$slug) {
             show_404();
         }
 
         $data = $this->get_common_data();
         
-        // Try to get by code first, then by ID
-        $data['program'] = $this->Academic_program_model->get_by_code($code);
+        // Try to get by slug first, then by code (for backwards compatibility)
+        $data['program'] = $this->Academic_program_model->get_by_slug($slug);
         if (!$data['program']) {
-            $data['program'] = $this->Academic_program_model->get_by_id($code);
+            $data['program'] = $this->Academic_program_model->get_by_code($slug);
+        }
+        if (!$data['program']) {
+            $data['program'] = $this->Academic_program_model->get_by_id($slug);
         }
         
         if (!$data['program']) {
@@ -96,10 +100,11 @@ class Programs extends Frontend_Controller {
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('program-detail', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -131,10 +136,14 @@ class Programs extends Frontend_Controller {
         $data['page_title'] = 'Programs - ' . $department->name;
         $data['meta_description'] = 'Browse programs in the ' . $department->name . ' department.';
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('programs', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -161,10 +170,14 @@ class Programs extends Frontend_Controller {
         $data['page_title'] = 'Programs - ' . ucfirst($level);
         $data['meta_description'] = 'Browse our ' . strtolower($level) . ' level programs.';
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('programs', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -193,9 +206,13 @@ class Programs extends Frontend_Controller {
         $data['page_title'] = 'Program Search: ' . $keyword;
         $data['meta_description'] = 'Search results for "' . $keyword . '" in our academic programs.';
 
-        load_template_view('header', $data);
-        load_template_view('navigation', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
         load_template_page('programs', $data);
-        load_template_view('footer', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 }

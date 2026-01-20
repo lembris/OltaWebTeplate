@@ -35,9 +35,9 @@
                                 <div class="row align-items-center">
                                     <div class="col-md-4 mb-3 mb-md-0">
                                         <?php if (!empty($event->banner)): ?>
-                                            <a href="<?php echo base_url('events/view/' . $event->uid); ?>" class="block-20" style="background-image: url('<?php echo base_url($event->banner); ?>'); border-left: 4px solid <?php echo $color; ?>;"></a>
+                                            <a href="<?php echo base_url('events/view/' . $event->slug); ?>" class="block-20" style="background-image: url('<?php echo base_url($event->banner); ?>'); border-left: 4px solid <?php echo $color; ?>;"></a>
                                         <?php elseif (!empty($event->image)): ?>
-                                            <a href="<?php echo base_url('events/view/' . $event->uid); ?>" class="block-20" style="background-image: url('<?php echo base_url($event->image); ?>'); border-left: 4px solid <?php echo $color; ?>;"></a>
+                                            <a href="<?php echo base_url('events/view/' . $event->slug); ?>" class="block-20" style="background-image: url('<?php echo base_url($event->image); ?>'); border-left: 4px solid <?php echo $color; ?>;"></a>
                                         <?php else: ?>
                                             <div class="block-20 d-flex align-items-center justify-content-center" style="background-color: #f8f9fa; border-left: 4px solid <?php echo $color; ?>;">
                                                 <?php 
@@ -56,7 +56,7 @@
                                             <?php echo ucfirst($event->event_type); ?>
                                         </span>
                                         <h3 class="heading mt-2">
-                                            <a href="<?php echo base_url('events/view/' . $event->uid); ?>">
+                                            <a href="<?php echo base_url('events/view/' . $event->slug); ?>">
                                                 <?php echo htmlspecialchars($event->title); ?>
                                             </a>
                                         </h3>
@@ -82,20 +82,20 @@
                                         </p>
                                     </div>
                                     <div class="col-md-3 text-md-end">
-                                        <a href="<?php echo base_url('events/view/' . $event->uid); ?>" class="more-link">
+                                        <a href="<?php echo base_url('events/view/' . $event->slug); ?>" class="more-link">
                                             View Event <i class="fa fa-arrow-right ms-2"></i>
                                         </a>
                                         <div class="share-buttons-inline d-flex gap-2 mt-3" style="justify-content: flex-end;">
-                                            <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(base_url('events/view/' . $event->uid)); ?>" target="_blank" class="share-btn-circle-sm share-btn-facebook" title="Share on Facebook">
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(base_url('events/view/' . $event->slug)); ?>" target="_blank" class="share-btn-circle-sm share-btn-facebook" title="Share on Facebook">
                                                 <i class="fa fa-facebook"></i>
                                             </a>
-                                            <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(base_url('events/view/' . $event->uid)); ?>&text=<?php echo urlencode($event->title); ?>" target="_blank" class="share-btn-circle-sm share-btn-twitter" title="Share on X">
+                                            <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(base_url('events/view/' . $event->slug)); ?>&text=<?php echo urlencode($event->title); ?>" target="_blank" class="share-btn-circle-sm share-btn-twitter" title="Share on X">
                                                 <i class="fa fa-twitter"></i>
                                             </a>
-                                            <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode(base_url('events/view/' . $event->uid)); ?>&title=<?php echo urlencode($event->title); ?>" target="_blank" class="share-btn-circle-sm share-btn-linkedin" title="Share on LinkedIn">
+                                            <a href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo urlencode(base_url('events/view/' . $event->slug)); ?>&title=<?php echo urlencode($event->title); ?>" target="_blank" class="share-btn-circle-sm share-btn-linkedin" title="Share on LinkedIn">
                                                 <i class="fa fa-linkedin"></i>
                                             </a>
-                                            <a href="https://wa.me/?text=<?php echo urlencode($event->title . ' ' . base_url('events/view/' . $event->uid)); ?>" target="_blank" class="share-btn-circle-sm share-btn-whatsapp" title="Share on WhatsApp">
+                                            <a href="https://wa.me/?text=<?php echo urlencode($event->title . ' ' . base_url('events/view/' . $event->slug)); ?>" target="_blank" class="share-btn-circle-sm share-btn-whatsapp" title="Share on WhatsApp">
                                                 <i class="fa fa-whatsapp"></i>
                                             </a>
                                         </div>

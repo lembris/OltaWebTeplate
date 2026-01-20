@@ -8,7 +8,7 @@ class Booking extends Frontend_Controller {
         parent::__construct();
         $this->load->model(['Booking_model', 'Model_common']);
         $this->load->library(['form_validation', 'email']);
-        $this->load->helper(['url', 'form']);
+        $this->load->helper(['url', 'form', 'template']);
     }
 
     /**
@@ -25,10 +25,14 @@ class Booking extends Frontend_Controller {
         $data['pre_selected_package'] = $this->input->get('package');
         $data['pre_selected_date'] = $this->input->get('date');
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/booking', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('booking', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -302,10 +306,14 @@ class Booking extends Frontend_Controller {
         $data['main_page'] = 'Booking';
         $data['booking'] = $booking;
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/booking_confirmation', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('booking_confirmation', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**
@@ -653,10 +661,14 @@ class Booking extends Frontend_Controller {
             }
         }
 
-        $this->load->view('includes/header', $data);
-        $this->load->view('includes/navigation', $data);
-        $this->load->view('pages/booking_lookup', $data);
-        $this->load->view('includes/footer', $data);
+        // Load footer programs for college template
+        $data['footer_programs'] = $this->get_footer_programs();
+
+        $template = get_active_template();
+        $this->load->view('templates/' . $template . '/header', $data);
+        $this->load->view('templates/' . $template . '/navigation', $data);
+        load_template_page('booking_lookup', $data);
+        $this->load->view('templates/' . $template . '/footer', $data);
     }
 
     /**

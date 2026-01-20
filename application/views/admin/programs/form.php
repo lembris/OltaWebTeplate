@@ -42,7 +42,34 @@
     </div>
 <?php endif; ?>
 
-<?= form_open_multipart(isset($program) && $program ? 'admin/programs/edit/' . $program->uid : 'admin/programs/create', ['id' => 'programForm']) ?>
+<?= form_open_multipart(isset($program) && $program ? 'admin/programs/edit/' . $program->uid : 'admin/programs/create', ['id' => 'programForm', 'enctype' => 'multipart/form-data']) ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('image');
+    const imagePreview = document.getElementById('imagePreview');
+    const imagePreviewPlaceholder = document.getElementById('imagePreviewPlaceholder');
+    
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (imagePreview) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.style.display = 'block';
+                    }
+                    if (imagePreviewPlaceholder) {
+                        imagePreviewPlaceholder.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+</script>
 
     <div class="row">
         <!-- Main Content -->
@@ -104,10 +131,20 @@
                                     name="level" 
                                     required>
                                 <option value="">Select Level</option>
-                                <?php foreach ($levels as $level): ?>
-                                    <option value="<?= $level ?>" 
-                                        <?= set_select('level', $level, isset($program) && $program && $program->level == $level) ?>>
-                                        <?= htmlspecialchars($level) ?>
+                                <?php 
+                                $levels_map = [
+                                    'certificate' => 'Certificate',
+                                    'diploma' => 'Diploma', 
+                                    'bachelors' => 'Bachelors',
+                                    'masters' => 'Masters',
+                                    'phd' => 'PhD',
+                                    'postdoctoral' => 'Postdoctoral'
+                                ];
+                                $db_level = isset($program) && $program ? $program->level : '';
+                                foreach ($levels_map as $val => $label): ?>
+                                    <option value="<?= $val ?>" 
+                                        <?= set_select('level', $val, isset($program) && $program && $db_level == $val) ?>>
+                                        <?= htmlspecialchars($label) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
