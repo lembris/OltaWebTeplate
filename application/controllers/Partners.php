@@ -19,8 +19,11 @@ class Partners extends Frontend_Controller {
         $active_template = get_active_template();
         
         if ($active_template === 'medical') {
-            $data['page_title'] = 'Hospital Partners | TNA CARE';
-            $data['meta_description'] = 'TNA CARE partners with leading hospitals and healthcare organizations across Tanzania and internationally.';
+            $data['page_title'] = 'Hospital Partners | TNA CARE - Healthcare Network Tanzania';
+            $data['meta_description'] = 'TNA CARE partners with leading hospitals and healthcare organizations across Tanzania and internationally to provide comprehensive medical services. View our network of partner hospitals.';
+            $data['meta_keywords'] = 'TNA CARE partners, Tanzania hospitals, healthcare partners, medical partnerships, hospital network Tanzania, international healthcare partners';
+            $data['canonical_url'] = base_url('partners');
+            $data['og_image'] = base_url('assets/templates/medical/img/health/tna-male-and-female-black-doctors-wod-round.png');
             
             $data['tz_partners'] = $this->Partner_model->get_all_by_type('tanzania', 'display_order', 'asc');
             $data['int_partners'] = $this->Partner_model->get_all_by_type('international', 'display_order', 'asc');

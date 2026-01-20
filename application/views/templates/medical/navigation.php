@@ -16,16 +16,16 @@
         </div>
         <div class="social-links d-none d-md-flex align-items-center">
           <?php if (!empty($facebook)): ?>
-          <a href="<?php echo $facebook; ?>" target="_blank" class="facebook"><i class="bi bi-facebook"></i></a>
+          <a href="<?php echo $facebook; ?>" target="_blank" rel="noopener noreferrer" class="facebook"><i class="bi bi-facebook"></i></a>
           <?php endif; ?>
           <?php if (!empty($instagram)): ?>
-          <a href="<?php echo $instagram; ?>" target="_blank" class="instagram"><i class="bi bi-instagram"></i></a>
+          <a href="<?php echo $instagram; ?>" target="_blank" rel="noopener noreferrer" class="instagram"><i class="bi bi-instagram"></i></a>
           <?php endif; ?>
           <?php if (!empty($youtube)): ?> 
-          <a href="<?php echo $youtube; ?>" target="_blank" class="youtube"><i class="bi bi-youtube"></i></a>
+          <a href="<?php echo $youtube; ?>" target="_blank" rel="noopener noreferrer" class="youtube"><i class="bi bi-youtube"></i></a>
           <?php endif; ?>
           <?php if (!empty($linkedin)): ?>
-          <a href="<?php echo $linkedin; ?>" target="_blank" class="linkedin"><i class="bi bi-linkedin"></i></a>
+          <a href="<?php echo $linkedin; ?>" target="_blank" rel="noopener noreferrer" class="linkedin"><i class="bi bi-linkedin"></i></a>
           <?php endif; ?>
         </div>
       </div>
@@ -43,12 +43,14 @@
 
         <nav id="navmenu" class="navmenu">
            <ul>
-             <li><a href="<?php echo base_url(); ?>" class="<?php echo uri_string() === '' || uri_string() === '/' ? 'active' : ''; ?>">Home</a></li>
-             <li><a href="<?php echo base_url('about'); ?>" class="<?php echo strpos(uri_string(), 'about') === 0 ? 'active' : ''; ?>">About</a></li>
-             <li><a href="<?php echo base_url('expertise'); ?>" class="<?php echo strpos(uri_string(), 'expertise') === 0 ? 'active' : ''; ?>">Expertise</a></li>
-             <li><a href="<?php echo base_url('services'); ?>" class="<?php echo strpos(uri_string(), 'services') === 0 ? 'active' : ''; ?>">Services</a></li>
-             <li><a href="<?php echo base_url('partners'); ?>" class="<?php echo strpos(uri_string(), 'partners') === 0 ? 'active' : ''; ?>">Partners</a></li>
-             <li><a href="<?php echo base_url('contact'); ?>" class="<?php echo strpos(uri_string(), 'contact') === 0 ? 'active' : ''; ?>">Contact</a></li>
+              <li><a href="<?php echo base_url(); ?>" class="<?php echo uri_string() === '' || uri_string() === '/' ? 'active' : ''; ?>">Home</a></li>
+              <li><a href="<?php echo base_url('about'); ?>" class="<?php echo strpos(uri_string(), 'about') === 0 ? 'active' : ''; ?>">About</a></li>
+              <li><a href="<?php echo base_url('expertise'); ?>" class="<?php echo strpos(uri_string(), 'expertise') === 0 ? 'active' : ''; ?>">Expertise</a></li>
+              <li><a href="<?php echo base_url('services'); ?>" class="<?php echo strpos(uri_string(), 'services') === 0 ? 'active' : ''; ?>">Services</a></li>
+              <li><a href="<?php echo base_url('partners'); ?>" class="<?php echo strpos(uri_string(), 'partners') === 0 ? 'active' : ''; ?>">Partners</a></li>
+              <li><a href="<?php echo base_url('blog'); ?>" class="<?php echo strpos(uri_string(), 'blog') === 0 ? 'active' : ''; ?>">Blog</a></li>
+              <li><a href="<?php echo base_url('faq'); ?>" class="<?php echo strpos(uri_string(), 'faq') === 0 ? 'active' : ''; ?>">FAQ</a></li>
+              <li><a href="<?php echo base_url('contact'); ?>" class="<?php echo strpos(uri_string(), 'contact') === 0 ? 'active' : ''; ?>">Contact</a></li>
              <li class="ms-lg-3">
                <a href="<?php echo base_url('#consultation'); ?>" class="nav-cta-btn">
                  <i class="bi bi-calendar-check me-2"></i><span>Get Health Support</span>

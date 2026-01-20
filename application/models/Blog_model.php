@@ -69,12 +69,20 @@ class Blog_model extends CI_Model {
     }
 
     /**
-     * Get posts by category
+     * Get posts by category (theme-aware)
      */
-    public function get_by_category($category, $limit = 12, $offset = 0)
+    public function get_by_category($category, $limit = 12, $offset = 0, $theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
         return $this->db->where('category', $category)
                        ->where('published', 1)
+                       ->group_start()
+                           ->where('theme', 'all')
+                           ->or_where('theme', $theme)
+                       ->group_end()
                        ->order_by('created_at', 'DESC')
                        ->limit($limit, $offset)
                        ->get($this->table)
@@ -82,12 +90,20 @@ class Blog_model extends CI_Model {
     }
 
     /**
-     * Get category count
+     * Get category count (theme-aware)
      */
-    public function get_category_count($category)
+    public function get_category_count($category, $theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
         return $this->db->where('category', $category)
                        ->where('published', 1)
+                       ->group_start()
+                           ->where('theme', 'all')
+                           ->or_where('theme', $theme)
+                       ->group_end()
                        ->count_all_results($this->table);
     }
 
@@ -135,15 +151,23 @@ class Blog_model extends CI_Model {
     }
 
     /**
-     * Search posts
+     * Search posts (theme-aware)
      */
-    public function search($keyword, $limit = 12, $offset = 0)
+    public function search($keyword, $limit = 12, $offset = 0, $theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
         $this->db->where('published', 1);
         $this->db->group_start()
                  ->like('title', $keyword)
                  ->or_like('content', $keyword)
                  ->or_like('excerpt', $keyword)
+                 ->group_end();
+        $this->db->group_start()
+                 ->where('theme', 'all')
+                 ->or_where('theme', $theme)
                  ->group_end();
         
         return $this->db->order_by('created_at', 'DESC')
@@ -153,15 +177,23 @@ class Blog_model extends CI_Model {
     }
 
     /**
-     * Get search count
+     * Get search count (theme-aware)
      */
-    public function get_search_count($keyword)
+    public function get_search_count($keyword, $theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
         $this->db->where('published', 1);
         $this->db->group_start()
                  ->like('title', $keyword)
                  ->or_like('content', $keyword)
                  ->or_like('excerpt', $keyword)
+                 ->group_end();
+        $this->db->group_start()
+                 ->where('theme', 'all')
+                 ->or_where('theme', $theme)
                  ->group_end();
         
         return $this->db->count_all_results($this->table);

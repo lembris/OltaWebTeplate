@@ -377,3 +377,118 @@ if (!function_exists('get_template_info')) {
         ];
     }
 }
+
+if (!function_exists('generate_breadcrumb_schema')) {
+    /**
+     * Generate JSON-LD Breadcrumb schema for SEO
+     * 
+     * @param array $breadcrumbs Array of breadcrumb items with 'name' and 'url' keys
+     * @return string JSON-LD script tag
+     */
+    function generate_breadcrumb_schema($breadcrumbs = [])
+    {
+        if (empty($breadcrumbs)) {
+            return '';
+        }
+        
+        $breadcrumbList = [];
+        foreach ($breadcrumbs as $index => $breadcrumb) {
+            $breadcrumbList[] = [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'name' => $breadcrumb['name'],
+                'item' => $breadcrumb['url']
+            ];
+        }
+        
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => $breadcrumbList
+        ];
+        
+        return '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_SLASHES) . '</script>';
+    }
+}
+
+if (!function_exists('generate_medical_service_schema')) {
+    /**
+     * Generate JSON-LD Medical Service schema for expertise/specialties
+     * 
+     * @param array $service Service details with keys: name, description, provider
+     * @return string JSON-LD script tag
+     */
+    function generate_medical_service_schema($service = [])
+    {
+        if (empty($service['name'])) {
+            return '';
+        }
+        
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'MedicalBusiness',
+            'name' => $service['name'],
+            'description' => $service['description'] ?? '',
+            'provider' => [
+                '@type' => 'MedicalOrganization',
+                'name' => $service['provider'] ?? 'TNA CARE'
+            ]
+        ];
+        
+        if (!empty($service['image'])) {
+            $schema['image'] = $service['image'];
+        }
+        
+        if (!empty($service['offers'])) {
+            $schema['offers'] = [
+                '@type' => 'Offer',
+                'priceCurrency' => $service['offers']['currency'] ?? 'USD',
+                'price' => $service['offers']['price'] ?? ''
+            ];
+        }
+        
+        return '<script type="application/ld+json">' . json_encode($schema, JSON_UNESCAPED_SLASHES) . '</script>';
+    }
+}
+
+if (!function_exists('get_breadcrumbs')) {
+    /**
+     * Build breadcrumb array based on current URI
+     * 
+     * @return array Breadcrumb items
+     */
+    function get_breadcrumbs()
+    {
+        $CI = &get_instance();
+        $breadcrumbs = [
+            [
+                'name' => 'Home',
+                'url' => base_url()
+            ]
+        ];
+        
+        $uri_segments = $CI->uri->segment_array();
+        $current_url = base_url();
+        
+        $breadcrumb_labels = [
+            'about' => 'About Us',
+            'services' => 'Services',
+            'expertise' => 'Medical Expertise',
+            'partners' => 'Hospital Partners',
+            'blog' => 'Blog',
+            'contact' => 'Contact Us'
+        ];
+        
+        foreach ($uri_segments as $segment) {
+            $current_url .= $segment . '/';
+            $label = $breadcrumb_labels[$segment] ?? ucfirst(str_replace('-', ' ', $segment));
+            
+            $breadcrumbs[] = [
+                'name' => $label,
+                'url' => $current_url
+            ];
+        }
+        
+        return $breadcrumbs;
+    }
+}

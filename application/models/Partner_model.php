@@ -112,6 +112,24 @@ class Partner_model extends CI_Model {
                        ->result();
     }
 
+    public function get_featured_by_type($type, $limit = 4)
+    {
+        $theme = get_active_template();
+        
+        $this->db->group_start()
+                 ->where('template', 'all')
+                 ->or_where('template', $theme)
+                 ->group_end();
+        
+        return $this->db->where('type', $type)
+                       ->where('is_featured', 1)
+                       ->where('status', 'active')
+                       ->order_by('display_order', 'ASC')
+                       ->limit($limit)
+                       ->get($this->table)
+                       ->result();
+    }
+
     public function get_by_id($id)
     {
         return $this->db->where('id', $id)

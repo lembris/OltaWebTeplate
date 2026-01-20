@@ -282,7 +282,10 @@ class Appointment_model extends CI_Model {
             $data['template'] = get_active_template();
         }
 
-        return $this->db->insert($this->table, $data);
+        if ($this->db->insert($this->table, $data)) {
+            return $this->db->insert_id();
+        }
+        return false;
     }
 
     public function update_by_uid($uid, $data)

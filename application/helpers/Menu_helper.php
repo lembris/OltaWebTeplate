@@ -699,6 +699,48 @@ if (!function_exists('_get_default_admin_menu_items')) {
     }
 }
 
+// Check if current user is super admin
+if (!function_exists('is_super_admin')) {
+    function is_super_admin()
+    {
+        $CI = &get_instance();
+        
+        // Check admin session first
+        if ($CI->session->userdata('admin_logged_in')) {
+            return $CI->session->userdata('admin_role') === 'super_admin';
+        }
+        
+        // Check user session (from Users controller)
+        if ($CI->session->userdata('user_logged_in')) {
+            return $CI->session->userdata('user_role') === 'super_admin';
+        }
+        
+        return false;
+    }
+}
+
+// Check if menu item should be hidden based on user role
+if (!function_exists('_should_hide_menu_item')) {
+    function _should_hide_menu_item($url)
+    {
+        // URLs that should only be visible to super admins
+        $super_admin_only = [
+            'admin/settings',
+            'admin/users'
+        ];
+        
+        foreach ($super_admin_only as $admin_url) {
+            if (strpos($url, $admin_url) === 0) {
+                if (!is_super_admin()) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+}
+
 // Render admin menu - supports both section-based (from admin_menu.json) and flat formats
 if (!function_exists('render_admin_menu')) {
     function render_admin_menu($admin_menu, $CI, $badges = [])
@@ -717,13 +759,24 @@ if (!function_exists('render_admin_menu')) {
                 
                 if (empty($section_items)) continue;
                 
+                // Filter out items that should be hidden for non-super-admins
+                $visible_items = [];
+                foreach ($section_items as $item) {
+                    $url = $item['url'] ?? '#';
+                    if (!_should_hide_menu_item($url)) {
+                        $visible_items[] = $item;
+                    }
+                }
+                
+                if (empty($visible_items)) continue;
+                
                 // Render section header
                 if (!empty($section_header)) {
                     $html .= '<li class="sidebar-section-header">' . htmlspecialchars($section_header) . '</li>' . PHP_EOL;
                 }
                 
                 // Render items in this section
-                foreach ($section_items as $item) {
+                foreach ($visible_items as $item) {
                     $url = $item['url'] ?? '#';
                     $label = $item['label'] ?? '';
                     $icon = $item['icon'] ?? '';
@@ -767,6 +820,11 @@ if (!function_exists('render_admin_menu')) {
             // Fallback to flat items rendering
             foreach ($items as $item) {
                 if (!$item->is_visible) {
+                    continue;
+                }
+                
+                // Check if item should be hidden for non-super-admins
+                if (_should_hide_menu_item($item->item_url)) {
                     continue;
                 }
                 

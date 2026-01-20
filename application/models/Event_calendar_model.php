@@ -23,12 +23,26 @@ class Event_calendar_model extends CI_Model {
         );
     }
 
-    public function get_all($limit = NULL, $offset = 0)
+    /**
+     * Get all events (admin) - theme-aware
+     */
+    public function get_all($limit = NULL, $offset = 0, $template = null)
     {
+        if ($template === null) {
+            $template = get_active_template();
+        }
+        
         $query = $this->db->select('ec.*, d.name as department_name')
                           ->from($this->table . ' ec')
-                          ->join('departments d', 'ec.department_id = d.id', 'left')
-                          ->order_by('ec.start_date', 'DESC');
+                          ->join('departments d', 'ec.department_id = d.id', 'left');
+        
+        // Filter by template
+        $this->db->group_start();
+        $this->db->where('ec.template', 'all');
+        $this->db->or_where('ec.template', $template);
+        $this->db->group_end();
+        
+        $query->order_by('ec.start_date', 'DESC');
         
         if ($limit) {
             $query->limit($limit, $offset);
@@ -37,8 +51,21 @@ class Event_calendar_model extends CI_Model {
         return $query->get()->result();
     }
 
-    public function count_all()
+    /**
+     * Count all events (admin) - theme-aware
+     */
+    public function count_all($template = null)
     {
+        if ($template === null) {
+            $template = get_active_template();
+        }
+        
+        // Filter by template
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $template);
+        $this->db->group_end();
+        
         return $this->db->count_all_results($this->table);
     }
 
@@ -208,10 +235,14 @@ class Event_calendar_model extends CI_Model {
     }
 
     /**
-     * Search events
+     * Search events (admin) - theme-aware
      */
-    public function search($keyword, $limit = 20, $offset = 0)
+    public function search($keyword, $limit = 20, $offset = 0, $template = null)
     {
+        if ($template === null) {
+            $template = get_active_template();
+        }
+        
         $this->db->select('ec.*, d.name as department_name')
                  ->from($this->table . ' ec')
                  ->join('departments d', 'ec.department_id = d.id', 'left')
@@ -219,22 +250,37 @@ class Event_calendar_model extends CI_Model {
                  ->like('ec.title', $keyword)
                  ->or_like('ec.description', $keyword)
                  ->or_like('ec.location', $keyword)
-                 ->group_end()
-                 ->where('ec.visibility', 'public')
-                 ->order_by('ec.start_date', 'DESC')
+                 ->group_end();
+        
+        // Filter by template
+        $this->db->group_start();
+        $this->db->where('ec.template', 'all');
+        $this->db->or_where('ec.template', $template);
+        $this->db->group_end();
+        
+        $this->db->order_by('ec.start_date', 'DESC')
                  ->limit($limit, $offset);
         
         return $this->db->get()->result();
     }
 
-    public function get_search_count($keyword)
+    public function get_search_count($keyword, $template = null)
     {
+        if ($template === null) {
+            $template = get_active_template();
+        }
+        
         $this->db->group_start()
                  ->like('title', $keyword)
                  ->or_like('description', $keyword)
                  ->or_like('location', $keyword)
-                 ->group_end()
-                 ->where('visibility', 'public');
+                 ->group_end();
+        
+        // Filter by template
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $template);
+        $this->db->group_end();
         
         return $this->db->count_all_results($this->table);
     }
@@ -349,26 +395,47 @@ class Event_calendar_model extends CI_Model {
     }
 
     /**
-     * Get upcoming events for dashboard
+     * Get upcoming events for dashboard (theme-aware)
      */
-    public function get_upcoming_events($limit = 5)
+    public function get_upcoming_events($limit = 5, $offset = 0, $template = null)
     {
+        if ($template === null) {
+            $template = get_active_template();
+        }
+        
         $today = date('Y-m-d');
         
-        return $this->db->select('ec.*, d.name as department_name')
+        $query = $this->db->select('ec.*, d.name as department_name')
                         ->from($this->table . ' ec')
                         ->join('departments d', 'ec.department_id = d.id', 'left')
-                        ->where('ec.start_date >=', $today)
-                        ->order_by('ec.start_date', 'ASC')
-                        ->limit($limit)
-                        ->get()->result();
+                        ->where('ec.start_date >=', $today);
+        
+        // Filter by template
+        $this->db->group_start();
+        $this->db->where('ec.template', 'all');
+        $this->db->or_where('ec.template', $template);
+        $this->db->group_end();
+        
+        return $query->order_by('ec.start_date', 'ASC')
+                     ->limit($limit, $offset)
+                     ->get()->result();
     }
 
     /**
-     * Count all events
+     * Count all events (theme-aware)
      */
-    public function count_events($status = null)
+    public function count_events($status = null, $template = null)
     {
+        if ($template === null) {
+            $template = get_active_template();
+        }
+        
+        // Filter by template
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $template);
+        $this->db->group_end();
+        
         if ($status) {
             $this->db->where('status', $status);
         }

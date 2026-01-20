@@ -8,6 +8,7 @@ class User_model extends CI_Model
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('session');
     }
 
     /**
@@ -22,6 +23,154 @@ class User_model extends CI_Model
             mt_rand(0, 0x3fff) | 0x8000,
             mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
+    }
+
+    /**
+     * Get active template for filtering
+     */
+    private function get_active_template() {
+        if (function_exists('get_active_template')) {
+            return get_active_template();
+        }
+        // Fallback for when not in frontend context
+        $template = 'all';
+        try {
+            $this->load->helper('template');
+            $template = get_active_template();
+        } catch (Exception $e) {
+            // Use 'all' as default
+        }
+        return $template;
+    }
+
+    /**
+     * Get all users with pagination and theme filtering
+     */
+    public function get_all($limit = 50, $offset = 0)
+    {
+        $theme = $this->get_active_template();
+        
+        $this->db->select('users.*, roles.name as role_name');
+        $this->db->from($this->table);
+        $this->db->join('roles', 'roles.id = users.role_id', 'left');
+        $this->db->where('users.is_deleted', 0);
+        $this->db->where('users.role_id !=', 1); // Exclude Super Admin
+        
+        // Theme filtering
+        $this->db->group_start();
+        $this->db->where('users.template', 'all');
+        $this->db->or_where('users.template', $theme);
+        $this->db->group_end();
+        
+        $this->db->order_by('users.created_at', 'DESC');
+        $this->db->limit($limit, $offset);
+        return $this->db->get()->result();
+    }
+
+    /**
+     * Count all active users with theme filtering
+     */
+    public function count_users($status = null)
+    {
+        $theme = $this->get_active_template();
+        
+        $this->db->where('is_deleted', 0);
+        $this->db->where('role_id !=', 1); // Exclude Super Admin
+        
+        // Theme filtering
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $theme);
+        $this->db->group_end();
+        
+        if ($status) {
+            $this->db->where('status', $status);
+        }
+        return $this->db->count_all_results($this->table);
+    }
+
+    /**
+     * Search users with theme filtering
+     */
+    public function search($keyword, $limit = 50, $offset = 0)
+    {
+        $theme = $this->get_active_template();
+        
+        $this->db->select('users.*, roles.name as role_name');
+        $this->db->from($this->table);
+        $this->db->join('roles', 'roles.id = users.role_id', 'left');
+        $this->db->where('users.is_deleted', 0);
+        $this->db->where('users.role_id !=', 1); // Exclude Super Admin
+        
+        // Theme filtering
+        $this->db->group_start();
+        $this->db->where('users.template', 'all');
+        $this->db->or_where('users.template', $theme);
+        $this->db->group_end();
+        
+        $this->db->group_start();
+        $this->db->like('users.full_name', $keyword);
+        $this->db->or_like('users.email', $keyword);
+        $this->db->or_like('users.username', $keyword);
+        $this->db->group_end();
+        
+        $this->db->order_by('users.created_at', 'DESC');
+        $this->db->limit($limit, $offset);
+        return $this->db->get()->result();
+    }
+
+    /**
+     * Get user statistics with theme filtering
+     */
+    public function get_statistics()
+    {
+        $theme = $this->get_active_template();
+        
+        $stats = new stdClass();
+        
+        // Total with theme filter
+        $this->db->where('is_deleted', 0);
+        $this->db->where('role_id !=', 1);
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $theme);
+        $this->db->group_end();
+        $stats->total = $this->db->count_all_results($this->table);
+        
+        // Active with theme filter
+        $this->db->where('status', 'active');
+        $this->db->where('is_deleted', 0);
+        $this->db->where('role_id !=', 1);
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $theme);
+        $this->db->group_end();
+        $stats->active = $this->db->count_all_results($this->table);
+        
+        // Inactive with theme filter
+        $this->db->where('status', 'inactive');
+        $this->db->where('is_deleted', 0);
+        $this->db->where('role_id !=', 1);
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $theme);
+        $this->db->group_end();
+        $stats->inactive = $this->db->count_all_results($this->table);
+        
+        // Count by role (with role names) and theme filter
+        $this->db->select('roles.name as role, COUNT(*) as count');
+        $this->db->from($this->table);
+        $this->db->join('roles', 'roles.id = users.role_id', 'left');
+        $this->db->where('users.is_deleted', 0);
+        $this->db->where('users.role_id !=', 1);
+        $this->db->group_start();
+        $this->db->where('users.template', 'all');
+        $this->db->or_where('users.template', $theme);
+        $this->db->group_end();
+        $this->db->group_by('users.role_id');
+        $stats->by_role = $this->db->get()->result();
+        
+        return $stats;
     }
 
     /**
@@ -45,34 +194,6 @@ class User_model extends CI_Model
         $this->db->where('users.uid', $uid);
         $this->db->where('users.is_deleted', 0);
         return $this->db->get()->row();
-    }
-
-    /**
-     * Get all users with pagination (excludes super_admin - role_id = 1)
-     */
-    public function get_all($limit = 50, $offset = 0)
-    {
-        $this->db->select('users.*, roles.name as role_name');
-        $this->db->from($this->table);
-        $this->db->join('roles', 'roles.id = users.role_id', 'left');
-        $this->db->where('users.is_deleted', 0);
-        $this->db->where('users.role_id !=', 1); // Exclude Super Admin (role_id = 1)
-        $this->db->order_by('users.created_at', 'DESC');
-        $this->db->limit($limit, $offset);
-        return $this->db->get()->result();
-    }
-
-    /**
-     * Count all active users (excludes super_admin - role_id = 1)
-     */
-    public function count_users($status = null)
-    {
-        $this->db->where('is_deleted', 0);
-        $this->db->where('role_id !=', 1); // Exclude Super Admin
-        if ($status) {
-            $this->db->where('status', $status);
-        }
-        return $this->db->count_all_results($this->table);
     }
 
     /**
@@ -123,31 +244,17 @@ class User_model extends CI_Model
      */
     public function get_users_by_role($role, $limit = 50, $offset = 0)
     {
+        $theme = $this->get_active_template();
+        
         $this->db->where('role', $role);
         $this->db->where('is_deleted', 0);
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $theme);
+        $this->db->group_end();
         $this->db->order_by('created_at', 'DESC');
         $this->db->limit($limit, $offset);
         return $this->db->get($this->table)->result();
-    }
-
-    /**
-     * Search users by name, email, or username (excludes super_admin - role_id = 1)
-     */
-    public function search($keyword, $limit = 50, $offset = 0)
-    {
-        $this->db->select('users.*, roles.name as role_name');
-        $this->db->from($this->table);
-        $this->db->join('roles', 'roles.id = users.role_id', 'left');
-        $this->db->where('users.is_deleted', 0);
-        $this->db->where('users.role_id !=', 1); // Exclude Super Admin
-        $this->db->group_start();
-        $this->db->like('users.full_name', $keyword);
-        $this->db->or_like('users.email', $keyword);
-        $this->db->or_like('users.username', $keyword);
-        $this->db->group_end();
-        $this->db->order_by('users.created_at', 'DESC');
-        $this->db->limit($limit, $offset);
-        return $this->db->get()->result();
     }
 
     /**
@@ -258,24 +365,31 @@ class User_model extends CI_Model
     }
 
     /**
-     * Get user statistics (excludes super_admin - role_id = 1)
+     * User login authentication
      */
-    public function get_statistics()
+    public function login($username, $password)
     {
-        $stats = new stdClass();
-        $stats->total = $this->db->where('is_deleted', 0)->where('role_id !=', 1)->count_all_results($this->table);
-        $stats->active = $this->db->where('status', 'active')->where('is_deleted', 0)->where('role_id !=', 1)->count_all_results($this->table);
-        $stats->inactive = $this->db->where('status', 'inactive')->where('is_deleted', 0)->where('role_id !=', 1)->count_all_results($this->table);
-        
-        // Count by role (with role names)
-        $this->db->select('roles.name as role, COUNT(*) as count');
-        $this->db->from($this->table);
-        $this->db->join('roles', 'roles.id = users.role_id', 'left');
-        $this->db->where('users.is_deleted', 0);
-        $this->db->where('users.role_id !=', 1); // Exclude Super Admin
-        $this->db->group_by('users.role_id');
-        $stats->by_role = $this->db->get()->result();
-        
-        return $stats;
+        $this->db->where('username', $username);
+        $this->db->where('status', 'active');
+        $this->db->where('is_deleted', 0);
+        $this->db->where('role !=', 'super_admin'); // Exclude super_admin
+        $query = $this->db->get($this->table);
+
+        if ($query->num_rows() === 1) {
+            $user = $query->row();
+            if (password_verify($password, $user->password)) {
+                $this->update_last_login($user->id);
+                return $user;
+            }
+        }
+        return FALSE;
+    }
+
+    /**
+     * Check if user is logged in
+     */
+    public function is_logged_in()
+    {
+        return $this->session->userdata('user_logged_in') === TRUE;
     }
 }

@@ -86,6 +86,25 @@ class About_faq_model extends CI_Model {
         return $grouped;
     }
 
+    public function get_featured($limit = 5, $theme = null)
+    {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
+        $this->db->group_start()
+                 ->where('theme', 'all')
+                 ->or_where('theme', $theme)
+                 ->group_end();
+        
+        return $this->db->where('status', 'active')
+                       ->where('featured', 1)
+                       ->order_by('display_order', 'ASC')
+                       ->limit($limit)
+                       ->get($this->table)
+                       ->result();
+    }
+
     public function get_by_uid($uid)
     {
         return $this->db->where('uid', $uid)

@@ -72,19 +72,22 @@ class Events extends Admin_Controller
         $data = $this->get_admin_data();
         $data['page_title'] = 'Manage Events';
         
+        $this->load->helper('template');
+        $theme = get_active_template();
+        
         // Search functionality
         $keyword = $this->input->get('keyword');
         $dept_filter = $this->input->get('department');
         
         if ($keyword) {
-            $data['events'] = $this->Event_calendar_model->search($keyword, 100);
+            $data['events'] = $this->Event_calendar_model->search($keyword, 100, 0, $theme);
             $data['keyword'] = $keyword;
         } elseif ($dept_filter) {
             $data['events'] = $this->Event_calendar_model->get_by_department($dept_filter, 100);
             $data['keyword'] = '';
             $data['dept_filter'] = $dept_filter;
         } else {
-            $data['events'] = $this->Event_calendar_model->get_all(100);
+            $data['events'] = $this->Event_calendar_model->get_all(100, 0, $theme);
             $data['keyword'] = '';
         }
         

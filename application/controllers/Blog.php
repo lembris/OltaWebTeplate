@@ -58,8 +58,18 @@ class Blog extends Frontend_Controller {
         // Page meta
         $data['current_page_name'] = 'Blog';
         $data['main_page'] = 'Blog';
-        $data['page_title'] = 'Safari Blog - Travel Tips & Guides';
-        $data['meta_description'] = 'Expert safari travel tips, wildlife guides, and Tanzania destination advice from Osiram Safari Adventure.';
+        
+        $active_template = get_active_template();
+        if ($active_template === 'medical') {
+            $data['page_title'] = 'Health Blog | TNA CARE - Health Tips & Medical Insights';
+            $data['meta_description'] = 'Expert health tips, medical insights, and wellness guidance from TNA CARE healthcare professionals. Stay informed about health topics.';
+            $data['meta_keywords'] = 'health blog Tanzania, medical tips, health education, wellness guidance, TNA CARE blog';
+            $data['canonical_url'] = base_url('blog');
+            $data['og_image'] = base_url('assets/templates/medical/img/health/tna-female-doctor-community-health.png');
+        } else {
+            $data['page_title'] = 'Safari Blog - Travel Tips & Guides';
+            $data['meta_description'] = 'Expert safari travel tips, wildlife guides, and Tanzania destination advice from Osiram Safari Adventure.';
+        }
         
         // Merge common data
         $data = array_merge($this->get_common_data(), $data);
@@ -124,6 +134,15 @@ class Blog extends Frontend_Controller {
         $data['page_title'] = $data['post']->seo_title ?: $data['post']->title;
         $data['meta_description'] = $data['post']->seo_description ?: substr(strip_tags($data['post']->excerpt ?: $data['post']->content), 0, 160);
         
+        // Medical template OG image
+        $active_template = get_active_template();
+        if ($active_template === 'medical') {
+            $data['og_image'] = !empty($data['post']->featured_image) 
+                ? base_url('assets/img/blog/' . $data['post']->featured_image)
+                : base_url('assets/templates/medical/img/health/tna-female-doctor-community-health.png');
+            $data['canonical_url'] = base_url('blog/post/' . $data['post']->slug);
+        }
+        
         // Load footer programs for college template
         $data['footer_programs'] = $this->get_footer_programs();
 
@@ -139,19 +158,24 @@ class Blog extends Frontend_Controller {
      */
     public function category($category, $page = 1)
     {
+        $this->load->helper('template');
+        
         // Convert URL-safe format back to original category name
         $category = str_replace('-', ' ', $category);
         $category = urldecode($category);
         $limit = 12;
         $page = max(1, (int)$page); // Ensure page is at least 1
-        $total = $this->Blog_model->get_category_count($category);
+        
+        // Get theme-aware count
+        $theme = get_active_template();
+        $total = $this->Blog_model->get_category_count($category, $theme);
 
         if ($total == 0) {
             show_404();
         }
 
         // Pagination config
-        $config['base_url'] = base_url('blog/category/' . $category . '/');
+        $config['base_url'] = base_url('blog/category/' . str_replace(' ', '-', $category) . '/');
         $config['total_rows'] = $total;
         $config['per_page'] = $limit;
         $config['uri_segment'] = 4;
@@ -177,11 +201,11 @@ class Blog extends Frontend_Controller {
 
         // Get posts - ensure offset is never negative
         $offset = max(0, ($page - 1) * $limit);
-        $data['posts'] = $this->Blog_model->get_by_category($category, $limit, $offset);
+        $data['posts'] = $this->Blog_model->get_by_category($category, $limit, $offset, $theme);
         $data['pagination'] = $this->pagination->create_links();
         $data['category'] = $category;
-        $data['categories'] = $this->Blog_model->get_categories();
-        $data['latest_posts'] = $this->Blog_model->get_latest_posts(5);
+        $data['categories'] = $this->Blog_model->get_categories($theme);
+        $data['latest_posts'] = $this->Blog_model->get_latest_posts(5, $theme);
         
         // Page meta
         $category_name = ucfirst(str_replace('-', ' ', $category));
@@ -214,9 +238,12 @@ class Blog extends Frontend_Controller {
             redirect('blog');
         }
 
+        $this->load->helper('template');
+        $theme = get_active_template();
+        
         $page = max(1, (int)$this->input->get('page', TRUE) ?: 1);
         $limit = 12;
-        $total = $this->Blog_model->get_search_count($keyword);
+        $total = $this->Blog_model->get_search_count($keyword, $theme);
 
         $config['base_url'] = base_url('blog/search/');
         $config['total_rows'] = $total;
@@ -240,12 +267,12 @@ class Blog extends Frontend_Controller {
         $this->pagination->initialize($config);
 
         $offset = max(0, ($page - 1) * $limit);
-        $data['posts'] = $this->Blog_model->search($keyword, $limit, $offset);
+        $data['posts'] = $this->Blog_model->search($keyword, $limit, $offset, $theme);
         $data['pagination'] = $this->pagination->create_links();
         $data['keyword'] = $keyword;
         $data['total_results'] = $total;
-        $data['categories'] = $this->Blog_model->get_categories();
-        $data['latest_posts'] = $this->Blog_model->get_latest_posts(5);
+        $data['categories'] = $this->Blog_model->get_categories($theme);
+        $data['latest_posts'] = $this->Blog_model->get_latest_posts(5, $theme);
         
         $data['current_page_name'] = 'Search Results';
         $data['main_page'] = 'Blog';

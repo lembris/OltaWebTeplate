@@ -36,6 +36,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     font-size: 1.125rem;
     color: #64748b;
     max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
   }
 
   .specialties-section {

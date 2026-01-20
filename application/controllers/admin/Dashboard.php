@@ -19,6 +19,10 @@ class Dashboard extends Admin_Controller {
         $this->load->model('Notice_model');
         $this->load->model('Contact_model');
         $this->load->model('User_model');
+        $this->load->model('Team_member_model');
+        $this->load->model('Appointment_model');
+        
+        $this->load->helper('template');
     }
 
     /**
@@ -31,13 +35,40 @@ class Dashboard extends Admin_Controller {
 
     /**
      * Business Operations Dashboard
-     * Focus: Admissions, Academic Programs, Departments, Faculty, Events, Notices
+     * Content changes based on active template (medical/college/tourism)
      */
     public function operations()
     {
         $data = $this->get_admin_data();
         $data['page_title'] = 'Business Operations';
 
+        $active_template = get_active_template();
+        
+        if ($active_template === 'medical') {
+            // Medical template specific data
+            $data['total_events'] = $this->Event_calendar_model->count_events(null, $active_template);
+            $data['upcoming_events'] = $this->Event_calendar_model->get_upcoming_events(5, 0, $active_template);
+            $data['total_notices'] = $this->Notice_model->count_notices();
+            $data['recent_notices'] = $this->Notice_model->get_recent_notices(5);
+            $data['unread_messages'] = $this->Contact_model->count_unread($active_template);
+            $data['recent_contacts'] = $this->Contact_model->get_recent_contacts(5, $active_template);
+            
+            // Appointments (medical template)
+            $data['total_appointments'] = $this->Appointment_model->count_all($active_template);
+            $data['pending_appointments'] = $this->Appointment_model->count_by_status('pending', $active_template);
+            $data['recent_appointments'] = $this->Appointment_model->get_recent(7, 5, $active_template);
+            
+            $data['total_team_members'] = $this->Team_member_model->count_all($active_template);
+            $data['total_users'] = $this->User_model->count_users();
+            
+            $this->load->view('admin/layout/header', $data);
+            $this->load->view('admin/layout/sidebar', $data);
+            $this->load->view('admin/dashboard/medical_operations', $data);
+            $this->load->view('admin/layout/footer', $data);
+            return;
+        }
+        
+        // Default operations (for other templates)
         // Admission Statistics
         $data['admission_stats'] = $this->Admission_model->get_statistics();
         $data['total_admissions'] = $this->Admission_model->count_admissions();
@@ -58,17 +89,17 @@ class Dashboard extends Admin_Controller {
         $data['total_faculty'] = $this->Faculty_staff_model->count_all();
         $data['active_faculty'] = $this->Faculty_staff_model->count_active();
 
-        // Events
-        $data['upcoming_events'] = $this->Event_calendar_model->get_upcoming_events(5);
-        $data['total_events'] = $this->Event_calendar_model->count_events();
+        // Events (theme-aware)
+        $data['upcoming_events'] = $this->Event_calendar_model->get_upcoming_events(5, 0, $active_template);
+        $data['total_events'] = $this->Event_calendar_model->count_events(null, $active_template);
 
         // Notices
         $data['recent_notices'] = $this->Notice_model->get_recent_notices(5);
         $data['total_notices'] = $this->Notice_model->count_notices();
 
         // Contact Messages
-        $data['unread_messages'] = $this->Contact_model->count_unread();
-        $data['recent_contacts'] = $this->Contact_model->get_recent_contacts(5);
+        $data['unread_messages'] = $this->Contact_model->count_unread($active_template);
+        $data['recent_contacts'] = $this->Contact_model->get_recent_contacts(5, $active_template);
 
         // Enquiries
         $data['total_enquiries'] = $this->Enquiry_model->count_enquiries();
@@ -88,30 +119,24 @@ class Dashboard extends Admin_Controller {
 
     /**
      * Analytics Dashboard
-     * Focus: Visitor statistics, website analytics, trends
+     * Content changes based on active template (medical/college/tourism)
      */
     public function analytics()
     {
         $data = $this->get_admin_data();
         $data['page_title'] = 'Analytics Dashboard';
 
-        // Total counts for quick reference
+        $active_template = get_active_template();
+        
+        // Common data for all templates
         $data['total_packages'] = $this->Package_model->count_packages();
         $data['total_blog_posts'] = $this->Blog_model->get_all_count();
         $data['total_bookings'] = $this->Booking_model->count_bookings();
         $data['total_enquiries'] = $this->Enquiry_model->count_enquiries();
-
-        // Recent bookings (last 5)
         $data['recent_bookings'] = $this->Booking_model->get_all_bookings(5, 0);
-
-        // Recent enquiries (last 5)
         $data['recent_enquiries'] = $this->Enquiry_model->get_recent_enquiries(5);
-
-        // Statistics
         $data['booking_stats'] = $this->Booking_model->get_statistics();
         $data['enquiry_stats'] = $this->Enquiry_model->get_statistics();
-
-        // Count new/pending items for badges
         $data['pending_bookings'] = $this->Booking_model->count_bookings('pending');
         $data['new_enquiries'] = $this->Enquiry_model->count_enquiries('new');
 
@@ -124,10 +149,19 @@ class Dashboard extends Admin_Controller {
         $data['browser_stats'] = $this->Visitor_model->get_browser_stats();
         $data['country_stats'] = $this->Visitor_model->get_country_stats(30, 10);
 
-        // Events - Display upcoming events
-        $data['upcoming_events'] = $this->Event_calendar_model->get_upcoming_events(5);
+        // Events (theme-aware)
+        $data['upcoming_events'] = $this->Event_calendar_model->get_upcoming_events(5, 0, $active_template);
 
-        // Load views
+        if ($active_template === 'medical') {
+            // Use medical analytics view
+            $this->load->view('admin/layout/header', $data);
+            $this->load->view('admin/layout/sidebar', $data);
+            $this->load->view('admin/dashboard/medical_analytics', $data);
+            $this->load->view('admin/layout/footer', $data);
+            return;
+        }
+        
+        // Default analytics view
         $this->load->view('admin/layout/header', $data);
         $this->load->view('admin/layout/sidebar', $data);
         $this->load->view('admin/dashboard/index', $data);

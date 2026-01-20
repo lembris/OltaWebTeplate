@@ -36,6 +36,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     font-size: 1.125rem;
     color: #64748b;
     max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
   }
 
   .service-section {
@@ -390,7 +392,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <div class="col-lg-10 text-center">
         <div class="page-header" data-aos="fade-up">
           <h1>Our Healthcare Services</h1>
-          <p>Comprehensive healthcare solutions designed to bridge the gap between communities and quality medical services across Tanzania and East Africa.</p>
+          <p>Comprehensive healthcare solutions designed to bridge the gap between communities and quality medical services across Tanzania, East and Central Africa.</p>
         </div>
       </div>
     </div>

@@ -237,7 +237,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       <?php foreach ($youtube_videos as $video): ?>
       <div class="video-card" data-aos="fade-up" data-aos-delay="100">
         <div class="video-thumbnail-wrapper">
-          <img src="<?php echo htmlspecialchars($video->thumbnail_url); ?>" alt="<?php echo htmlspecialchars($video->title); ?>" class="video-thumbnail">
+          <img src="<?php echo htmlspecialchars($video->thumbnail_url); ?>" alt="<?php echo htmlspecialchars($video->title); ?>" class="video-thumbnail" loading="lazy" decoding="async">
           <div class="video-play-button" onclick="playVideo('<?php echo htmlspecialchars($video->youtube_video_id); ?>', '<?php echo htmlspecialchars($video->title); ?>')">
             <i class="bi bi-play-fill"></i>
           </div>

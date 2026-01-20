@@ -51,6 +51,13 @@ class Home extends Frontend_Controller {
 		$active_template = get_active_template();
 		$data['current_page_name'] = 'Home';
 		
+		// Check for consultation success message
+		$data['consultation_success'] = $this->session->userdata('consultation_success');
+		$data['consultation_ref'] = $this->session->userdata('consultation_ref');
+		// Clear after reading
+		$this->session->unset_userdata('consultation_success');
+		$this->session->unset_userdata('consultation_ref');
+		
 		// Load template-specific content
 		if ($active_template === 'college') {
 			$this->load_college_content($data);
@@ -246,13 +253,14 @@ class Home extends Frontend_Controller {
 			}
 		}
 		
-		// Load partner hospitals - Tanzanian
+		// Load partner hospitals - Featured only for home page
 		$data['tz_partners'] = [];
+		$data['int_partners'] = [];
 		if ($this->db->table_exists('partners')) {
 			try {
 				$this->load->model('Partner_model');
-				$data['tz_partners'] = $this->Partner_model->get_by_type('tanzania', 4);
-				$data['int_partners'] = $this->Partner_model->get_by_type('international', 4);
+				$data['tz_partners'] = $this->Partner_model->get_featured_by_type('tanzania', 4);
+				$data['int_partners'] = $this->Partner_model->get_featured_by_type('international', 4);
 			} catch (Exception $e) {
 				$data['tz_partners'] = [];
 				$data['int_partners'] = [];
@@ -281,6 +289,17 @@ class Home extends Frontend_Controller {
 				$data['youtube_videos'] = $this->Youtube_videos_model->get_featured(6);
 			} catch (Exception $e) {
 				$data['youtube_videos'] = [];
+			}
+		}
+		
+		// Load featured FAQs for home page
+		$data['featured_faqs'] = [];
+		if ($this->db->table_exists('about_faq')) {
+			try {
+				$this->load->model('About_faq_model');
+				$data['featured_faqs'] = $this->About_faq_model->get_featured(5, 'medical');
+			} catch (Exception $e) {
+				$data['featured_faqs'] = [];
 			}
 		}
 		

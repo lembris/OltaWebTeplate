@@ -1,0 +1,48 @@
+# TNA CARE Medical Services - robots.txt
+# This file directs search engine crawlers
+
+# Default rules for all bots
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /index.php
+Disallow: /application/
+Disallow: /system/
+Disallow: /admin_index.php
+Disallow: /admin/
+Disallow: /api/private/
+Disallow: /*?*
+Disallow: /cache/
+Disallow: /search?
+Disallow: /*/delete
+Disallow: /*/edit
+Disallow: *.php$
+
+# Allow access to robots.txt and sitemap
+Allow: /robots.txt
+Allow: /sitemap.xml
+Allow: /sitemap-*.xml
+
+# Specific rules for Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Specific rules for Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemap location
+Sitemap: http://localhost/institute/sitemap.xml
+Sitemap: https://localhost/institute/sitemap.xml

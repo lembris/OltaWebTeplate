@@ -18,15 +18,18 @@ class Contacts extends Admin_Controller
     {
         $data = $this->get_admin_data();
         $data['page_title'] = 'Contact Queries';
-
+        
+        $this->load->helper('template');
+        $theme = get_active_template();
+        
         $status = $this->input->get('status');
         $search = $this->input->get('search');
         $per_page = 20;
         $page = (int)$this->input->get('page') ?: 1;
         $offset = ($page - 1) * $per_page;
 
-        $data['enquiries'] = $this->Contact_model->get_all_contacts($per_page, $offset, $status, $search);
-        $data['total_enquiries'] = $this->Contact_model->count_contacts($status, $search);
+        $data['enquiries'] = $this->Contact_model->get_all_contacts($per_page, $offset, $status, $search, $theme);
+        $data['total_enquiries'] = $this->Contact_model->count_contacts($status, $search, $theme);
         $data['stats'] = $this->Contact_model->get_statistics();
         
         $data['current_status'] = $status;

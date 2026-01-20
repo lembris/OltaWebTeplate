@@ -174,8 +174,10 @@ class Consultation extends Frontend_Controller {
             }
         });
 
-        // Step 3: Redirect to success page
-        redirect('consultation/success/' . $saved_appointment->uid);
+        // Step 3: Redirect back to homepage with success message
+        $this->session->set_userdata('consultation_success', true);
+        $this->session->set_userdata('consultation_ref', $saved_appointment->booking_ref);
+        redirect(base_url() . '#consultation');
     }
 
     public function success($uid = null)

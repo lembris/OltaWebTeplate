@@ -27,12 +27,15 @@ class Contact extends Frontend_Controller {
             $this->load->model('Testimonial_model');
             $data['testimonials'] = $this->Testimonial_model->get_featured(6);
         } elseif ($active_template === 'medical') {
-            $data['page_title'] = 'Contact Us - TNA CARE';
-            $data['meta_description'] = 'Get in touch with TNA CARE for healthcare inquiries, partnerships, or to schedule a consultation.';
+            $data['page_title'] = 'Contact TNA CARE | Healthcare Consultation & Support Tanzania';
+            $data['meta_description'] = 'Get in touch with TNA CARE for healthcare inquiries, medical partnerships, corporate wellness programs, or to schedule a consultation. We respond within 24 hours.';
+            $data['meta_keywords'] = 'TNA CARE contact, healthcare Tanzania, medical consultation, health support, corporate wellness inquiry, Tanzania healthcare contact';
+            $data['canonical_url'] = base_url('contact');
+            $data['og_image'] = base_url('assets/templates/medical/img/health/tna-female-doctor-community-health.png');
             
-            // Load FAQs
+            // Load featured FAQs for featured section
             $this->load->model('About_faq_model');
-            $data['contact_faqs'] = $this->About_faq_model->get_grouped_by_category('medical');
+            $data['featured_faqs'] = $this->About_faq_model->get_featured(5, 'medical');
         } else {
             $data['page_title'] = 'Contact Us - Safari Adventure Tours';
             $data['meta_description'] = 'Get in touch with Osiram Safari Adventure for safari bookings and travel inquiries.';

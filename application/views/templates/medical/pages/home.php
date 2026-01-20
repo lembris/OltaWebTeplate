@@ -3,6 +3,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?>
 
 <style>
+  /* Hero Section - Push below fixed header */
+  .hero {
+    min-height: auto !important;
+    padding: 100px 0 60px !important;
+  }
+
+  @media (max-width: 991px) {
+    .hero {
+      padding: 90px 0 50px !important;
+    }
+  }
+
+  @media (max-width: 575px) {
+    .hero {
+      padding: 80px 0 40px !important;
+    }
+  }
+
+  .hero .hero-content {
+    padding: 1rem 0 !important;
+  }
+
+  .trust-badges {
+    margin-bottom: 0.75rem !important;
+  }
+
+  .trust-badges .badge-item {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .hero-content h1 {
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-description {
+    margin-bottom: 1rem;
+  }
+
+  .hero-stats {
+    margin-bottom: 1.5rem !important;
+  }
+
   /* Featured Expertises Section */
   .featured-expertises {
     padding: 80px 0;
@@ -161,6 +205,44 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     color: #64748b;
   }
 
+  /* Fix spacing for features section */
+  .features-section {
+    margin-top: -40px;
+    padding-top: 40px;
+  }
+
+  .feature-block {
+    padding: 2rem 1.5rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .feature-block:hover {
+    background: white;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .feature-icon {
+    font-size: 2.5rem;
+    color: var(--theme-primary);
+    margin-bottom: 1rem;
+  }
+
+  .feature-block h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--theme-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-block p {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
   @media (max-width: 768px) {
     .featured-expertises {
       padding: 60px 0;
@@ -172,6 +254,180 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
     .expertise-card-simple {
       margin-bottom: 0.75rem;
+    }
+  }
+
+  /* Health Blog Cards */
+  .health-blog-section {
+    background: #f8fafc;
+    padding: 80px 0;
+  }
+
+  .health-blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .health-blog-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+  }
+
+  .health-blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  }
+
+  .health-blog-image {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+  }
+
+  .health-blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .health-blog-card:hover .health-blog-image img {
+    transform: scale(1.08);
+  }
+
+  .health-blog-category {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .health-blog-category span {
+    background: var(--theme-accent, #175cdd);
+    color: white;
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .health-blog-content {
+    padding: 1.5rem;
+  }
+
+  .health-blog-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+
+  .health-blog-meta i {
+    margin-right: 0.25rem;
+  }
+
+  .health-blog-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--theme-primary);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .health-blog-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .health-blog-title a:hover {
+    color: var(--theme-accent, #175cdd);
+  }
+
+  .health-blog-excerpt {
+    color: #64748b;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .health-blog-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .health-blog-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .health-blog-author img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .health-blog-author-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #334155;
+  }
+
+  .health-blog-read-more {
+    color: var(--theme-accent, #175cdd);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: gap 0.2s ease;
+  }
+
+  .health-blog-read-more:hover {
+    gap: 0.6rem;
+  }
+
+  .view-all-blogs {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    color: var(--theme-accent, #175cdd);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    border: 2px solid var(--theme-accent, #175cdd);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+  }
+
+  .view-all-blogs:hover {
+    background: var(--theme-accent, #175cdd);
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    .health-blog-section {
+      padding: 60px 0;
+    }
+    
+    .health-blog-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
@@ -242,10 +498,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
           </div>
 
-          <div class="col-lg-6">
+           <div class="col-lg-6">
             <div class="hero-visual" data-aos="fade-left" data-aos-delay="400">
               <div class="main-image">
-                <img src="<?php echo base_url('assets/templates/medical/img/health/tna-female-black-doctor.png'); ?>" alt="TNA CARE Community Health Outreach" class="img-fluid">
+                <img src="<?php echo base_url('assets/templates/medical/img/health/tna-female-black-doctor.png'); ?>" alt="TNA CARE Community Health Outreach" class="img-fluid" fetchpriority="high" loading="eager" decoding="async">
                 <div class="floating-card appointment-card">
                   <div class="card-icon">
                     <i class="bi bi-calendar-check"></i>
@@ -310,7 +566,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <div class="col-lg-6" data-aos="fade-left" data-aos-delay="300">
             <div class="about-visual">
               <div class="main-image">
-                <img src="<?php echo base_url('assets/templates/medical/img/health/tna-male-and-female-black-doctors-wod-round.png'); ?>" alt="TNA CARE Medical Outreach" class="img-fluid">
+                <img src="<?php echo base_url('assets/templates/medical/img/health/tna-male-and-female-black-doctors-wod-round.png'); ?>" alt="TNA CARE Medical Outreach" class="img-fluid" loading="lazy">
               </div>
               <div class="floating-card">
                 <div class="card-content">
@@ -720,7 +976,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="partner-logo-card">
                       <div class="partner-logo-wrapper">
                         <?php if (!empty($partner->logo)): ?>
-                        <img src="<?php echo base_url('assets/img/partners/' . $partner->logo); ?>" alt="<?php echo htmlspecialchars($partner->name); ?>" class="partner-logo-img">
+                        <img src="<?php echo base_url('assets/img/partners/' . $partner->logo); ?>" alt="<?php echo htmlspecialchars($partner->name); ?>" class="partner-logo-img" loading="lazy">
                         <?php else: ?>
                         <i class="bi bi-hospital partner-icon-large"></i>
                         <?php endif; ?>
@@ -870,7 +1126,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="partner-logo-card">
                       <div class="partner-logo-wrapper">
                         <?php if (!empty($partner->logo)): ?>
-                        <img src="<?php echo base_url('assets/img/partners/' . $partner->logo); ?>" alt="<?php echo htmlspecialchars($partner->name); ?>" class="partner-logo-img">
+                        <img src="<?php echo base_url('assets/img/partners/' . $partner->logo); ?>" alt="<?php echo htmlspecialchars($partner->name); ?>" class="partner-logo-img" loading="lazy">
                         <?php else: ?>
                         <i class="bi bi-hospital partner-icon-large"></i>
                         <?php endif; ?>
@@ -1058,6 +1314,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
               </div>
 
+              <!-- Success Message -->
+              <?php if (isset($consultation_success) && $consultation_success): ?>
+              <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                  <div>
+                    <strong>Consultation Request Submitted!</strong>
+                    <p class="mb-0">Your reference number is: <strong><?= htmlspecialchars($consultation_ref ?? 'N/A') ?></strong></p>
+                    <small class="text-muted">Our medical coordinator will contact you within 24 hours.</small>
+                  </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              <?php endif; ?>
+
               <div class="consultation-form-wrapper">
                 <div class="form-card">
                   <form id="consultationForm" action="<?php echo base_url('consultation/submit'); ?>" method="post" class="consultation-form">
@@ -1189,46 +1460,77 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
      </section>
 
-     <?php if (!empty($latest_blogs)): ?>
-    <!-- Recent Posts Section -->
-    <section id="recent-posts" class="recent-posts section">
-
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Latest Health Tips & News</h2>
-        <p>Stay informed with our latest articles and health updates</p>
-      </div>
-
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
-        <div class="row g-4">
-          <?php foreach ($latest_blogs as $blog): ?>
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-            <article class="blog-card">
-              <?php if (!empty($blog->featured_image)): ?>
-              <div class="post-img">
-                <img src="<?php echo base_url('assets/img/blog/' . $blog->featured_image); ?>" alt="<?php echo htmlspecialchars($blog->title); ?>" class="img-fluid">
-              </div>
-              <?php endif; ?>
-              <p class="post-category"><?php echo htmlspecialchars(ucfirst($blog->category ?? 'Health')); ?></p>
-              <h2 class="title">
-                <a href="<?php echo base_url('blog/post/' . $blog->slug); ?>"><?php echo htmlspecialchars($blog->title); ?></a>
-              </h2>
-              <p class="post-excerpt">
-                <?php 
-                  $excerpt = $blog->excerpt ?? strip_tags($blog->content ?? '');
-                  echo htmlspecialchars(substr($excerpt, 0, 100) . (strlen($excerpt) > 100 ? '...' : '')); 
-                ?>
-              </p>
-            </article>
+      <?php if (!empty($latest_blogs)): ?>
+      <!-- Health Blog Section -->
+      <section class="health-blog-section">
+        <div class="container">
+          <div class="text-center mb-5" data-aos="fade-up">
+            <span class="subheading" style="color: var(--theme-accent); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Health Insights</span>
+            <h2 style="font-size: 2rem; font-weight: 700; color: var(--theme-primary); margin-top: 0.5rem;">Latest Health Tips & News</h2>
+            <p style="color: #64748b; max-width: 600px; margin: 0.75rem auto 0;">Stay informed with our latest articles and health updates from our medical experts</p>
           </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
 
-    </section>
-    <?php endif; ?>
+          <div class="health-blog-grid">
+            <?php foreach ($latest_blogs as $index => $blog): ?>
+            <article class="health-blog-card" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
+              <div class="health-blog-image">
+                <?php 
+                $img_url = !empty($blog->featured_image) ? base_url('assets/img/blog/' . $blog->featured_image) : base_url('assets/templates/medical/img/health/tna-female-black-doctor.png');
+                ?>
+                <a href="<?= base_url('blog/post/' . $blog->slug) ?>">
+                  <img src="<?= $img_url ?>" alt="<?= htmlspecialchars($blog->title) ?>" loading="lazy">
+                </a>
+                <?php if (!empty($blog->category)): ?>
+                <div class="health-blog-category">
+                  <span><?= htmlspecialchars(ucfirst($blog->category)) ?></span>
+                </div>
+                <?php endif; ?>
+              </div>
+              
+              <div class="health-blog-content">
+                <div class="health-blog-meta">
+                  <span><i class="bi bi-calendar3"></i> <?= date('M d, Y', strtotime($blog->created_at)) ?></span>
+                  <span><i class="bi bi-clock"></i> <?= isset($blog->read_time) ? $blog->read_time . ' min' : '5 min' ?> read</span>
+                </div>
+                
+                <h3 class="health-blog-title">
+                  <a href="<?= base_url('blog/post/' . $blog->slug) ?>"><?= htmlspecialchars($blog->title) ?></a>
+                </h3>
+                
+                <?php if (!empty($blog->excerpt)): ?>
+                <p class="health-blog-excerpt"><?= htmlspecialchars(substr(strip_tags($blog->excerpt), 0, 100)) ?><?= strlen(strip_tags($blog->excerpt)) > 100 ? '...' : '' ?></p>
+                <?php endif; ?>
+                
+                <div class="health-blog-footer">
+                  <div class="health-blog-author">
+                    <img src="<?= base_url('assets/templates/medical/img/health/tna-female-black-doctor.png') ?>" alt="Author" loading="lazy" decoding="async">
+                    <span class="health-blog-author-name"><?= htmlspecialchars($blog->author ?? 'TNA CARE') ?></span>
+                  </div>
+                  <a href="<?= base_url('blog/post/' . $blog->slug) ?>" class="health-blog-read-more">
+                    Read More <i class="bi bi-arrow-right"></i>
+                  </a>
+                </div>
+              </div>
+            </article>
+            <?php endforeach; ?>
+          </div>
+
+          <div class="text-center">
+            <a href="<?= base_url('blog') ?>" class="view-all-blogs">
+              View All Articles <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+      <?php endif; ?>
 
     <?php if (!empty($youtube_videos)): ?>
     <?php echo $this->load->view('templates/medical/sections/youtube_videos', ['youtube_videos' => $youtube_videos], TRUE); ?>
+    <?php endif; ?>
+
+    <!-- Featured FAQ Section -->
+    <?php if (!empty($featured_faqs)): ?>
+    <?php echo $this->load->view('templates/medical/sections/featured_faqs', ['featured_faqs' => $featured_faqs], TRUE); ?>
     <?php endif; ?>
 
     <!-- Call To Action Section -->
@@ -1257,7 +1559,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <div class="col-lg-6">
               <div class="image-container" data-aos="fade-left" data-aos-delay="300">
-                <img src="<?php echo base_url('assets/templates/medical/img/health/tna-female-doctor-community-health.png'); ?>" alt="Community Health Transformation" class="img-fluid">
+                <img src="<?php echo base_url('assets/templates/medical/img/health/tna-female-doctor-community-health.png'); ?>" alt="Community Health Transformation" class="img-fluid" loading="lazy" decoding="async">
               </div>
             </div>
 

@@ -110,17 +110,28 @@ class Contact_model extends CI_Model {
     }
 
     /**
-     * Get all contacts with filters
+     * Get all contacts with filters (theme-aware)
      * @param int $limit Limit
      * @param int $offset Offset
      * @param string $status Filter by status
      * @param string $search Search term
+     * @param string $theme Filter by theme
      * @return array Array of contacts
      */
-    public function get_all_contacts($limit = 20, $offset = 0, $status = null, $search = null)
+    public function get_all_contacts($limit = 20, $offset = 0, $status = null, $search = null, $theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
         $this->db->where('trip_type', 'Contact Form');
         $this->db->where('is_deleted', 0);
+        
+        // Filter by theme
+        $this->db->group_start();
+        $this->db->where('theme', 'all');
+        $this->db->or_where('theme', $theme);
+        $this->db->group_end();
         
         if ($status && $status !== 'all') {
             $this->db->where('status', $status);
@@ -143,15 +154,26 @@ class Contact_model extends CI_Model {
     }
 
     /**
-     * Count contacts with filters
+     * Count contacts with filters (theme-aware)
      * @param string $status Filter by status
      * @param string $search Search term
+     * @param string $theme Filter by theme
      * @return int Count
      */
-    public function count_contacts($status = null, $search = null)
+    public function count_contacts($status = null, $search = null, $theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
         $this->db->where('trip_type', 'Contact Form');
         $this->db->where('is_deleted', 0);
+        
+        // Filter by theme
+        $this->db->group_start();
+        $this->db->where('theme', 'all');
+        $this->db->or_where('theme', $theme);
+        $this->db->group_end();
         
         if ($status && $status !== 'all') {
             $this->db->where('status', $status);
@@ -471,29 +493,76 @@ class Contact_model extends CI_Model {
     }
 
     /**
-     * Get recent contacts for dashboard
+     * Get recent contacts for dashboard (theme-aware)
      * @param int $limit Number of contacts
+     * @param string $theme Filter by theme
      * @return array Array of contacts
      */
-    public function get_recent_contacts($limit = 5)
+    public function get_recent_contacts($limit = 5, $theme = null)
     {
-        return $this->db->where('trip_type', 'Contact Form')
-                       ->where('is_deleted', 0)
-                       ->order_by('created_at', 'DESC')
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
+        $this->db->where('trip_type', 'Contact Form');
+        $this->db->where('is_deleted', 0);
+        
+        // Filter by theme
+        $this->db->group_start();
+        $this->db->where('theme', 'all');
+        $this->db->or_where('theme', $theme);
+        $this->db->group_end();
+        
+        return $this->db->order_by('created_at', 'DESC')
                        ->limit($limit)
                        ->get($this->table)
                        ->result();
     }
 
     /**
-     * Get contacts for export
-     * @param string $status Filter by status
-     * @return array Array of contacts
+     * Count unread contact messages (theme-aware)
+     * @param string $theme Filter by theme
+     * @return int Count of unread messages
      */
-    public function get_contacts_for_export($status = null)
+    public function count_unread($theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
         $this->db->where('trip_type', 'Contact Form');
         $this->db->where('is_deleted', 0);
+        $this->db->where('status', 'new');
+        
+        // Filter by theme
+        $this->db->group_start();
+        $this->db->where('theme', 'all');
+        $this->db->or_where('theme', $theme);
+        $this->db->group_end();
+        
+        return $this->db->count_all_results($this->table);
+    }
+
+    /**
+     * Get contacts for export (theme-aware)
+     * @param string $status Filter by status
+     * @param string $theme Filter by theme
+     * @return array Array of contacts
+     */
+    public function get_contacts_for_export($status = null, $theme = null)
+    {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
+        $this->db->where('trip_type', 'Contact Form');
+        $this->db->where('is_deleted', 0);
+        
+        // Filter by theme
+        $this->db->group_start();
+        $this->db->where('theme', 'all');
+        $this->db->or_where('theme', $theme);
+        $this->db->group_end();
         
         if ($status && $status !== 'all') {
             $this->db->where('status', $status);
@@ -532,17 +601,5 @@ class Contact_model extends CI_Model {
         return $this->db->where('uid', $uid)
                        ->where('trip_type', 'Contact Form')
                        ->update($this->table, $data);
-    }
-
-    /**
-     * Count unread contact messages
-     * @return int Count of unread messages
-     */
-    public function count_unread()
-    {
-        return $this->db->where('trip_type', 'Contact Form')
-                       ->where('is_deleted', 0)
-                       ->where('status', 'new')
-                       ->count_all_results($this->table);
     }
 }

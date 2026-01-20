@@ -16,6 +16,10 @@
                   <span class="sitename"><?php echo $site_name; ?></span>
                 <?php endif; ?>
               </a>
+              <div class="brand-name mb-3">
+                <h5 class="text-white mb-1" style="font-size: 1.3rem; font-weight: 700;">TIBA NA AFYA CARE</h5>
+                <p class="text-muted" style="font-size: 0.85rem;">TNA CARE</p>
+              </div>
               <p class="brand-description text-light" style="font-size: 0.95rem;">
                 Connecting Communities to Better Health through innovative health education, outreach programs, and digital solutions across Tanzania, east and central Africa.
               </p>
@@ -83,13 +87,13 @@
                     <nav class="footer-nav d-flex flex-column gap-2">
                       <a href="<?php echo base_url('partners'); ?>" class="text-light text-decoration-none">Become a Partner</a>
                       <?php if (!empty($youtube)): ?>
-                        <a href="<?php echo $youtube; ?>" target="_blank" class="text-light text-decoration-none">YouTube</a>
+                        <a href="<?php echo $youtube; ?>" target="_blank" rel="noopener noreferrer" class="text-light text-decoration-none">YouTube</a>
                       <?php endif; ?>
                       <?php if (!empty($facebook)): ?>
-                        <a href="<?php echo $facebook; ?>" target="_blank" class="text-light text-decoration-none">Facebook</a>
+                        <a href="<?php echo $facebook; ?>" target="_blank" rel="noopener noreferrer" class="text-light text-decoration-none">Facebook</a>
                       <?php endif; ?>
                       <?php if (!empty($instagram)): ?>
-                        <a href="<?php echo $instagram; ?>" target="_blank" class="text-light text-decoration-none">Instagram</a>
+                        <a href="<?php echo $instagram; ?>" target="_blank" rel="noopener noreferrer" class="text-light text-decoration-none">Instagram</a>
                       <?php endif; ?>
                     </nav>
                   </div>
@@ -108,7 +112,7 @@
           <div class="row align-items-center">
             <div class="col-lg-6">
               <div class="copyright">
-                <p class="mb-0 text-light" style="font-size: 0.9rem;">&copy; <?php echo date('Y'); ?> <span class="sitename"><?php echo $site_name; ?></span>. All rights reserved.</p>
+                <p class="mb-0 text-light" style="font-size: 0.9rem;">&copy; <?php echo date('Y'); ?> TIBA NA AFYA CARE (TNA CARE). All rights reserved.</p>
               </div>
             </div>
             <div class="col-lg-6 text-lg-end">
@@ -116,7 +120,7 @@
                 <a href="<?php echo base_url('privacy-policy'); ?>" class="text-light text-decoration-none" style="font-size: 0.9rem;">Privacy Policy</a>
                 <a href="<?php echo base_url('terms-of-service'); ?>" class="text-light text-decoration-none" style="font-size: 0.9rem;">Terms of Service</a>
                 <div class="credits text-light" style="font-size: 0.9rem;">
-                  Proudly developed by <a href="https://oltanasoftworks.com/" target="_blank" class="text-light text-decoration-none">Oltana Softworks</a>
+                  Proudly developed by <a href="https://oltanasoftworks.com/" target="_blank" rel="noopener noreferrer" class="text-light text-decoration-none">Oltana Softworks</a>
                 </div>
               </div>
             </div>
@@ -132,15 +136,31 @@
   <!-- Preloader -->
   <div id="preloader"></div>
 
-  <!-- Vendor JS -->
-  <script src="<?php echo base_url('assets/templates/medical/vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>"></script>
-  <script src="<?php echo base_url('assets/templates/medical/vendor/aos/aos.js'); ?>"></script>
-  <script src="<?php echo base_url('assets/templates/medical/vendor/glightbox/js/glightbox.min.js'); ?>"></script>
-  <script src="<?php echo base_url('assets/templates/medical/vendor/purecounter/purecounter_vanilla.js'); ?>"></script>
-  <script src="<?php echo base_url('assets/templates/medical/vendor/swiper/swiper-bundle.min.js'); ?>"></script>
+  <!-- Vendor JS - Deferred loading for performance -->
+  <script src="<?php echo base_url('assets/templates/medical/vendor/bootstrap/js/bootstrap.bundle.min.js'); ?>" defer></script>
+  <script src="<?php echo base_url('assets/templates/medical/vendor/aos/aos.js'); ?>" defer></script>
+  <script src="<?php echo base_url('assets/templates/medical/vendor/glightbox/js/glightbox.min.js'); ?>" defer></script>
+  <script src="<?php echo base_url('assets/templates/medical/vendor/purecounter/purecounter_vanilla.js'); ?>" defer></script>
+  <script src="<?php echo base_url('assets/templates/medical/vendor/swiper/swiper-bundle.min.js'); ?>" defer></script>
 
   <!-- Main JS -->
-  <script src="<?php echo base_url('assets/templates/medical/js/main.js'); ?>"></script>
+  <script src="<?php echo base_url('assets/templates/medical/js/main.js'); ?>" defer></script>
+
+  <!-- AOS Optimization: Reduce animation processing overhead -->
+  <script>
+    window.addEventListener('load', function() {
+      if (window.AOS) {
+        AOS.init({
+          once: true,
+          disable: 'phone',
+          debounceDelay: 50,
+          mirror: false,
+          offset: 100,
+          duration: 400
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>

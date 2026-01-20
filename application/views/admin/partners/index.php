@@ -84,12 +84,15 @@
                             </td>
                             <td>
                                 <?php
-                                $template_class = match($partner->template ?? 'all') {
-                                    'medical' => 'bg-primary',
-                                    'college' => 'bg-secondary',
-                                    'tourism' => 'bg-success',
-                                    default => 'bg-dark'
-                                };
+                                $template = $partner->template ?? 'all';
+                                $template_class = 'bg-dark';
+                                if ($template === 'medical') {
+                                    $template_class = 'bg-primary';
+                                } elseif ($template === 'college') {
+                                    $template_class = 'bg-secondary';
+                                } elseif ($template === 'tourism') {
+                                    $template_class = 'bg-success';
+                                }
                                 ?>
                                 <span class="badge <?= $template_class ?>">
                                     <?= ucfirst($partner->template ?? 'all') ?>

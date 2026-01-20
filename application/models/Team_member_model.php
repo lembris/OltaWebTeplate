@@ -34,8 +34,17 @@ class Team_member_model extends CI_Model {
         return $query->get($this->table)->result();
     }
 
-    public function count_all()
+    public function count_all($theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
+        $this->db->group_start();
+        $this->db->where('template', 'all');
+        $this->db->or_where('template', $theme);
+        $this->db->group_end();
+        
         return $this->db->count_all_results($this->table);
     }
 

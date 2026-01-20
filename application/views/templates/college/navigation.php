@@ -81,6 +81,15 @@
                     <li class="nav-item <?php echo ($current_page_name == 'Contact Us') ? 'active' : ''; ?>">
                         <a href="<?php echo base_url('contact'); ?>" class="nav-link <?php echo ($current_page_name == 'Contact Us') ? 'active' : ''; ?>">Contact</a>
                     </li>
+                    <?php if (!$this->session->userdata('user_logged_in')): ?>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url('users/auth/login'); ?>" class="nav-link"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                    </li>
+                    <?php else: ?>
+                    <li class="nav-item">
+                        <a href="<?php echo base_url('admin/dashboard'); ?>" class="nav-link"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                    </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

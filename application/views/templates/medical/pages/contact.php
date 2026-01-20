@@ -36,6 +36,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     font-size: 1.125rem;
     color: #64748b;
     max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
   }
 
   .contact-section {
@@ -180,17 +182,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     box-shadow: 0 10px 25px rgba(var(--theme-primary-rgb), 0.3);
   }
 
-  .map-wrapper {
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  }
 
-  .map-wrapper iframe {
-    width: 100%;
-    height: 450px;
-    border: none;
-  }
 
   .website_url {
     display: none;
@@ -337,9 +329,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       </div>
     </div>
 
-    <!-- Contact Form & Map -->
-    <div class="row g-5">
-      <div class="col-lg-6" data-aos="fade-right">
+    <!-- Contact Form - Full Width -->
+    <div class="row">
+      <div class="col-lg-8 mx-auto" data-aos="fade-up">
         <div class="contact-form-wrapper">
           <h3>Send Us a Message</h3>
           <p>Fill out the form below and we'll get back to you as soon as possible.</p>
@@ -416,123 +408,66 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <?php echo form_close(); ?>
         </div>
       </div>
-      
-      <div class="col-lg-6" data-aos="fade-left">
-        <div class="map-wrapper">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.0!2d39.289!3d-6.812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwNDgnNDYuMCJTIDE5wrE1OCcwMC42JlI!5e0!3m2!1sen!2stz!4v1600000000000!5m2!1sen!2stz" 
-                  allowfullscreen="" 
-                  loading="lazy" 
-                  referrerpolicy="no-referrer-when-downgrade"
-                  title="TNA CARE Location">
-          </iframe>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- FAQ Section -->
-<section class="faq-section">
-  <div class="container">
-    <div class="row justify-content-center mb-5">
-      <div class="col-lg-10 text-center" data-aos="fade-up">
-        <h2 style="font-size: 2rem; font-weight: 700; color: var(--theme-primary); margin-bottom: 1rem;">Frequently Asked Questions</h2>
-        <p style="color: #64748b; max-width: 600px; margin: 0 auto;">Find answers to common questions about our services</p>
+<!-- Full-Width Map Section -->
+<section class="map-section" style="padding: 0; background: white; margin-bottom: 0;">
+  <div style="width: 100%; height: 600px; position: relative;">
+    <!-- Placeholder with lazy-load trigger -->
+    <div id="full-map-placeholder" class="full-map-placeholder" style="width: 100%; height: 100%; background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative;">
+      <div style="text-align: center; color: #475569;">
+        <i class="bi bi-map" style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.7;"></i>
+        <h3 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">Tap to View Our Location</h3>
+        <p style="margin: 0; opacity: 0.7;">Dar es Salaam, Tanzania</p>
       </div>
     </div>
-    <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <?php if (!empty($contact_faqs)): ?>
-          <?php foreach ($contact_faqs as $category => $faqs): ?>
-            <?php if (!empty($category)): ?>
-            <h4 style="color: var(--theme-primary); margin-bottom: 1.5rem; font-weight: 700;">
-              <i class="bi bi-folder-open me-2"></i><?php echo htmlspecialchars($category); ?>
-            </h4>
-            <?php endif; ?>
-            <?php foreach ($faqs as $index => $faq): ?>
-            <div class="faq-item" data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
-              <div class="faq-question" onclick="toggleFaq(this)">
-                <span><i class="bi bi-question-circle me-2" style="color: var(--theme-accent);"></i><?php echo htmlspecialchars($faq->question); ?></span>
-                <i class="bi bi-chevron-down"></i>
-              </div>
-              <div class="faq-answer">
-                <?php echo $faq->answer; ?>
-              </div>
-            </div>
-            <?php endforeach; ?>
-          <?php endforeach; ?>
-        <?php else: ?>
-        <div class="faq-item" data-aos="fade-up">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            <span>What services does TNA CARE offer?</span>
-            <i class="bi bi-chevron-down"></i>
-          </div>
-          <div class="faq-answer">
-            TNA CARE offers comprehensive healthcare services including health education programs, medical outreach initiatives, corporate wellness solutions, digital health platforms, medical tourism facilitation, and health media production.
-          </div>
-        </div>
-        
-        <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            <span>How can I book a consultation?</span>
-            <i class="bi bi-chevron-down"></i>
-          </div>
-          <div class="faq-answer">
-            You can book a consultation by filling out the contact form above, calling us directly, or sending us an email. Our team will respond within 24 hours.
-          </div>
-        </div>
-        
-        <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            <span>Do you offer corporate wellness programs?</span>
-            <i class="bi bi-chevron-down"></i>
-          </div>
-          <div class="faq-answer">
-            Yes! We provide customized corporate wellness solutions for businesses and organizations, including employee health assessments, mental health programs, and workplace safety training.
-          </div>
-        </div>
-        
-        <div class="faq-item" data-aos="fade-up" data-aos-delay="300">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            <span>What areas do you serve?</span>
-            <i class="bi bi-chevron-down"></i>
-          </div>
-          <div class="faq-answer">
-            TNA CARE serves communities across Tanzania and East Africa. Our partner hospital network extends internationally.
-          </div>
-        </div>
-        
-        <div class="faq-item" data-aos="fade-up" data-aos-delay="400">
-          <div class="faq-question" onclick="toggleFaq(this)">
-            <span>How can my organization partner with TNA CARE?</span>
-            <i class="bi bi-chevron-down"></i>
-          </div>
-          <div class="faq-answer">
-            We welcome partnership opportunities with hospitals, NGOs, government agencies, and corporate entities. Please select "Partnership Opportunity" as the subject in our contact form.
-          </div>
-        </div>
-        <?php endif; ?>
-      </div>
-    </div>
+    <iframe id="full-map-iframe" 
+            data-src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.0!2d39.289!3d-6.812!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwNDgnNDYuMCJTIDE5wrE1OCcwMC42JlI!5e0!3m2!1sen!2stz!4v1600000000000!5m2!1sen!2stz" 
+            allowfullscreen="" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="TNA CARE Location"
+            style="display: none; width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;">
+    </iframe>
   </div>
+  
+  <script>
+    // Lazy-load full map on user interaction
+    document.getElementById('full-map-placeholder').addEventListener('click', function() {
+      var mapIframe = document.getElementById('full-map-iframe');
+      var mapPlaceholder = document.getElementById('full-map-placeholder');
+      
+      mapIframe.src = mapIframe.getAttribute('data-src');
+      mapIframe.style.display = 'block';
+      mapPlaceholder.style.display = 'none';
+    });
+
+    // Auto-load when in viewport
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var mapIframe = document.getElementById('full-map-iframe');
+            var mapPlaceholder = document.getElementById('full-map-placeholder');
+            mapIframe.src = mapIframe.getAttribute('data-src');
+            mapIframe.style.display = 'block';
+            mapPlaceholder.style.display = 'none';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '100px' });
+      observer.observe(document.getElementById('full-map-placeholder'));
+    }
+  </script>
 </section>
+
+<!-- Featured FAQ Section -->
+<?php if (!empty($featured_faqs)): ?>
+<?php echo $this->load->view('templates/medical/sections/featured_faqs', ['featured_faqs' => $featured_faqs], TRUE); ?>
+<?php endif; ?>
 
 <script>
-function toggleFaq(element) {
-    const item = element.closest('.faq-item');
-    const isActive = item.classList.contains('active');
-    
-    // Close all other items
-    document.querySelectorAll('.faq-item').forEach(faq => {
-        faq.classList.remove('active');
-    });
-    
-    // Toggle current item
-    if (!isActive) {
-        item.classList.add('active');
-    }
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     // Check if we already have a question displayed
     var questionText = document.getElementById('captchaQuestion').textContent.trim();

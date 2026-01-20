@@ -82,7 +82,12 @@
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="<?= base_url('admin/profile') ?>"><i class="fas fa-user me-2"></i> My Profile</a></li>
+                    <?php 
+                    $is_super_admin = (isset($admin_role) && $admin_role === 'super_admin') || 
+                                      (isset($user_role) && $user_role === 'super_admin');
+                    if ($is_super_admin): ?>
                     <li><a class="dropdown-item" href="<?= base_url('admin/settings') ?>"><i class="fas fa-cog me-2"></i> Settings</a></li>
+                    <?php endif; ?>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger" href="<?= base_url('admin/auth/logout') ?>"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
                 </ul>

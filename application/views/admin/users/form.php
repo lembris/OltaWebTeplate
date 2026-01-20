@@ -235,6 +235,25 @@
                         <?php endif; ?>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label">Template Theme</label>
+                        <select name="template" class="form-select">
+                            <option value="all" <?= set_select('template', 'all', !isset($user) || !$user || $user->template == 'all') ?>>
+                                All Templates
+                            </option>
+                            <option value="medical" <?= set_select('template', 'medical', isset($user) && $user && $user->template == 'medical') ?>>
+                                Medical Template Only
+                            </option>
+                            <option value="college" <?= set_select('template', 'college', isset($user) && $user && $user->template == 'college') ?>>
+                                College Template Only
+                            </option>
+                            <option value="tourism" <?= set_select('template', 'tourism', isset($user) && $user && $user->template == 'tourism') ?>>
+                                Tourism Template Only
+                            </option>
+                        </select>
+                        <small class="text-muted">User will only see this template's content.</small>
+                    </div>
+
                     <hr>
 
                     <div class="d-grid gap-2">
