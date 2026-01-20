@@ -31,6 +31,11 @@ class Home extends Frontend_Controller {
 			$this->load->model('Blog_model');
 		}
 		
+		// Load YouTube videos model if exists
+		if (file_exists(APPPATH . 'models/Youtube_videos_model.php')) {
+			$this->load->model('Youtube_videos_model');
+		}
+		
 		// Load common content models (Events, Notices, Announcements)
 		$this->load->model('Event_calendar_model');
 		$this->load->model('Notice_model');
@@ -266,6 +271,16 @@ class Home extends Frontend_Controller {
 			} catch (Exception $e) {
 				$data['team_members'] = [];
 				$data['featured_team_members'] = [];
+			}
+		}
+		
+		// Load YouTube videos for video section
+		$data['youtube_videos'] = [];
+		if ($this->db->table_exists('youtube_videos') && isset($this->Youtube_videos_model)) {
+			try {
+				$data['youtube_videos'] = $this->Youtube_videos_model->get_featured(6);
+			} catch (Exception $e) {
+				$data['youtube_videos'] = [];
 			}
 		}
 		

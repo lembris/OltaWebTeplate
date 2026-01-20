@@ -115,6 +115,15 @@
                     "segment": [
                         "gallery"
                     ]
+                },
+                {
+                    "label": "YouTube Videos",
+                    "icon": "fas fa-video",
+                    "url": "admin/youtube",
+                    "segment": [
+                        "admin/youtube",
+                        "youtube"
+                    ]
                 }
             ]
         },

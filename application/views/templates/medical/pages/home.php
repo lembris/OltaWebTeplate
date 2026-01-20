@@ -1227,6 +1227,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </section>
     <?php endif; ?>
 
+    <?php if (!empty($youtube_videos)): ?>
+    <?php echo $this->load->view('templates/medical/sections/youtube_videos', ['youtube_videos' => $youtube_videos], TRUE); ?>
+    <?php endif; ?>
+
     <!-- Call To Action Section -->
     <section id="call-to-action" class="call-to-action section light-background">
 

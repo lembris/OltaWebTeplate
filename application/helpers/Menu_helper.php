@@ -605,7 +605,33 @@ if (!function_exists('_get_default_admin_menu_items')) {
                     'is_visible' => 1,
                     'sort_order' => 4,
                     'children' => []
+                ],
+                (object)[
+                    'id' => 33,
+                    'item_label' => 'YouTube Videos',
+                    'item_url' => 'admin-youtube',
+                    'item_icon' => 'fas fa-video',
+                    'item_class' => '',
+                    'target_blank' => 0,
+                    'is_visible' => 1,
+                    'sort_order' => 5,
+                    'children' => []
                 ]
+            ];
+        }
+        
+        // Add YouTube Videos menu item to medical template
+        if ($template === 'medical') {
+            $template_items[] = (object)[
+                'id' => 14,
+                'item_label' => 'YouTube Videos',
+                'item_url' => 'admin-youtube',
+                'item_icon' => 'fas fa-video',
+                'item_class' => '',
+                'target_blank' => 0,
+                'is_visible' => 1,
+                'sort_order' => 6,
+                'children' => []
             ];
         }
         
