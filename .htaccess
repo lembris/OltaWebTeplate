@@ -1,14 +1,16 @@
 # ============================================
-# SEO & Performance Optimizations
-# Updated: December 27, 2025
+# CodeIgniter URL Rewriting for cPanel/Shared Hosting
 # ============================================
 
 # Enable Rewrite Engine
 RewriteEngine On
 
-# Remove www if present (Optional - choose one approach)
-# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-# RewriteRule ^(.*)$ https://%1/$1 [L,R=301]
+# Set RewriteBase for subdirectory installations
+# If installed in root, comment out the next line
+# RewriteBase /demo/
+
+# For institute folder installation:
+RewriteBase /institute/
 
 # Route requests to index.php
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -16,87 +18,20 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 # ============================================
-# GZIP Compression
+# GZIP Compression (if mod_deflate available)
 # ============================================
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html
-    AddOutputFilterByType DEFLATE text/plain
-    AddOutputFilterByType DEFLATE text/xml
-    AddOutputFilterByType DEFLATE text/css
-    AddOutputFilterByType DEFLATE text/javascript
-    AddOutputFilterByType DEFLATE application/javascript
-    AddOutputFilterByType DEFLATE application/json
-    AddOutputFilterByType DEFLATE application/xml
-    AddOutputFilterByType DEFLATE application/xhtml+xml
-    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
 
 # ============================================
-# Browser Caching
+# Browser Caching (if mod_expires available)
 # ============================================
 <IfModule mod_expires.c>
     ExpiresActive On
-    
-    # Images
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"
-    ExpiresByType image/webp "access plus 1 year"
-    ExpiresByType image/svg+xml "access plus 1 year"
-    ExpiresByType image/x-icon "access plus 1 year"
-    ExpiresByType image/ico "access plus 1 year"
-    
-    # Video
-    ExpiresByType video/mp4 "access plus 1 year"
-    ExpiresByType video/webm "access plus 1 year"
-    
-    # CSS/JS
     ExpiresByType text/css "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType text/javascript "access plus 1 month"
-    
-    # Fonts
-    ExpiresByType font/woff "access plus 1 year"
-    ExpiresByType font/woff2 "access plus 1 year"
-    ExpiresByType application/font-woff "access plus 1 year"
-    ExpiresByType application/font-woff2 "access plus 1 year"
-    
-    # Default
-    ExpiresDefault "access plus 1 week"
-</IfModule>
-
-# ============================================
-# Cache Control Headers
-# ============================================
-<IfModule mod_headers.c>
-    # Cache static assets
-    <FilesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|webp|svg|js|css|swf|woff|woff2)$">
-        Header set Cache-Control "max-age=31536000, public"
-    </FilesMatch>
-    
-    # Don't cache HTML
-    <FilesMatch "\.(html|php)$">
-        Header set Cache-Control "no-cache, no-store, must-revalidate"
-    </FilesMatch>
-    
-    # Security Headers
-    Header always set X-Content-Type-Options "nosniff"
-    Header always set X-Frame-Options "SAMEORIGIN"
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-</IfModule>
-
-# ============================================
-# ETags for better caching
-# ============================================
-<IfModule mod_headers.c>
-    Header unset ETag
-</IfModule>
-FileETag None
-
-# ============================================
-# Keep-Alive connections
-# ============================================
-<IfModule mod_headers.c>
-    Header set Connection keep-alive
 </IfModule>

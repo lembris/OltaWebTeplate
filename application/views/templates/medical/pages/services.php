@@ -409,113 +409,98 @@ defined('BASEPATH') OR exit('No direct script access allowed');
       </div>
     </div>
     <div class="row g-4">
-      <!-- Health Education -->
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-        <div class="service-card" id="education">
-          <div class="service-icon-wrapper">
-            <i class="bi bi-mortarboard"></i>
+      <?php if (!empty($medical_specialties)): ?>
+        <?php foreach ($medical_specialties as $index => $specialty): ?>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="<?php echo 100 + ($index * 100); ?>">
+            <div class="service-card" id="<?php echo htmlspecialchars($specialty->slug); ?>">
+              <div class="service-icon-wrapper">
+                <?php if (!empty($specialty->icon)): ?>
+                  <i class="bi <?php echo htmlspecialchars($specialty->icon); ?>"></i>
+                <?php else: ?>
+                  <i class="bi bi-heart-pulse"></i>
+                <?php endif; ?>
+              </div>
+              <h3><?php echo htmlspecialchars($specialty->name); ?></h3>
+              <p><?php echo htmlspecialchars($specialty->short_description ?? $specialty->description); ?></p>
+              <?php if (!empty($specialty->features)): ?>
+                <ul class="service-features">
+                  <?php 
+                    $features = json_decode($specialty->features);
+                    if (is_array($features)) {
+                      foreach (array_slice($features, 0, 4) as $feature):
+                  ?>
+                  <li><i class="bi bi-check-circle"></i> <?php echo htmlspecialchars($feature); ?></li>
+                  <?php 
+                      endforeach;
+                    }
+                  ?>
+                </ul>
+              <?php endif; ?>
+              <?php 
+                $cta_url = !empty($specialty->cta_url) ? $specialty->cta_url : 'contact';
+                $cta_text = !empty($specialty->cta_text) ? $specialty->cta_text : 'Get Started';
+                $cta_icon = !empty($specialty->cta_icon) ? $specialty->cta_icon : 'arrow-right';
+              ?>
+              <a href="<?php echo base_url($cta_url); ?>" class="service-cta"><?php echo htmlspecialchars($cta_text); ?> <i class="bi bi-<?php echo htmlspecialchars($cta_icon); ?>"></i></a>
+            </div>
           </div>
-          <h3>Health Education</h3>
-          <p>Empowering communities with reliable health information through digital media, workshops, and community outreach programs.</p>
-          <ul class="service-features">
-            <li><i class="bi bi-check-circle"></i> Digital health content creation</li>
-            <li><i class="bi bi-check-circle"></i> Community health workshops</li>
-            <li><i class="bi bi-check-circle"></i> School health programs</li>
-            <li><i class="bi bi-check-circle"></i> Public health campaigns</li>
-          </ul>
-          <a href="<?php echo base_url('contact'); ?>" class="service-cta">Get Started <i class="bi bi-arrow-right"></i></a>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <!-- Fallback to static services if no data in database -->
+        <!-- Health Education -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="service-card" id="education">
+            <div class="service-icon-wrapper">
+              <i class="bi bi-mortarboard"></i>
+            </div>
+            <h3>Health Education</h3>
+            <p>Empowering communities with reliable health information through digital media, workshops, and community outreach programs.</p>
+            <ul class="service-features">
+              <li><i class="bi bi-check-circle"></i> Digital health content creation</li>
+              <li><i class="bi bi-check-circle"></i> Community health workshops</li>
+              <li><i class="bi bi-check-circle"></i> School health programs</li>
+              <li><i class="bi bi-check-circle"></i> Public health campaigns</li>
+            </ul>
+            <a href="<?php echo base_url('contact'); ?>" class="service-cta">Get Started <i class="bi bi-arrow-right"></i></a>
+          </div>
         </div>
-      </div>
 
-      <!-- Medical Outreach -->
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-        <div class="service-card" id="outreach">
-          <div class="service-icon-wrapper">
-            <i class="bi bi-people"></i>
+        <!-- Medical Outreach -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="service-card" id="outreach">
+            <div class="service-icon-wrapper">
+              <i class="bi bi-people"></i>
+            </div>
+            <h3>Medical Outreach</h3>
+            <p>Bringing healthcare directly to underserved communities through mobile clinics, screening camps, and treatment programs.</p>
+            <ul class="service-features">
+              <li><i class="bi bi-check-circle"></i> Mobile health clinics</li>
+              <li><i class="bi bi-check-circle"></i> Health screening camps</li>
+              <li><i class="bi bi-check-circle"></i> Vaccination programs</li>
+              <li><i class="bi bi-check-circle"></i> Rural healthcare support</li>
+            </ul>
+            <a href="<?php echo base_url('contact'); ?>" class="service-cta">Get Started <i class="bi bi-arrow-right"></i></a>
           </div>
-          <h3>Medical Outreach</h3>
-          <p>Bringing healthcare directly to underserved communities through mobile clinics, screening camps, and treatment programs.</p>
-          <ul class="service-features">
-            <li><i class="bi bi-check-circle"></i> Mobile health clinics</li>
-            <li><i class="bi bi-check-circle"></i> Health screening camps</li>
-            <li><i class="bi bi-check-circle"></i> Vaccination programs</li>
-            <li><i class="bi bi-check-circle"></i> Rural healthcare support</li>
-          </ul>
-          <a href="<?php echo base_url('contact'); ?>" class="service-cta">Get Started <i class="bi bi-arrow-right"></i></a>
         </div>
-      </div>
 
-      <!-- Corporate Wellness -->
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-        <div class="service-card" id="corporate">
-          <div class="service-icon-wrapper">
-            <i class="bi bi-briefcase"></i>
+        <!-- Corporate Wellness -->
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="service-card" id="corporate">
+            <div class="service-icon-wrapper">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <h3>Corporate Wellness</h3>
+            <p>Comprehensive wellness solutions for organizations focusing on employee health, mental wellbeing, and productivity.</p>
+            <ul class="service-features">
+              <li><i class="bi bi-check-circle"></i> Employee health assessments</li>
+              <li><i class="bi bi-check-circle"></i> Mental health programs</li>
+              <li><i class="bi bi-check-circle"></i> Workplace safety training</li>
+              <li><i class="bi bi-check-circle"></i> Health insurance guidance</li>
+            </ul>
+            <a href="<?php echo base_url('contact'); ?>" class="service-cta">Get Started <i class="bi bi-arrow-right"></i></a>
           </div>
-          <h3>Corporate Wellness</h3>
-          <p>Comprehensive wellness solutions for organizations focusing on employee health, mental wellbeing, and productivity.</p>
-          <ul class="service-features">
-            <li><i class="bi bi-check-circle"></i> Employee health assessments</li>
-            <li><i class="bi bi-check-circle"></i> Mental health programs</li>
-            <li><i class="bi bi-check-circle"></i> Workplace safety training</li>
-            <li><i class="bi bi-check-circle"></i> Health insurance guidance</li>
-          </ul>
-          <a href="<?php echo base_url('contact'); ?>" class="service-cta">Get Started <i class="bi bi-arrow-right"></i></a>
         </div>
-      </div>
-
-      <!-- Digital Health -->
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-        <div class="service-card" id="digital">
-          <div class="service-icon-wrapper">
-            <i class="bi bi-laptop"></i>
-          </div>
-          <h3>Digital Health Solutions</h3>
-          <p>Modern healthcare technology solutions including telemedicine, health apps, and online consultation platforms.</p>
-          <ul class="service-features">
-            <li><i class="bi bi-check-circle"></i> Telemedicine consultations</li>
-            <li><i class="bi bi-check-circle"></i> Health mobile applications</li>
-            <li><i class="bi bi-check-circle"></i> Online health resources</li>
-            <li><i class="bi bi-check-circle"></i> Remote monitoring systems</li>
-          </ul>
-          <a href="<?php echo base_url('contact'); ?>" class="service-cta">Get Started <i class="bi bi-arrow-right"></i></a>
-        </div>
-      </div>
-
-      <!-- Medical Tourism -->
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-        <div class="service-card" id="tourism">
-          <div class="service-icon-wrapper">
-            <i class="bi bi-globe"></i>
-          </div>
-          <h3>Medical Tourism</h3>
-          <p>Facilitating access to world-class healthcare facilities locally and internationally through our partner network.</p>
-          <ul class="service-features">
-            <li><i class="bi bi-check-circle"></i> Hospital partnerships</li>
-            <li><i class="bi bi-check-circle"></i> International referrals</li>
-            <li><i class="bi bi-check-circle"></i> Treatment coordination</li>
-            <li><i class="bi bi-check-circle"></i> Travel assistance</li>
-          </ul>
-          <a href="<?php echo base_url('partners'); ?>" class="service-cta">View Partners <i class="bi bi-arrow-right"></i></a>
-        </div>
-      </div>
-
-      <!-- Media Production -->
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-        <div class="service-card" id="media">
-          <div class="service-icon-wrapper">
-            <i class="bi bi-camera-video"></i>
-          </div>
-          <h3>Health Media Production</h3>
-          <p>Professional health content creation including videos, podcasts, and educational materials for health organizations.</p>
-          <ul class="service-features">
-            <li><i class="bi bi-check-circle"></i> Health video production</li>
-            <li><i class="bi bi-check-circle"></i> Podcast creation</li>
-            <li><i class="bi bi-check-circle"></i> Educational materials</li>
-            <li><i class="bi bi-check-circle"></i> Social media content</li>
-          </ul>
-          <a href="https://www.youtube.com/@TNAAFYA" target="_blank" class="service-cta">Visit Channel <i class="bi bi-play-circle"></i></a>
-        </div>
-      </div>
+      <?php endif; ?>
     </div>
   </div>
 </section>

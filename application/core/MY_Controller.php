@@ -116,7 +116,7 @@ class Frontend_Controller extends CI_Controller
             // Contact Settings (fixed key mappings to match database)
             'phone_number' => $s['site_phone'] ?? '',
             'secondary_phone' => $s['site_phone_secondary'] ?? '',
-            'consult_number_call' => $s['whatsapp_number'] ?? '',
+            'consult_number_call' => $s['whatsapp_number'] ?? $s['site_whatsapp'] ?? '',
             'work_hours' => '9:00AM - 8:00PM',
             'physical_address' => $s['site_address'] ?? '',
             'email_address' => $s['site_email'] ?? '',

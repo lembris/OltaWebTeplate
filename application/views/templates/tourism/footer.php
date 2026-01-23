@@ -208,19 +208,37 @@
                     </p>
                 </div>
                 <div class="col-lg-6 text-center text-lg-end">
-                    <div class="footer-bottom-links">
-                        <?php if (!empty($footer_pages)): ?>
-                            <?php foreach ($footer_pages as $footer_page): ?>
-                                <a href="<?php echo base_url(); ?>page/<?php echo $footer_page->slug; ?>">
-                                    <?php echo ($footer_page->title === 'Frequently Asked Questions') ? 'FAQs' : $footer_page->title; ?>
-                                </a>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <a href="<?php echo base_url(); ?>page/privacy-policy">Privacy Policy</a>
-                            <a href="<?php echo base_url(); ?>page/terms-conditions">Terms & Conditions</a>
-                            <a href="<?php echo base_url(); ?>page/faq">FAQs</a>
-                        <?php endif; ?>
-                    </div>
+                     <div class="footer-bottom-links">
+                         <?php if (!empty($footer_pages)): ?>
+                             <?php foreach ($footer_pages as $footer_page): ?>
+                                 <a href="<?php echo base_url(); ?>page/<?php echo $footer_page->slug; ?>">
+                                     <?php echo ($footer_page->title === 'Frequently Asked Questions') ? 'FAQs' : $footer_page->title; ?>
+                                 </a>
+                             <?php endforeach; ?>
+                         <?php else: ?>
+                             <?php
+                             // Fallback: Check for direct legal pages if no footer pages in DB
+                             $legal_pages = [
+                                 'privacy-policy' => 'Privacy Policy',
+                                 'terms-of-service' => 'Terms of Service',
+                                 'refund-policy' => 'Refund Policy',
+                                 'cookie-policy' => 'Cookie Policy',
+                                 'disclaimer' => 'Disclaimer'
+                             ];
+
+                             foreach ($legal_pages as $slug => $title):
+                                 $page_path = APPPATH . 'views/templates/tourism/pages/' . $slug . '.php';
+                                 if (file_exists($page_path)):
+                             ?>
+                             <a href="<?php echo base_url(); ?><?php echo $slug; ?>"><?php echo $title; ?></a>
+                             <?php
+                                 endif;
+                             endforeach;
+                             ?>
+
+                             <a href="<?php echo base_url(); ?>page/faq">FAQs</a>
+                         <?php endif; ?>
+                     </div>
                 </div>
             </div>
             <div class="row mt-3">

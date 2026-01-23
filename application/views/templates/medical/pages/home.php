@@ -43,8 +43,72 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     margin-bottom: 1rem;
   }
 
+  .hero-content .highlight {
+    color: var(--theme-primary);
+  }
+
+  .hero-stats .stat-item h3 {
+    color: var(--theme-primary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--theme-primary) 0%, var(--primary-dark) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .hero-stats {
     margin-bottom: 1.5rem !important;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .hero-actions .btn {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .hero-actions .btn-primary {
+    background: var(--theme-primary);
+    border-color: var(--theme-primary);
+  }
+
+  .hero-actions .btn-primary:hover {
+    background: var(--primary-dark, #0056b3);
+    border-color: var(--primary-dark, #0056b3);
+    transform: translateY(-1px);
+  }
+
+  .hero-actions .btn-outline {
+    border-color: var(--theme-primary);
+    color: var(--theme-primary);
+  }
+
+  .hero-actions .btn-outline:hover {
+    background: var(--theme-primary);
+    border-color: var(--theme-primary);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  .hero-actions .btn-success {
+    background: #25D366;
+    border-color: #25D366;
+  }
+
+  .hero-actions .btn-success:hover {
+    background: #1da851;
+    border-color: #1da851;
+    transform: translateY(-1px);
   }
 
   /* Featured Expertises Section */
@@ -440,49 +504,55 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="row align-items-center">
           <div class="col-lg-6">
             <div class="hero-content">
-              <div class="trust-badges mb-4" data-aos="fade-right" data-aos-delay="200">
-                <div class="badge-item">
-                  <i class="bi bi-shield-check"></i>
-                  <span>Registered & Licensed</span>
-                </div>
-                <div class="badge-item">
-                  <i class="bi bi-people"></i>
-                  <span>Community Centered</span>
-                </div>
-              </div>
+               <div class="trust-badges mb-4" data-aos="fade-right" data-aos-delay="200">
+                 <div class="badge-item">
+                   <i class="bi bi-shield-check"></i>
+                   <span>Registered & Licensed</span>
+                 </div>
+                 <div class="badge-item">
+                   <i class="bi bi-people"></i>
+                   <span>community-Centered Care</span>
+                 </div>
+               </div>
 
               <h1 data-aos="fade-right" data-aos-delay="300">
-                <span class="highlight">Connecting Communities</span> to Better Health
+                <span class="highlight" style="color: var(--theme-primary);">Connecting Communities</span> to Better Health
               </h1>
 
-              <p class="hero-description" data-aos="fade-right" data-aos-delay="400">
-                TIBA NA AFYA CARE (TNA CARE) is a Tanzanian-registered health service company dedicated to bridging the gap between individuals and quality healthcare through education, consultation, and strategic partnerships.
-              </p>
+               <p class="hero-description" data-aos="fade-right" data-aos-delay="400">
+                 TIBA NA AFYA CARE (TNA CARE) is a healthcare facilitator and strategic partner, registered in Tanzania, bridging communities and institutions to quality care through innovation, education, training and collaboration.
+               </p>
 
-              <div class="hero-stats mb-4" data-aos="fade-right" data-aos-delay="500">
-                <div class="stat-item">
-                  <h3><span data-purecounter-start="0" data-purecounter-end="1" data-purecounter-duration="2" class="purecounter"></span>M</h3>
-                  <p>People Impacted</p>
-                </div>
-                <div class="stat-item">
-                  <h3><span data-purecounter-start="0" data-purecounter-end="28000" data-purecounter-duration="2" class="purecounter"></span>+</h3>
-                  <p>Subscribers</p>
-                </div>
-                <div class="stat-item">
-                  <h3><span data-purecounter-start="0" data-purecounter-end="50" data-purecounter-duration="2" class="purecounter"></span>+</h3>
-                  <p>Partnerships</p>
-                </div>
-              </div>
+               <div class="hero-stats mb-4" data-aos="fade-right" data-aos-delay="500">
+                 <div class="stat-item">
+                   <h3><span data-purecounter-start="0" data-purecounter-end="1" data-purecounter-duration="2" class="purecounter"></span>M+</h3>
+                   <p>People Impacted</p>
+                 </div>
+                 <div class="stat-item">
+                   <h3><span data-purecounter-start="0" data-purecounter-end="28000" data-purecounter-duration="2" class="purecounter"></span>+</h3>
+                   <p>Subscribers</p>
+                 </div>
+                 <div class="stat-item">
+                   <h3><span data-purecounter-start="0" data-purecounter-end="50" data-purecounter-duration="2" class="purecounter"></span>+</h3>
+                   <p>Partnerships</p>
+                 </div>
+               </div>
 
-              <div class="hero-actions" data-aos="fade-right" data-aos-delay="600">
-                <a href="<?php echo base_url('partners'); ?>" class="btn btn-primary">Partner With Us</a>
-                <?php if (!empty($youtube)): ?> 
-                <a href="<?php echo $youtube; ?>" class="btn btn-outline glightbox">
-                  <i class="bi bi-youtube me-2"></i>
-                  Visit Our Channel
-                </a>
-                <?php endif; ?>
-              </div>
+               <div class="hero-actions" data-aos="fade-right" data-aos-delay="600">
+                 <a href="<?php echo base_url('partners'); ?>" class="btn btn-primary">Partner With Us</a>
+                 <?php if (!empty($youtube)): ?>
+                 <a href="<?php echo $youtube; ?>" target="_blank" class="btn btn-outline glightbox">
+                   <i class="bi bi-youtube me-2"></i>
+                   Visit Our Channel
+                 </a>
+                 <?php endif; ?>
+                 <?php if (!empty($consult_number_call)): ?>
+                 <a href="https://wa.me/<?php echo $consult_number_call; ?>?text=Hello!%20I'm%20interested%20in%20learning%20more%20about%20TNA%20CARE%20healthcare%20services" target="_blank" class="btn btn-success">
+                   <i class="bi bi-whatsapp me-2"></i>
+                   WhatsApp Us
+                 </a>
+                 <?php endif; ?>
+               </div>
 
               <div class="emergency-contact" data-aos="fade-right" data-aos-delay="700">
                 <div class="emergency-icon">
@@ -509,7 +579,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                   <div class="card-content">
                     <h6>Health & Medical</h6>
                     <p>Solutions</p>
-                    <small>Access trusted health education, outreach, </br>and care support across Tanzania</small>
+                     <small>Access trusted health education, outreach, </br>and care support across Tanzania, East and Central Africa,</br>and beyond.</small>
                   </div>
                 </div>
                 <div class="floating-card rating-card">

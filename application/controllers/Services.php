@@ -25,7 +25,15 @@ class Services extends Frontend_Controller {
             $this->load->model('Testimonial_model');
             $data['testimonials'] = $this->Testimonial_model->get_featured(6);
             
-            $data['medical_specialties'] = $this->Specialty_model->get_active(20, 0);
+            // Load medical specialties (TNA CARE services) - same as home page
+            $data['medical_specialties'] = [];
+            if ($this->db->table_exists('specialties')) {
+                try {
+                    $data['medical_specialties'] = $this->Specialty_model->get_active(20, 0);
+                } catch (Exception $e) {
+                    $data['medical_specialties'] = [];
+                }
+            }
         } else {
             $data['page_title'] = 'Our Services - Safari Adventure Tours';
             $data['meta_description'] = 'Learn about our safari packages and adventure services.';
