@@ -34,7 +34,7 @@ class Gallery extends Admin_Controller
     {
         $data = $this->get_admin_data();
         $data['page_title'] = 'Manage Gallery';
-        $data['categories'] = $this->categories;
+        $data['categories'] = $this->Gallery_model->get_categories();
         $data['active_template'] = get_active_template();
         
         // Search and filter
@@ -73,12 +73,12 @@ class Gallery extends Admin_Controller
         $data = $this->get_admin_data();
         $data['page_title'] = 'Add Gallery Image';
         $data['image'] = null;
-        $data['categories'] = $this->categories;
+        $data['categories'] = $this->Gallery_model->get_categories();
         $data['form_action'] = base_url('admin/gallery/create');
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('title', 'Title', 'required|trim|min_length[2]');
-            $this->form_validation->set_rules('category', 'Category', 'required');
+            $this->form_validation->set_rules('category', 'Category', 'trim|max_length[100]');
 
             if ($this->form_validation->run() === TRUE) {
                 $image_data = [
@@ -137,12 +137,12 @@ class Gallery extends Admin_Controller
         $data = $this->get_admin_data();
         $data['page_title'] = 'Edit Gallery Image';
         $data['image'] = $image;
-        $data['categories'] = $this->categories;
+        $data['categories'] = $this->Gallery_model->get_categories();
         $data['form_action'] = base_url('admin/gallery/edit/' . $uid);
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('title', 'Title', 'required|trim|min_length[2]');
-            $this->form_validation->set_rules('category', 'Category', 'required');
+            $this->form_validation->set_rules('category', 'Category', 'trim|max_length[100]');
 
             if ($this->form_validation->run() === TRUE) {
                 $image_data = [
@@ -303,7 +303,7 @@ class Gallery extends Admin_Controller
     {
         $data = $this->get_admin_data();
         $data['page_title'] = 'Bulk Upload Images';
-        $data['categories'] = $this->categories;
+        $data['categories'] = $this->Gallery_model->get_categories();
 
         if ($this->input->post()) {
             $category = $this->input->post('category', TRUE) ?: 'safari';

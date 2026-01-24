@@ -30,17 +30,11 @@ class Blog extends Admin_Controller
     }
     
     /**
-     * Get categories - from DB if available, otherwise use defaults
+     * Get categories from existing blog posts like YouTube model
      */
     private function get_categories()
     {
-        if ($this->Category_model->table_exists()) {
-            $db_categories = $this->Category_model->get_dropdown('blog');
-            if (!empty($db_categories)) {
-                return $db_categories;
-            }
-        }
-        return $this->default_categories;
+        return $this->Blog_model->get_categories();
     }
 
     public function index()
@@ -67,7 +61,7 @@ class Blog extends Admin_Controller
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('title', 'Title', 'required|trim|min_length[3]');
-            $this->form_validation->set_rules('category', 'Category', 'required');
+            $this->form_validation->set_rules('category', 'Category', 'trim|max_length[100]');
             $this->form_validation->set_rules('content', 'Content', 'required');
 
             if ($this->form_validation->run() === TRUE) {
@@ -129,7 +123,7 @@ class Blog extends Admin_Controller
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('title', 'Title', 'required|trim|min_length[3]');
-            $this->form_validation->set_rules('category', 'Category', 'required');
+            $this->form_validation->set_rules('category', 'Category', 'trim|max_length[100]');
             $this->form_validation->set_rules('content', 'Content', 'required');
 
             if ($this->form_validation->run() === TRUE) {

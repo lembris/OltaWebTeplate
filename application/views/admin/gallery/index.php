@@ -69,9 +69,9 @@
             <!-- Category Filter -->
             <select class="form-select form-select-sm" id="categoryFilter" style="width: auto;">
                 <option value="all" <?= !isset($active_category) ? 'selected' : '' ?>>All Categories</option>
-                <?php foreach ($categories as $key => $label): ?>
-                <option value="<?= $key ?>" <?= isset($active_category) && $active_category === $key ? 'selected' : '' ?>>
-                    <?= $label ?>
+                <?php foreach ($categories as $cat): ?>
+                <option value="<?= $cat->category ?>" <?= isset($active_category) && $active_category === $cat->category ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($cat->category) ?>
                 </option>
                 <?php endforeach; ?>
             </select>
@@ -172,7 +172,7 @@
                             <?= htmlspecialchars(character_limiter($image->title, 25)) ?>
                         </h6>
                         <div class="gallery-meta">
-                            <span class="badge bg-info"><?= htmlspecialchars(ucfirst($image->category)) ?></span>
+                            <span class="badge bg-info"><?= htmlspecialchars($image->category) ?></span>
                             <div class="gallery-toggles">
                                 <div class="form-check form-switch" title="Active">
                                     <input class="form-check-input active-toggle" 

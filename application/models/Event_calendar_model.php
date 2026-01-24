@@ -441,4 +441,17 @@ class Event_calendar_model extends CI_Model {
         }
         return $this->db->count_all_results($this->table);
     }
+
+    /**
+     * Get all unique categories from existing events
+     */
+    public function get_categories()
+    {
+        return $this->db->select('category, COUNT(*) as count')
+                        ->where('category IS NOT NULL AND category != ""', NULL, FALSE)
+                        ->group_by('category')
+                        ->order_by('category', 'ASC')
+                        ->get($this->table)
+                        ->result();
+    }
 }

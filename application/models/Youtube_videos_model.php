@@ -53,13 +53,22 @@ class Youtube_videos_model extends CI_Model {
     }
 
     /**
-     * Get featured videos for homepage preview
+     * Get featured videos for homepage preview - filtered by active theme
      */
-    public function get_featured($limit = 6)
+    public function get_featured($limit = 6, $theme = null)
     {
-        return $this->db->where('is_active', 1)
-                       ->where('is_featured', 1)
-                       ->order_by('display_order', 'ASC')
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
+        $this->db->where('is_active', 1)
+                ->where('is_featured', 1)
+                ->group_start()
+                ->where('theme', 'all')
+                ->or_where('theme', $theme)
+                ->group_end();
+        
+        return $this->db->order_by('display_order', 'ASC')
                        ->order_by('created_at', 'DESC')
                        ->limit($limit)
                        ->get($this->table)
@@ -208,10 +217,29 @@ class Youtube_videos_model extends CI_Model {
      */
     public function extract_video_id($url)
     {
-        // Handle youtube.com and youtu.be URLs
-        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.*/|(?:v|e(?:mbed)?)/)([^\"?&\s]{11})|youtu\.be/([^\"?&\s]{11}))%i', $url, $match)) {
-            return $match[1] ?: $match[2];
+        // Handle various YouTube URL formats
+        // Matches: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID, youtube-nocookie.com, etc.
+        
+        // Try to extract video ID from different URL patterns
+        $patterns = [
+            // youtube.com/watch?v=VIDEO_ID
+            '/(?:youtube\.com\/watch\?v=|youtube\.com\/watch\?.*&v=)([a-zA-Z0-9_-]{11})/i',
+            // youtu.be/VIDEO_ID
+            '/youtu\.be\/([a-zA-Z0-9_-]{11})/i',
+            // youtube.com/embed/VIDEO_ID
+            '/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/i',
+            // youtube-nocookie.com
+            '/youtube-nocookie\.com\/embed\/([a-zA-Z0-9_-]{11})/i',
+            // youtube.com/v/VIDEO_ID
+            '/youtube\.com\/v\/([a-zA-Z0-9_-]{11})/i'
+        ];
+        
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $url, $match)) {
+                return $match[1];
+            }
         }
+        
         return null;
     }
 
@@ -257,10 +285,19 @@ class Youtube_videos_model extends CI_Model {
     }
 
     /**
-     * Get all videos for admin (no active filter)
+     * Get all videos for admin (no active filter) - filtered by active theme
      */
-    public function get_all_admin($limit = 50, $offset = 0)
+    public function get_all_admin($limit = 50, $offset = 0, $theme = null)
     {
+        if ($theme === null) {
+            $theme = get_active_template();
+        }
+        
+        $this->db->group_start()
+                 ->where('theme', 'all')
+                 ->or_where('theme', $theme)
+                 ->group_end();
+        
         return $this->db->order_by('display_order', 'ASC')
                        ->order_by('created_at', 'DESC')
                        ->limit($limit, $offset)

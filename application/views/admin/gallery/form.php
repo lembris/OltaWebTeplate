@@ -90,16 +90,21 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label for="category" class="form-label fw-bold">Category <span class="text-danger">*</span></label>
-                                <select class="form-select" id="category" name="category" required>
-                                    <option value="">Select Category</option>
-                                    <?php foreach ($categories as $key => $label): ?>
-                                    <option value="<?= $key ?>" 
-                                        <?= (isset($image) && $image->category === $key) || set_value('category') === $key ? 'selected' : '' ?>>
-                                        <?= $label ?>
-                                    </option>
+                                <label for="category" class="form-label fw-bold">Category</label>
+                                <input type="text" 
+                                       name="category" 
+                                       id="category" 
+                                       class="form-control"
+                                       placeholder="e.g., Medical Equipment, Healthcare Facilities, Medical Team"
+                                       value="<?= isset($image) ? $image->category : set_value('category') ?>"
+                                       list="categoryList">
+                                <?php if (!empty($categories)): ?>
+                                <datalist id="categoryList">
+                                    <?php foreach ($categories as $cat): ?>
+                                    <option value="<?= htmlspecialchars($cat->category) ?>">
                                     <?php endforeach; ?>
-                                </select>
+                                </datalist>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

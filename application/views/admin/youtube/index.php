@@ -16,6 +16,15 @@
     </div>
 </div>
 
+<!-- Active Theme Info -->
+<div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+    <i class="fas fa-palette me-3 fa-lg"></i>
+    <div>
+        <strong>Active Theme:</strong> <span class="badge bg-primary fs-6 ms-2"><?= ucfirst($active_template) ?></span>
+        <span class="ms-3 text-muted">Showing videos for "<?= ucfirst($active_template) ?>" theme and universal videos (theme = "all")</span>
+    </div>
+</div>
+
 <!-- Stats Row -->
 <?php
 $total = count($videos);
@@ -64,7 +73,7 @@ $categories = count($categories);
         <?php if (empty($videos)): ?>
             <div class="text-center py-5">
                 <i class="fas fa-video-slash fa-3x mb-3 text-muted"></i>
-                <p class="text-muted">No YouTube videos added yet.</p>
+                <p class="text-muted">No YouTube videos found for theme "<?= ucfirst($active_template) ?>".</p>
                 <a href="<?= base_url('admin/youtube/create') ?>" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Add First Video
                 </a>
@@ -77,6 +86,7 @@ $categories = count($categories);
                             <th style="width: 120px;">Thumbnail</th>
                             <th>Title</th>
                             <th>Category</th>
+                            <th width="80">Theme</th>
                             <th width="80">Order</th>
                             <th width="80">Featured</th>
                             <th width="80">Status</th>
@@ -110,6 +120,13 @@ $categories = count($categories);
                                 <?php else: ?>
                                 <span class="text-muted">-</span>
                                 <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php 
+                                $theme = isset($video->theme) ? $video->theme : 'all';
+                                $theme_class = ($theme === 'all') ? 'bg-secondary' : 'bg-success';
+                                ?>
+                                <span class="badge <?= $theme_class ?>"><?= ucfirst($theme) ?></span>
                             </td>
                             <td><?= $video->display_order ?></td>
                             <td>

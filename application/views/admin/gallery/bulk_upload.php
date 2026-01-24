@@ -64,11 +64,20 @@
                             
                             <div class="mb-3">
                                 <label for="category" class="form-label fw-bold">Category</label>
-                                <select class="form-select" id="category" name="category">
-                                    <?php foreach ($categories as $key => $label): ?>
-                                    <option value="<?= $key ?>"><?= $label ?></option>
+                                <input type="text" 
+                                       name="category" 
+                                       id="category" 
+                                       class="form-control"
+                                       placeholder="e.g., Medical Equipment, Healthcare Facilities, Medical Team"
+                                       value="<?= set_value('category') ?>"
+                                       list="categoryList">
+                                <?php if (!empty($categories)): ?>
+                                <datalist id="categoryList">
+                                    <?php foreach ($categories as $cat): ?>
+                                    <option value="<?= htmlspecialchars($cat->category) ?>">
                                     <?php endforeach; ?>
-                                </select>
+                                </datalist>
+                                <?php endif; ?>
                                 <small class="text-muted">All images will be assigned this category</small>
                             </div>
 

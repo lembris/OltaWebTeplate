@@ -108,6 +108,7 @@ class Events extends Admin_Controller
         $data['page_title'] = 'Add Event';
         $data['event'] = null;
         $data['departments'] = $this->Department_model->get_all();
+        $data['categories'] = $this->Event_calendar_model->get_categories();
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('title', 'Event Title', 'required|trim|min_length[3]');
@@ -143,6 +144,7 @@ class Events extends Admin_Controller
                     'description' => $this->input->post('description', TRUE),
                     'department_id' => $this->input->post('department_id', TRUE) ?: NULL,
                     'event_type' => $this->input->post('event_type', TRUE) ?: 'academic',
+                    'category' => $this->input->post('category', TRUE),
                     'is_featured' => $this->input->post('is_featured') ? 1 : 0,
                     'registration_required' => $this->input->post('registration_required') ? 1 : 0,
                     'visibility' => $this->input->post('visibility', TRUE) ?: 'public',
@@ -211,6 +213,7 @@ class Events extends Admin_Controller
         $data['page_title'] = 'Edit Event';
         $data['event'] = $event;
         $data['departments'] = $this->Department_model->get_all();
+        $data['categories'] = $this->Event_calendar_model->get_categories();
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('title', 'Event Title', 'required|trim|min_length[3]');
@@ -249,6 +252,7 @@ class Events extends Admin_Controller
                     'description' => $this->input->post('description', TRUE),
                     'department_id' => $this->input->post('department_id', TRUE) ?: NULL,
                     'event_type' => $this->input->post('event_type', TRUE) ?: 'academic',
+                    'category' => $this->input->post('category', TRUE),
                     'is_featured' => $this->input->post('is_featured') ? 1 : 0,
                     'registration_required' => $this->input->post('registration_required') ? 1 : 0,
                     'visibility' => $this->input->post('visibility', TRUE) ?: 'public',

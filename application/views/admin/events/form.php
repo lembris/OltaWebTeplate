@@ -122,31 +122,60 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Department</label>
-                            <select class="form-select" name="department_id">
-                                <option value="">Select Department</option>
+                            <input type="text" 
+                                   name="department_id" 
+                                   id="department" 
+                                   class="form-control"
+                                   placeholder="e.g., Cardiology, Pediatrics, Emergency"
+                                   value="<?= set_value('department_id', isset($event) && $event && $event->department ? $event->department : '') ?>"
+                                   list="departmentList">
+                            <?php if (!empty($departments)): ?>
+                            <datalist id="departmentList">
                                 <?php foreach ($departments as $dept): ?>
-                                    <option value="<?= $dept->id ?>" 
-                                        <?= set_select('department_id', $dept->id, isset($event) && $event && $event->department_id == $dept->id) ?>>
-                                        <?= htmlspecialchars($dept->name) ?>
-                                    </option>
+                                <option value="<?= htmlspecialchars($dept->name) ?>">
                                 <?php endforeach; ?>
-                            </select>
+                            </datalist>
+                            <?php endif; ?>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Event Type</label>
-                            <select class="form-select" name="event_type">
-                                <option value="academic" <?= set_select('event_type', 'academic', !isset($event) || !$event || $event->event_type == 'academic') ?>>Academic</option>
-                                <option value="administrative" <?= set_select('event_type', 'administrative', isset($event) && $event && $event->event_type == 'administrative') ?>>Administrative</option>
-                                <option value="cultural" <?= set_select('event_type', 'cultural', isset($event) && $event && $event->event_type == 'cultural') ?>>Cultural</option>
-                                <option value="sports" <?= set_select('event_type', 'sports', isset($event) && $event && $event->event_type == 'sports') ?>>Sports</option>
-                                <option value="workshop" <?= set_select('event_type', 'workshop', isset($event) && $event && $event->event_type == 'workshop') ?>>Workshop</option>
-                                <option value="seminar" <?= set_select('event_type', 'seminar', isset($event) && $event && $event->event_type == 'seminar') ?>>Seminar</option>
-                                <option value="conference" <?= set_select('event_type', 'conference', isset($event) && $event && $event->event_type == 'conference') ?>>Conference</option>
-                                <option value="social" <?= set_select('event_type', 'social', isset($event) && $event && $event->event_type == 'social') ?>>Social</option>
-                                <option value="holiday" <?= set_select('event_type', 'holiday', isset($event) && $event && $event->event_type == 'holiday') ?>>Holiday</option>
-                            </select>
+                            <input type="text" 
+                                   name="event_type" 
+                                   id="event_type" 
+                                   class="form-control"
+                                   placeholder="e.g., Conference, Workshop, Seminar"
+                                   value="<?= set_value('event_type', isset($event) && $event ? $event->event_type : '') ?>"
+                                   list="eventTypeList">
+                            <datalist id="eventTypeList">
+                                <option value="Academic">
+                                <option value="Administrative">
+                                <option value="Cultural">
+                                <option value="Sports">
+                                <option value="Workshop">
+                                <option value="Seminar">
+                                <option value="Conference">
+                                <option value="Social">
+                                <option value="Holiday">
+                            </datalist>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Category</label>
+                            <input type="text" 
+                                   name="category" 
+                                   id="category" 
+                                   class="form-control"
+                                   placeholder="e.g., Medical Conference, Training, Public Event"
+                                   value="<?= set_value('category', isset($event) && $event ? $event->category : '') ?>"
+                                   list="categoryList">
+                            <?php if (!empty($categories)): ?>
+                            <datalist id="categoryList">
+                                <?php foreach ($categories as $cat): ?>
+                                <option value="<?= htmlspecialchars($cat->category) ?>">
+                                <?php endforeach; ?>
+                            </datalist>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

@@ -23,7 +23,7 @@ class Expertise extends Admin_Controller
         $data['page_title'] = 'Manage Medical Expertise';
         $data['active_template'] = get_active_template();
         $data['expertises'] = $this->Expertise_model->get_all(100, 0);
-        $data['categories'] = $this->Expertise_model->get_default_categories();
+        $data['categories'] = $this->Expertise_model->get_categories();
 
         $this->load->view('admin/layout/header', $data);
         $this->load->view('admin/layout/sidebar', $data);
@@ -36,12 +36,12 @@ class Expertise extends Admin_Controller
         $data = $this->get_admin_data();
         $data['page_title'] = 'Create Medical Expertise';
         $data['expertise'] = null;
-        $data['categories'] = $this->Expertise_model->get_default_categories();
+        $data['categories'] = $this->Expertise_model->get_categories();
         $data['form_action'] = base_url('admin/expertise/create');
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('name', 'Name', 'required|trim|min_length[2]');
-            $this->form_validation->set_rules('category', 'Category', 'required');
+            $this->form_validation->set_rules('category', 'Category', 'trim|max_length[100]');
             $this->form_validation->set_rules('short_description', 'Short Description', 'required|trim|max_length[255]');
 
             if ($this->form_validation->run() === TRUE) {
@@ -101,7 +101,7 @@ class Expertise extends Admin_Controller
         $data = $this->get_admin_data();
         $data['page_title'] = 'Edit Medical Expertise';
         $data['expertise'] = $this->Expertise_model->get_by_uid($uid);
-        $data['categories'] = $this->Expertise_model->get_default_categories();
+        $data['categories'] = $this->Expertise_model->get_categories();
         $data['form_action'] = base_url('admin/expertise/edit/' . $uid);
 
         if (!$data['expertise']) {
@@ -113,7 +113,7 @@ class Expertise extends Admin_Controller
 
         if ($this->input->post()) {
             $this->form_validation->set_rules('name', 'Name', 'required|trim|min_length[2]');
-            $this->form_validation->set_rules('category', 'Category', 'required');
+            $this->form_validation->set_rules('category', 'Category', 'trim|max_length[100]');
             $this->form_validation->set_rules('short_description', 'Short Description', 'required|trim|max_length[255]');
 
             if ($this->form_validation->run() === TRUE) {

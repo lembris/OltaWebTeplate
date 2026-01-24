@@ -17,6 +17,15 @@
     </div>
 </div>
 
+<!-- Active Theme Info -->
+<div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+    <i class="fas fa-palette me-3 fa-lg"></i>
+    <div>
+        <strong>Active Theme:</strong> <span class="badge bg-primary fs-6 ms-2"><?= ucfirst($active_template) ?></span>
+        <span class="ms-3 text-muted">This video will be saved for "<?= ucfirst($active_template) ?>" theme. Videos can be marked as "all" to appear on all themes.</span>
+    </div>
+</div>
+
 <!-- Flash Messages -->
 <?php if ($this->session->flashdata('success')): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">

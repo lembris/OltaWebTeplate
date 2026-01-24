@@ -65,16 +65,21 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Category <span class="text-danger">*</span></label>
-                                <select name="category" class="form-select" required>
-                                    <option value="">Select Category</option>
-                                    <?php foreach ($categories as $key => $label): ?>
-                                        <option value="<?= $key ?>" 
-                                            <?= set_select('category', $key, ($expertise->category ?? '') === $key) ?>>
-                                            <?= $label ?>
-                                        </option>
+                                <label class="form-label">Category</label>
+                                <input type="text" 
+                                       name="category" 
+                                       id="category" 
+                                       class="form-control"
+                                       placeholder="e.g., Cardiac Care, Surgical Procedures, Diagnostic Services"
+                                       value="<?= set_value('category', $expertise->category ?? '') ?>"
+                                       list="categoryList">
+                                <?php if (!empty($categories)): ?>
+                                <datalist id="categoryList">
+                                    <?php foreach ($categories as $cat): ?>
+                                    <option value="<?= htmlspecialchars($cat->category) ?>">
                                     <?php endforeach; ?>
-                                </select>
+                                </datalist>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="col-md-6">
