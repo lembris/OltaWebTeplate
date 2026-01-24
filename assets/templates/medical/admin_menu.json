@@ -121,6 +121,14 @@
                     "segment": [
                         "gallery"
                     ]
+                },
+                {
+                    "label": "YouTube",
+                    "icon": "fab fa-youtube",
+                    "url": "admin/youtube",
+                    "segment": [
+                        "youtube"
+                    ]
                 }
             ]
         },

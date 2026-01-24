@@ -507,11 +507,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                <div class="trust-badges mb-4" data-aos="fade-right" data-aos-delay="200">
                  <div class="badge-item">
                    <i class="bi bi-shield-check"></i>
-                   <span>Registered & Licensed</span>
+                   <span style="color: var(--theme-secondary);">Registered & Licensed</span>
                  </div>
                  <div class="badge-item">
                    <i class="bi bi-people"></i>
-                   <span>community-Centered Care</span>
+                   <span style="color: var(--theme-secondary);">Community-Centered Care</span>
                  </div>
                </div>
 
@@ -577,9 +577,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <i class="bi bi-calendar-check"></i>
                   </div>
                   <div class="card-content">
-                    <h6>Health & Medical</h6>
-                    <p>Solutions</p>
-                     <small>Access trusted health education, outreach, </br>and care support across Tanzania, East and Central Africa,</br>and beyond.</small>
+                    <h6>Health & Medical Solutions</h6>
+                     <small>Access trusted health education, outreach, </br>and care support</small>
                   </div>
                 </div>
                 <div class="floating-card rating-card">
@@ -623,9 +622,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right" data-aos-delay="200">
             <div class="about-content">
               <h2 class="section-heading">Simplifying Access to Quality Healthcare</h2>
-              <p class="lead-text">TNA CARE began as a health media initiative to close the gap between reliable health information and underserved communities. We've evolved into a multi-service healthcare facilitation company trusted by individuals, corporates, NGOs, and government agencies.</p>
+              <p class="lead-text">
+                  TNA CARE began as a health media initiative to close the gap between reliable health information and underserved communities. We've evolved into a multi-service healthcare facilitation company trusted by individuals, corporates, NGOs, and government agencies.
+              </p>
 
-              <p>Our integrated model combines digital media, direct patient outreach, corporate wellness programs, and innovative digital health solutions to address public health challenges across Tanzania, East and Central Africa, and beyond.</p>
+              <p>
+                  Our integrated model combines digital media, direct patient outreach, training and capacity-building programs, corporate wellness initiatives, and innovative digital health solutions to address public health challenges across Tanzania, East and Central Africa, and beyond.
+              </p>
+              
+              <p>
+                  Through strategic partnerships and targeted interventions, we empower communities, support institutions, and enable access to essential healthcare services, creating meaningful and lasting impact across Africa.
+              </p>
 
               <div class="cta-section">
                 <a href="<?php echo base_url('about'); ?>" class="btn-primary">Learn More About Us</a>
